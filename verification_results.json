@@ -2,16 +2,16 @@
   "summary": {
     "total_patches_checked": 78,
     "status_counts": {
-      "applied": 10,
-      "not_applied": 30,
-      "partial": 12,
-      "unknown": 26,
+      "applied": 26,
+      "not_applied": 13,
+      "partial": 16,
+      "unknown": 23,
       "empty": 0
     },
-    "confidence_score": 0.5666666666666667,
+    "confidence_score": 0.5769230769230769,
     "main_js_patches": 78,
     "other_file_patches": 49,
-    "verification_timestamp": 1758324538.9882603
+    "verification_timestamp": 1758325437.357296
   },
   "verification_results": [
     {
@@ -24,19 +24,14 @@
         "context": "Line 475",
         "tool_id": "toolu_01W6BgHXGimEu3YksykM24wa"
       },
-      "status": "applied",
+      "status": "unknown",
       "old_code_found": false,
-      "new_code_found": true,
+      "new_code_found": false,
       "old_code_locations": [],
-      "new_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "confidence": 0.9,
+      "new_code_locations": [],
+      "confidence": 0.1,
       "notes": [
-        "Old code not found, new code found - patch appears applied"
+        "Neither old nor new code found - unclear status"
       ]
     },
     {
@@ -139,13 +134,13 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          191,
+          194,
           "  async makeMove(fromRow, fromCol, toRow, toCol) {"
         ]
       ],
       "new_code_locations": [
         [
-          191,
+          194,
           "  async makeMove(fromRow, fromCol, toRow, toCol) {"
         ]
       ],
@@ -189,19 +184,19 @@
         "context": "Line 269",
         "tool_id": "toolu_01UeQzT6m7rbFUzKNEz5CZWx"
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -214,19 +209,19 @@
         "context": "Line 272",
         "tool_id": "toolu_011gKMjnjhAkkLqdgmWqXy4V"
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -239,19 +234,19 @@
         "context": "Line 278",
         "tool_id": "toolu_017dfTubbPW2hUbTAUDnjb2h"
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -269,13 +264,13 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          2316,
+          2431,
           "  async handleSquareSelection(row, col) {"
         ]
       ],
       "new_code_locations": [
         [
-          2316,
+          2431,
           "  async handleSquareSelection(row, col) {"
         ]
       ],
@@ -299,13 +294,13 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          2395,
+          2510,
           "          const moveResult = await this.game.makeMove(fromRow, fromCol, logicalRow, logicalCol);"
         ]
       ],
       "new_code_locations": [
         [
-          2395,
+          2510,
           "          const moveResult = await this.game.makeMove(fromRow, fromCol, logicalRow, logicalCol);"
         ]
       ],
@@ -324,19 +319,24 @@
         "context": "Line 391",
         "tool_id": "toolu_01PVxYpCbXqictdQc4uzBHFK"
       },
-      "status": "not_applied",
+      "status": "partial",
       "old_code_found": true,
-      "new_code_found": false,
+      "new_code_found": true,
       "old_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
-      "confidence": 0.9,
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.5,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Both old and new code found - possible partial application"
       ]
     },
     {
@@ -349,6 +349,31 @@
         "context": "Line 394",
         "tool_id": "toolu_01H7xUwArvSHXgthT8rZUfcr"
       },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:06:56.174Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "    // Clear the undo/redo state flag when making a new move\n    this.isInUndoRedoState = false;\n\n    // Store complete engine state AFTER the move\n    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));\n    const stateEntry = {\n      engineState: stateAfterMove,\n      move: {\n        from: moveData.from,\n        to: moveData.to,\n        piece: moveData.piece,\n        captured: moveData.captured\n      },\n      notation: moveData.notation,\n      commentary: moveData.commentary,\n      timestamp: Date.now()\n    };\n\n    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);\n    this.stateHistory.push(stateEntry);\n    this.currentStateIndex++;\n\n    // R1 Memory Management: Limit history to prevent excessive memory usage\n    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states for R1 device",
+        "new_code": "    // Clear the undo/redo state flag when making a new move\n    this.isInUndoRedoState = false;\n\n    // R1 Memory Management: Define history limit for R1 device\n    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states to prevent memory issues\n\n    // Store complete engine state AFTER the move\n    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));\n    const stateEntry = {\n      engineState: stateAfterMove,\n      move: {\n        from: moveData.from,\n        to: moveData.to,\n        piece: moveData.piece,\n        captured: moveData.captured\n      },\n      notation: moveData.notation,\n      commentary: moveData.commentary,\n      timestamp: Date.now()\n    };\n\n    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);\n    this.stateHistory.push(stateEntry);\n    this.currentStateIndex++;\n\n    // Check if we've exceeded the history limit",
+        "context": "Line 397",
+        "tool_id": "toolu_01FZdxaEEcq7k5gcNjhyQE9C"
+      },
       "status": "not_applied",
       "old_code_found": true,
       "new_code_found": false,
@@ -362,26 +387,6 @@
       "confidence": 0.9,
       "notes": [
         "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:06:56.174Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "    // Clear the undo/redo state flag when making a new move\n    this.isInUndoRedoState = false;\n\n    // Store complete engine state AFTER the move\n    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));\n    const stateEntry = {\n      engineState: stateAfterMove,\n      move: {\n        from: moveData.from,\n        to: moveData.to,\n        piece: moveData.piece,\n        captured: moveData.captured\n      },\n      notation: moveData.notation,\n      commentary: moveData.commentary,\n      timestamp: Date.now()\n    };\n\n    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);\n    this.stateHistory.push(stateEntry);\n    this.currentStateIndex++;\n\n    // R1 Memory Management: Limit history to prevent excessive memory usage\n    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states for R1 device",
-        "new_code": "    // Clear the undo/redo state flag when making a new move\n    this.isInUndoRedoState = false;\n\n    // R1 Memory Management: Define history limit for R1 device\n    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states to prevent memory issues\n\n    // Store complete engine state AFTER the move\n    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));\n    const stateEntry = {\n      engineState: stateAfterMove,\n      move: {\n        from: moveData.from,\n        to: moveData.to,\n        piece: moveData.piece,\n        captured: moveData.captured\n      },\n      notation: moveData.notation,\n      commentary: moveData.commentary,\n      timestamp: Date.now()\n    };\n\n    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);\n    this.stateHistory.push(stateEntry);\n    this.currentStateIndex++;\n\n    // Check if we've exceeded the history limit",
-        "context": "Line 397",
-        "tool_id": "toolu_01FZdxaEEcq7k5gcNjhyQE9C"
-      },
-      "status": "unknown",
-      "old_code_found": false,
-      "new_code_found": false,
-      "old_code_locations": [],
-      "new_code_locations": [],
-      "confidence": 0.1,
-      "notes": [
-        "Neither old nor new code found - unclear status"
       ]
     },
     {
@@ -417,19 +422,24 @@
           "(Ella|Evy|Emmy|Asa)"
         ]
       },
-      "status": "not_applied",
+      "status": "partial",
       "old_code_found": true,
-      "new_code_found": false,
+      "new_code_found": true,
       "old_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
-      "confidence": 0.9,
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.5,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Both old and new code found - possible partial application"
       ]
     },
     {
@@ -442,19 +452,19 @@
         "context": "Line 413",
         "tool_id": "toolu_01XZ6fsN4cvKayg4LyqP8zmn"
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -467,19 +477,19 @@
         "context": "Line 460",
         "tool_id": "toolu_013TCpfFrWRYufFoUuFU7Sx6"
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -512,19 +522,24 @@
         "context": "Line 466",
         "tool_id": "toolu_01Wa5aDrdMNBJz3TGEndYMKa"
       },
-      "status": "not_applied",
+      "status": "partial",
       "old_code_found": true,
-      "new_code_found": false,
+      "new_code_found": true,
       "old_code_locations": [
         [
-          3433,
+          3573,
           "  async loadGameState() {"
         ]
       ],
-      "new_code_locations": [],
-      "confidence": 0.9,
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.5,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Both old and new code found - possible partial application"
       ]
     },
     {
@@ -536,6 +551,31 @@
         "new_code": "      if (this.isValidSavedState(state)) {\n        debugLogger.info('LOAD', 'State validation passed - Loading game state', {\n          moveCount: state.moveHistory.length,\n          currentPlayer: state.currentPlayer,\n          gameStatus: state.gameStatus,\n          soundEnabled: state.soundEnabled,\n          allowUndo: state.allowUndo,\n          gameMode: selectedMode || state.gameMode\n        });\n        console.log('Loading valid saved state');\n\n        // CRITICAL: Set the correct game mode BEFORE loading state\n        if (selectedMode) {\n          this.game.gameMode = selectedMode;\n          console.log(`[LOAD] Setting game mode to: ${selectedMode}`);\n        }\n\n        this.game.loadGameState(state);\n        this.applyTheme();\n        this.updateDisplay();\n\n        // Update menu visibility based on loaded game mode\n        this.updateMenuVisibility();\n\n        debugLogger.info('LOAD', 'Game state loaded and UI updated successfully');\n        console.log('Game state loaded successfully');\n        return true;",
         "context": "Line 473",
         "tool_id": "toolu_01WX5RprV9QAN7spt8fp7MFd"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:14:06.093Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "  // Helper to get the latest timestamp from a saved state\n  getLatestTimestamp(state) {",
+        "new_code": "  // Update menu visibility based on game mode\n  updateMenuVisibility() {\n    const colorGroup = document.getElementById('color-group');\n    const difficultyGroup = document.getElementById('difficulty-group');\n    const orientationGroup = document.getElementById('orientation-mode-group');\n\n    if (this.game.gameMode === 'human-vs-human') {\n      // Human vs Human mode\n      if (colorGroup) colorGroup.style.display = 'none';\n      if (difficultyGroup) difficultyGroup.style.display = 'none';\n      if (orientationGroup) orientationGroup.style.display = 'block';\n    } else {\n      // Human vs Bot mode\n      if (colorGroup) colorGroup.style.display = 'block';\n      if (difficultyGroup) difficultyGroup.style.display = 'block';\n      if (orientationGroup) orientationGroup.style.display = 'none';\n    }\n  }\n\n  // Helper to get the latest timestamp from a saved state\n  getLatestTimestamp(state) {",
+        "context": "Line 476",
+        "tool_id": "toolu_01Q6t2xSU96ajK1ixubX2xGT"
       },
       "status": "not_applied",
       "old_code_found": true,
@@ -550,26 +590,6 @@
       "confidence": 0.9,
       "notes": [
         "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:14:06.093Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "  // Helper to get the latest timestamp from a saved state\n  getLatestTimestamp(state) {",
-        "new_code": "  // Update menu visibility based on game mode\n  updateMenuVisibility() {\n    const colorGroup = document.getElementById('color-group');\n    const difficultyGroup = document.getElementById('difficulty-group');\n    const orientationGroup = document.getElementById('orientation-mode-group');\n\n    if (this.game.gameMode === 'human-vs-human') {\n      // Human vs Human mode\n      if (colorGroup) colorGroup.style.display = 'none';\n      if (difficultyGroup) difficultyGroup.style.display = 'none';\n      if (orientationGroup) orientationGroup.style.display = 'block';\n    } else {\n      // Human vs Bot mode\n      if (colorGroup) colorGroup.style.display = 'block';\n      if (difficultyGroup) difficultyGroup.style.display = 'block';\n      if (orientationGroup) orientationGroup.style.display = 'none';\n    }\n  }\n\n  // Helper to get the latest timestamp from a saved state\n  getLatestTimestamp(state) {",
-        "context": "Line 476",
-        "tool_id": "toolu_01Q6t2xSU96ajK1ixubX2xGT"
-      },
-      "status": "unknown",
-      "old_code_found": false,
-      "new_code_found": false,
-      "old_code_locations": [],
-      "new_code_locations": [],
-      "confidence": 0.1,
-      "notes": [
-        "Neither old nor new code found - unclear status"
       ]
     },
     {
@@ -605,19 +625,19 @@
           "bot.*move.*failed"
         ]
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -650,19 +670,19 @@
         "context": "Line 502",
         "tool_id": "toolu_01MLKiNfEz9VR2f2VpLJKR1i"
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -675,19 +695,19 @@
         "context": "Line 505",
         "tool_id": "toolu_01HocVycH2wunNXqFrGxf4sN"
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -700,6 +720,36 @@
         "context": "Line 571",
         "tool_id": "toolu_01SodZfAUBAfLa736oUnL8eT"
       },
+      "status": "partial",
+      "old_code_found": true,
+      "new_code_found": true,
+      "old_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.5,
+      "notes": [
+        "Both old and new code found - possible partial application"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:21:25.505Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "    debugLogger.info('BOT_INIT', 'Checking initial bot turn', {\n      humanColor,\n      currentPlayer,\n      isBotTurn,\n      gameStatus: this.game.gameStatus,\n      moveHistory: this.game.moveHistory.length\n    });",
+        "new_code": "    debugLogger.info('BOT_INIT', 'Checking initial bot turn', {\n      humanColor,\n      currentPlayer,\n      isBotTurn,\n      gameStatus: this.game.gameStatus,\n      moveHistory: this.game.moveHistory ? this.game.moveHistory.length : 0\n    });",
+        "context": "Line 599",
+        "tool_id": "toolu_017DXjCi88Zcs7WR3V98pAa5"
+      },
       "status": "not_applied",
       "old_code_found": true,
       "new_code_found": false,
@@ -713,26 +763,6 @@
       "confidence": 0.9,
       "notes": [
         "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:21:25.505Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "    debugLogger.info('BOT_INIT', 'Checking initial bot turn', {\n      humanColor,\n      currentPlayer,\n      isBotTurn,\n      gameStatus: this.game.gameStatus,\n      moveHistory: this.game.moveHistory.length\n    });",
-        "new_code": "    debugLogger.info('BOT_INIT', 'Checking initial bot turn', {\n      humanColor,\n      currentPlayer,\n      isBotTurn,\n      gameStatus: this.game.gameStatus,\n      moveHistory: this.game.moveHistory ? this.game.moveHistory.length : 0\n    });",
-        "context": "Line 599",
-        "tool_id": "toolu_017DXjCi88Zcs7WR3V98pAa5"
-      },
-      "status": "unknown",
-      "old_code_found": false,
-      "new_code_found": false,
-      "old_code_locations": [],
-      "new_code_locations": [],
-      "confidence": 0.1,
-      "notes": [
-        "Neither old nor new code found - unclear status"
       ]
     },
     {
@@ -750,13 +780,17 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          1784,
+          1862,
           "      moveHistoryLength: this.game.moveHistory.length"
         ]
       ],
       "new_code_locations": [
         [
-          2525,
+          2421,
+          "      moveCount: this.game.moveHistory ? this.game.moveHistory.length : 0"
+        ],
+        [
+          2640,
           "      moveIndex: this.game.moveHistory ? this.game.moveHistory.length : 'N/A'"
         ]
       ],
@@ -780,13 +814,13 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          1811,
+          1889,
           "    const isInitialBotMove = this.game.moveHistory.length === 0 && isBotTurn;"
         ]
       ],
       "new_code_locations": [
         [
-          1811,
+          1889,
           "    const isInitialBotMove = this.game.moveHistory.length === 0 && isBotTurn;"
         ]
       ],
@@ -810,25 +844,25 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          2793,
+          2908,
           "    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {"
         ]
       ],
       "new_code_locations": [
         [
-          734,
+          771,
           "    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {"
         ],
         [
-          748,
+          785,
           "    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {"
         ],
         [
-          761,
+          798,
           "    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {"
         ],
         [
-          2793,
+          2908,
           "    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {"
         ]
       ],
@@ -852,13 +886,17 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          3328,
+          3448,
           "    const totalMoves = this.game.moveHistory.length;"
         ]
       ],
       "new_code_locations": [
         [
-          2525,
+          2421,
+          "      moveCount: this.game.moveHistory ? this.game.moveHistory.length : 0"
+        ],
+        [
+          2640,
           "      moveIndex: this.game.moveHistory ? this.game.moveHistory.length : 'N/A'"
         ]
       ],
@@ -900,19 +938,19 @@
         "context": "Line 616",
         "tool_id": "toolu_01GN4bJSgd9Dpz2UJqJjMA93"
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -925,14 +963,19 @@
         "context": "Line 647",
         "tool_id": "toolu_01EeXz5R3Q3UY66TWhLwsCj9"
       },
-      "status": "unknown",
-      "old_code_found": false,
+      "status": "not_applied",
+      "old_code_found": true,
       "new_code_found": false,
-      "old_code_locations": [],
+      "old_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
       "new_code_locations": [],
-      "confidence": 0.1,
+      "confidence": 0.9,
       "notes": [
-        "Neither old nor new code found - unclear status"
+        "Old code found, new code not found - patch not applied"
       ]
     },
     {
@@ -944,26 +987,6 @@
         "new_code": "      console.log('[LOAD] About to validate state:', {\n        hasState: !!state,\n        moveCount: state?.moveHistory?.length || 0,\n        stateHistoryCount: state?.stateHistory?.length || 0,\n        currentPlayer: state?.currentPlayer,\n        gameMode: selectedMode || state?.gameMode\n      });\n\n      if (this.isValidSavedState(state)) {\n        debugLogger.info('LOAD', 'State validation passed - Loading game state', {\n          moveCount: state.moveHistory ? state.moveHistory.length : 0,\n          currentPlayer: state.currentPlayer,\n          gameStatus: state.gameStatus,\n          soundEnabled: state.soundEnabled,\n          allowUndo: state.allowUndo,\n          gameMode: selectedMode || state.gameMode\n        });\n        console.log('[LOAD] Validation PASSED - Loading valid saved state');",
         "context": "Line 650",
         "tool_id": "toolu_01KBeQMh6oPmtxs5wJsMJiMd"
-      },
-      "status": "unknown",
-      "old_code_found": false,
-      "new_code_found": false,
-      "old_code_locations": [],
-      "new_code_locations": [],
-      "confidence": 0.1,
-      "notes": [
-        "Neither old nor new code found - unclear status"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:29:39.812Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "  getStorageKey() {\n    return `chess_game_state_${this.gameMode}`;\n  }",
-        "new_code": "  getStorageKey() {\n    // Replace hyphens with underscores for consistent storage keys\n    return `chess_game_state_${this.gameMode.replace(/-/g, '_')}`;\n  }",
-        "context": "Line 670",
-        "tool_id": "toolu_01Ces4KZ7v4yVRXQ1Fh2mU55"
       },
       "status": "not_applied",
       "old_code_found": true,
@@ -978,6 +1001,31 @@
       "confidence": 0.9,
       "notes": [
         "Old code found, new code not found - patch not applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:29:39.812Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "  getStorageKey() {\n    return `chess_game_state_${this.gameMode}`;\n  }",
+        "new_code": "  getStorageKey() {\n    // Replace hyphens with underscores for consistent storage keys\n    return `chess_game_state_${this.gameMode.replace(/-/g, '_')}`;\n  }",
+        "context": "Line 670",
+        "tool_id": "toolu_01Ces4KZ7v4yVRXQ1Fh2mU55"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -1030,19 +1078,19 @@
         "context": "Line 694",
         "tool_id": "toolu_011G8kQbR2fNniUoGiwXKCnY"
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -1075,19 +1123,19 @@
         "context": "Line 791",
         "tool_id": "toolu_015hXML2B1DynHeZ7KqrnNs7"
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -1100,19 +1148,19 @@
         "context": "Line 794",
         "tool_id": "toolu_01QbkABL6gxC19omw6kFgeW2"
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -1247,19 +1295,14 @@
           "back.*to.*game.*button"
         ]
       },
-      "status": "applied",
+      "status": "unknown",
       "old_code_found": false,
-      "new_code_found": true,
+      "new_code_found": false,
       "old_code_locations": [],
-      "new_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "confidence": 0.9,
+      "new_code_locations": [],
+      "confidence": 0.1,
       "notes": [
-        "Old code not found, new code found - patch appears applied"
+        "Neither old nor new code found - unclear status"
       ]
     },
     {
@@ -1298,19 +1341,19 @@
           "back.*to.*game.*button"
         ]
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -1323,19 +1366,19 @@
         "context": "Line 77",
         "tool_id": "toolu_019Xs1JfZEbQMNKw9683m6UR"
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -1348,19 +1391,19 @@
         "context": "Line 187",
         "tool_id": "toolu_01ESY74aHKHdrewoWzdeiQ8a"
       },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
         [
           0,
           "Found in normalized content"
         ]
       ],
-      "new_code_locations": [],
       "confidence": 0.9,
       "notes": [
-        "Old code found, new code not found - patch not applied"
+        "Old code not found, new code found - patch appears applied"
       ]
     },
     {
@@ -1512,7 +1555,7 @@
       ],
       "new_code_locations": [
         [
-          4108,
+          4277,
           "  // Initialize menu visibility based on default game mode"
         ]
       ],
@@ -1611,7 +1654,7 @@
       "new_code_found": false,
       "old_code_locations": [
         [
-          1776,
+          1854,
           "    console.trace('[BOT_ACTIVATION] Bot turn handler called from:');"
         ]
       ],
@@ -1707,11 +1750,11 @@
       ],
       "new_code_locations": [
         [
-          224,
+          227,
           "      // Generate notation and commentary for the move"
         ],
         [
-          413,
+          416,
           "        // Generate notation and commentary"
         ]
       ],
@@ -1836,7 +1879,7 @@
       ],
       "new_code_locations": [
         [
-          483,
+          489,
           "    if (!isHumanVsBot || !isBotTurn || !isValidStatus) {"
         ]
       ],
@@ -1944,31 +1987,6 @@
   "applied_patches": [
     {
       "patch": {
-        "timestamp": "2025-09-18T18:55:18.403Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "  hideOptionsMenu() {\n    const overlay = document.getElementById('options-overlay');\n    if (overlay) {\n      overlay.classList.add('hidden');\n    }\n\n    // Apply correct orientation when menu closes using deterministic logic\n    const shouldFlip = this.game.determineOrientation();\n    if (this.game.boardFlipped !== shouldFlip) {\n      this.game.boardFlipped = shouldFlip;\n      this.updateDisplay();\n    }\n  }",
-        "new_code": "  hideOptionsMenu() {\n    const overlay = document.getElementById('options-overlay');\n    if (overlay) {\n      overlay.classList.add('hidden');\n    }\n\n    // Apply correct orientation when menu closes using deterministic logic\n    const shouldFlip = this.game.determineOrientation();\n    if (this.game.boardFlipped !== shouldFlip) {\n      this.game.boardFlipped = shouldFlip;\n      this.updateDisplay();\n    }\n\n    // Check if bot should make initial move after returning from options\n    // This handles the case where user changed color and clicked \"Back to game\"\n    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {\n      console.log('[HIDE_OPTIONS] Checking if bot should make initial move after color change');\n      // Use a small delay to let UI settle\n      setTimeout(() => {\n        this.checkInitialBotTurn();\n      }, 100);\n    }\n  }",
-        "context": "Line 475",
-        "tool_id": "toolu_01W6BgHXGimEu3YksykM24wa"
-      },
-      "status": "applied",
-      "old_code_found": false,
-      "new_code_found": true,
-      "old_code_locations": [],
-      "new_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "confidence": 0.9,
-      "notes": [
-        "Old code not found, new code found - patch appears applied"
-      ]
-    },
-    {
-      "patch": {
         "timestamp": "2025-09-18T19:40:59.276Z",
         "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
         "operation": "Edit",
@@ -2001,6 +2019,384 @@
         "new_code": "      // Play status sound with delay if there was a capture\n      if (this.gameStatus === 'checkmate') {\n        setTimeout(() => this.playSound('checkmate'), isCapture ? 100 : 0);\n      } else if (this.gameStatus === 'check') {\n        setTimeout(() => this.playSound('check'), isCapture ? 100 : 0);\n      }\n\n      // Auto-save after successful move\n      await this.autoSave();\n\n      return { success: true, enteredCheck };",
         "context": "Line 263",
         "tool_id": "toolu_01V6VEtJP5in1FbkBmvc85Xo"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T21:27:06.972Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "  /**\n   * Generate bot move\n   */\n  generateBotMove() {",
+        "new_code": "  /**\n   * Generate bot move\n   */\n  async generateBotMove() {",
+        "context": "Line 269",
+        "tool_id": "toolu_01UeQzT6m7rbFUzKNEz5CZWx"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T21:27:18.918Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "        // Play status sound with delay if there was a capture\n        if (this.gameStatus === 'checkmate') {\n          setTimeout(() => this.playSound('checkmate'), capturedPiece ? 100 : 0);\n        } else if (this.gameStatus === 'check') {\n          setTimeout(() => this.playSound('check'), capturedPiece ? 100 : 0);\n        }\n        \n        return {\n          from: fromCoords,\n          to: toCoords,\n          piece: movedPiece,\n          enteredCheck\n        };",
+        "new_code": "        // Play status sound with delay if there was a capture\n        if (this.gameStatus === 'checkmate') {\n          setTimeout(() => this.playSound('checkmate'), capturedPiece ? 100 : 0);\n        } else if (this.gameStatus === 'check') {\n          setTimeout(() => this.playSound('check'), capturedPiece ? 100 : 0);\n        }\n\n        // Auto-save after successful bot move\n        await this.autoSave();\n\n        return {\n          from: fromCoords,\n          to: toCoords,\n          piece: movedPiece,\n          enteredCheck\n        };",
+        "context": "Line 272",
+        "tool_id": "toolu_011gKMjnjhAkkLqdgmWqXy4V"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T21:27:33.606Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "    // Generate AND execute bot move (aiMove() does both!)\n    const botMove = this.generateBotMove();",
+        "new_code": "    // Generate AND execute bot move (aiMove() does both!)\n    const botMove = await this.generateBotMove();",
+        "context": "Line 278",
+        "tool_id": "toolu_017dfTubbPW2hUbTAUDnjb2h"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:06:44.505Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "    // Keep old moveHistory for backward compatibility (will remove later)\n    if (!this.moveHistory) this.moveHistory = [];\n    this.moveHistory.push({\n      from: moveData.from,\n      to: moveData.to,\n      piece: moveData.piece,\n      captured: moveData.captured,\n      notation: moveData.notation\n    });\n  }",
+        "new_code": "    // Keep old moveHistory for backward compatibility (will remove later)\n    if (!this.moveHistory) this.moveHistory = [];\n    this.moveHistory.push({\n      from: moveData.from,\n      to: moveData.to,\n      piece: moveData.piece,\n      captured: moveData.captured,\n      notation: moveData.notation\n    });\n\n    // Also limit moveHistory to match stateHistory limits\n    if (this.moveHistory.length > MAX_HISTORY_LENGTH - 1) {\n      // Keep moves in sync with stateHistory (exclude initial state)\n      this.moveHistory = this.moveHistory.slice(-(MAX_HISTORY_LENGTH - 1));\n    }\n  }",
+        "context": "Line 394",
+        "tool_id": "toolu_01H7xUwArvSHXgthT8rZUfcr"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:07:42.403Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "    this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sound preference\n    this.moveHistory = state.moveHistory || [];\n    this.currentMoveIndex = state.currentMoveIndex !== undefined ? state.currentMoveIndex : this.moveHistory.length - 1;",
+        "new_code": "    this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sound preference\n    this.moveHistory = state.moveHistory || [];\n\n    // R1 Memory Management: Apply same limit to moveHistory\n    const MAX_HISTORY_LENGTH = 100;\n    if (this.moveHistory.length > MAX_HISTORY_LENGTH - 1) {\n      console.log(`[LOAD] Trimming moveHistory from ${this.moveHistory.length} to ${MAX_HISTORY_LENGTH - 1}`);\n      this.moveHistory = this.moveHistory.slice(-(MAX_HISTORY_LENGTH - 1));\n    }\n\n    this.currentMoveIndex = state.currentMoveIndex !== undefined ? state.currentMoveIndex : this.moveHistory.length - 1;",
+        "context": "Line 413",
+        "tool_id": "toolu_01XZ6fsN4cvKayg4LyqP8zmn"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:13:24.075Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "  async loadGameState() {\n    try {\n      debugLogger.info('LOAD', 'Attempting to load saved game state from storage');\n      console.log('Attempting to load saved game state...');\n      \n      // Try to load state for current game mode first\n      const currentModeKey = this.game.getStorageKey();\n      let state = await loadFromStorage(currentModeKey);\n      \n      if (!state) {\n        debugLogger.info('LOAD', `No saved state found for current mode (${this.game.gameMode})`);\n        // Try to load from the other game mode\n        const otherMode = this.game.gameMode === 'human-vs-human' ? 'human-vs-bot' : 'human-vs-human';\n        const otherModeKey = `chess_game_state_${otherMode.replace('-', '_')}`;\n        state = await loadFromStorage(otherModeKey);\n        \n        if (state) {\n          debugLogger.info('LOAD', `Found saved state from other mode (${otherMode}), but keeping current mode settings`);\n          // Keep current game mode and settings, only restore board state\n          state.gameMode = this.game.gameMode;\n          state.humanColor = this.game.humanColor;\n        }\n      }\n      \n      if (!state) {\n        // Finally try legacy key for backward compatibility\n        state = await loadFromStorage('chess_game_state');\n        if (state) {\n          debugLogger.info('LOAD', 'Found legacy saved state, migrating to new format');\n        }\n      }",
+        "new_code": "  async loadGameState() {\n    try {\n      debugLogger.info('LOAD', 'Attempting to load saved game state from storage');\n      console.log('Attempting to load saved game state...');\n\n      // Load states from both game modes to find the most recent\n      const humanVsBotKey = 'chess_game_state_human_vs_bot';\n      const humanVsHumanKey = 'chess_game_state_human_vs_human';\n\n      const humanVsBotState = await loadFromStorage(humanVsBotKey);\n      const humanVsHumanState = await loadFromStorage(humanVsHumanKey);\n\n      let state = null;\n      let selectedMode = null;\n\n      // Determine which state to load based on timestamps\n      if (humanVsBotState && humanVsHumanState) {\n        // Both states exist - load the most recently saved one\n        const botTimestamp = this.getLatestTimestamp(humanVsBotState);\n        const humanTimestamp = this.getLatestTimestamp(humanVsHumanState);\n\n        if (humanTimestamp > botTimestamp) {\n          state = humanVsHumanState;\n          selectedMode = 'human-vs-human';\n          debugLogger.info('LOAD', 'Loading more recent human-vs-human game');\n        } else {\n          state = humanVsBotState;\n          selectedMode = 'human-vs-bot';\n          debugLogger.info('LOAD', 'Loading more recent human-vs-bot game');\n        }\n      } else if (humanVsHumanState) {\n        state = humanVsHumanState;\n        selectedMode = 'human-vs-human';\n        debugLogger.info('LOAD', 'Found only human-vs-human saved state');\n      } else if (humanVsBotState) {\n        state = humanVsBotState;\n        selectedMode = 'human-vs-bot';\n        debugLogger.info('LOAD', 'Found only human-vs-bot saved state');\n      }\n\n      if (!state) {\n        // Try legacy key for backward compatibility\n        state = await loadFromStorage('chess_game_state');\n        if (state) {\n          debugLogger.info('LOAD', 'Found legacy saved state, migrating to new format');\n          selectedMode = state.gameMode || 'human-vs-bot';\n        }\n      }",
+        "context": "Line 460",
+        "tool_id": "toolu_013TCpfFrWRYufFoUuFU7Sx6"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:13:57.952Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "      if (this.isValidSavedState(state)) {\n        debugLogger.info('LOAD', 'State validation passed - Loading game state', {\n          moveCount: state.moveHistory.length,\n          currentPlayer: state.currentPlayer,\n          gameStatus: state.gameStatus,\n          soundEnabled: state.soundEnabled,\n          allowUndo: state.allowUndo\n        });\n        console.log('Loading valid saved state');\n        this.game.loadGameState(state);\n        this.applyTheme();\n        this.updateDisplay();\n        debugLogger.info('LOAD', 'Game state loaded and UI updated successfully');\n        console.log('Game state loaded successfully');\n        return true;",
+        "new_code": "      if (this.isValidSavedState(state)) {\n        debugLogger.info('LOAD', 'State validation passed - Loading game state', {\n          moveCount: state.moveHistory.length,\n          currentPlayer: state.currentPlayer,\n          gameStatus: state.gameStatus,\n          soundEnabled: state.soundEnabled,\n          allowUndo: state.allowUndo,\n          gameMode: selectedMode || state.gameMode\n        });\n        console.log('Loading valid saved state');\n\n        // CRITICAL: Set the correct game mode BEFORE loading state\n        if (selectedMode) {\n          this.game.gameMode = selectedMode;\n          console.log(`[LOAD] Setting game mode to: ${selectedMode}`);\n        }\n\n        this.game.loadGameState(state);\n        this.applyTheme();\n        this.updateDisplay();\n\n        // Update menu visibility based on loaded game mode\n        this.updateMenuVisibility();\n\n        debugLogger.info('LOAD', 'Game state loaded and UI updated successfully');\n        console.log('Game state loaded successfully');\n        return true;",
+        "context": "Line 473",
+        "tool_id": "toolu_01WX5RprV9QAN7spt8fp7MFd"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:15:17.986Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "  // Enhanced bot initialization for both human white/black scenarios\n  checkInitialBotTurn() {\n    console.log('[CHECK_INITIAL_BOT_TURN] Called');\n\n    if (this.game.gameMode !== 'human-vs-bot') {\n      debugLogger.info('BOT_INIT', 'Not in vs Bot mode, skipping bot turn check');\n      console.log('[CHECK_INITIAL_BOT_TURN] Not in bot mode, exiting');\n      return;\n    }\n\n    const humanColor = this.game.getHumanColor();\n    const currentPlayer = this.game.currentPlayer;\n    const isBotTurn = this.game.isBotTurn();\n    \n    debugLogger.info('BOT_INIT', 'Checking initial bot turn', {\n      humanColor,\n      currentPlayer,\n      isBotTurn,\n      gameStatus: this.game.gameStatus\n    });\n\n    // Ensure game is not ended\n    if (this.game.gameStatus === 'checkmate' || this.game.gameStatus === 'stalemate') {\n      debugLogger.warn('BOT_INIT', 'Game ended, skipping bot turn');\n      return;\n    }\n\n    // Check if bot should make the first move\n    if (isBotTurn) {\n      console.log('[CHECK_INITIAL_BOT_TURN] Bot should move first!');\n      debugLogger.info('BOT_INIT', 'Bot should make first move - initializing bot turn');\n\n      // Show bot thinking immediately\n      this.showBotThinking(true);\n      this.setInputEnabled(false);\n\n      // Ensure UI is properly updated before bot move\n      this.updateGameStateIndicators();\n\n      // Small delay to allow UI to settle, then execute bot move\n      setTimeout(() => {\n        console.log('[CHECK_INITIAL_BOT_TURN] Calling handleBotTurn after delay');\n        this.handleBotTurn();\n      }, 1000);\n    } else {\n      debugLogger.info('BOT_INIT', 'Human goes first - enabling input and waiting for human move');\n      \n      // Ensure human can make moves\n      this.setInputEnabled(true);\n      this.showBotThinking(false);\n      \n      // Update UI to show it's human's turn\n      this.updateGameStateIndicators();\n    }\n  }",
+        "new_code": "  // Enhanced bot initialization for both human white/black scenarios\n  checkInitialBotTurn() {\n    console.log('[CHECK_INITIAL_BOT_TURN] Called');\n\n    if (this.game.gameMode !== 'human-vs-bot') {\n      debugLogger.info('BOT_INIT', 'Not in vs Bot mode, skipping bot turn check');\n      console.log('[CHECK_INITIAL_BOT_TURN] Not in bot mode, exiting');\n      return;\n    }\n\n    const humanColor = this.game.getHumanColor();\n    const currentPlayer = this.game.currentPlayer;\n    const isBotTurn = this.game.isBotTurn();\n\n    debugLogger.info('BOT_INIT', 'Checking initial bot turn', {\n      humanColor,\n      currentPlayer,\n      isBotTurn,\n      gameStatus: this.game.gameStatus,\n      moveHistory: this.game.moveHistory.length\n    });\n\n    // Ensure game is not ended\n    if (this.game.gameStatus === 'checkmate' || this.game.gameStatus === 'stalemate') {\n      debugLogger.warn('BOT_INIT', 'Game ended, skipping bot turn');\n      return;\n    }\n\n    // CRITICAL: Ensure game status is 'playing' before attempting bot move\n    // This prevents the \"bot move failed\" error\n    if (this.game.gameStatus !== 'playing') {\n      console.log('[CHECK_INITIAL_BOT_TURN] Game not in playing state yet, retrying...');\n      setTimeout(() => {\n        this.checkInitialBotTurn();\n      }, 500);\n      return;\n    }\n\n    // Check if bot should make the first move\n    if (isBotTurn) {\n      console.log('[CHECK_INITIAL_BOT_TURN] Bot should move first!');\n      debugLogger.info('BOT_INIT', 'Bot should make first move - initializing bot turn');\n\n      // Show bot thinking immediately\n      this.showBotThinking(true);\n      this.setInputEnabled(false);\n\n      // Ensure UI is properly updated before bot move\n      this.updateGameStateIndicators();\n\n      // Longer delay for initial bot move to ensure everything is ready\n      setTimeout(() => {\n        console.log('[CHECK_INITIAL_BOT_TURN] Calling handleBotTurn after delay');\n        // Final check before executing bot move\n        if (this.game.gameStatus === 'playing' && this.game.isBotTurn()) {\n          this.handleBotTurn();\n        } else {\n          console.error('[CHECK_INITIAL_BOT_TURN] Conditions changed, aborting bot move');\n          this.showBotThinking(false);\n          this.setInputEnabled(true);\n        }\n      }, 1500); // Increased delay for initial moves\n    } else {\n      debugLogger.info('BOT_INIT', 'Human goes first - enabling input and waiting for human move');\n\n      // Ensure human can make moves\n      this.setInputEnabled(true);\n      this.showBotThinking(false);\n\n      // Update UI to show it's human's turn\n      this.updateGameStateIndicators();\n    }\n  }",
+        "context": "Line 490",
+        "tool_id": "toolu_01R9emr9DvBG2QCfKL3tWFu3",
+        "features": [
+          "bot.*move.*failed"
+        ]
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:15:55.944Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "    // Update cached state FIRST (this sets currentPlayer correctly)\n    this.updateCachedState();\n\n    // THEN determine board orientation based on correct currentPlayer\n    this.boardFlipped = this.determineOrientation();\n    console.log('[NEW_GAME] Set board orientation:', this.boardFlipped, 'for player:', this.currentPlayer);\n\n    // Play new game sound\n    this.playSound('newGame');\n  }",
+        "new_code": "    // Update cached state FIRST (this sets currentPlayer correctly)\n    this.updateCachedState();\n\n    // CRITICAL: Update game status to ensure it's set to 'playing'\n    this.updateGameStatus();\n    console.log('[NEW_GAME] Game status updated to:', this.gameStatus);\n\n    // THEN determine board orientation based on correct currentPlayer\n    this.boardFlipped = this.determineOrientation();\n    console.log('[NEW_GAME] Set board orientation:', this.boardFlipped, 'for player:', this.currentPlayer);\n\n    // Play new game sound\n    this.playSound('newGame');\n  }",
+        "context": "Line 502",
+        "tool_id": "toolu_01MLKiNfEz9VR2f2VpLJKR1i"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:16:08.787Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "    // Check if bot should make initial move after returning from options\n    // This handles the case where user changed color and clicked \"Back to game\"\n    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {\n      console.log('[HIDE_OPTIONS] Checking if bot should make initial move after color change');\n      // Use a small delay to let UI settle\n      setTimeout(() => {\n        this.checkInitialBotTurn();\n      }, 100);\n    }",
+        "new_code": "    // Check if bot should make initial move after returning from options\n    // This handles the case where user changed color and clicked \"Back to game\"\n    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {\n      console.log('[HIDE_OPTIONS] Checking if bot should make initial move after color change');\n      // Use longer delay to ensure game state is fully ready\n      setTimeout(() => {\n        // Double-check game is ready before attempting bot move\n        if (this.game.gameStatus === 'playing') {\n          this.checkInitialBotTurn();\n        } else {\n          console.log('[HIDE_OPTIONS] Game not ready yet, skipping bot turn check');\n        }\n      }, 800); // Increased delay from 100ms to 800ms\n    }",
+        "context": "Line 505",
+        "tool_id": "toolu_01HocVycH2wunNXqFrGxf4sN"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:24:52.055Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "  // Handle new game start\n  onNewGameStart() {\n    console.log('[NEW_GAME_START] Called with:', {\n      gameMode: this.game.gameMode,\n      humanColor: this.game.humanColor,\n      currentPlayer: this.game.currentPlayer,\n      isBotTurn: this.game.isBotTurn()\n    });\n    this.updateDisplay();\n    this.checkInitialBotTurn();\n  }",
+        "new_code": "  // Handle new game start\n  onNewGameStart() {\n    console.log('[NEW_GAME_START] Called with:', {\n      gameMode: this.game.gameMode,\n      humanColor: this.game.humanColor,\n      currentPlayer: this.game.currentPlayer,\n      isBotTurn: this.game.isBotTurn(),\n      moveCount: this.game.moveHistory ? this.game.moveHistory.length : 0\n    });\n    this.updateDisplay();\n\n    // Only check for initial bot turn if no moves have been made yet\n    if (!this.game.moveHistory || this.game.moveHistory.length === 0) {\n      this.checkInitialBotTurn();\n    }\n  }",
+        "context": "Line 616",
+        "tool_id": "toolu_01GN4bJSgd9Dpz2UJqJjMA93"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:29:39.812Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "  getStorageKey() {\n    return `chess_game_state_${this.gameMode}`;\n  }",
+        "new_code": "  getStorageKey() {\n    // Replace hyphens with underscores for consistent storage keys\n    return `chess_game_state_${this.gameMode.replace(/-/g, '_')}`;\n  }",
+        "context": "Line 670",
+        "tool_id": "toolu_01Ces4KZ7v4yVRXQ1Fh2mU55"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:40:20.103Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "  async autoSave() {\n    try {\n      const state = this.getGameState();\n      const key = this.getStorageKey();\n      await saveToStorage(key, state);\n      console.log('Game auto-saved successfully');\n      return true;\n    } catch (error) {\n      console.error('Auto-save failed:', error);\n      return false;\n    }\n  }",
+        "new_code": "  async autoSave() {\n    try {\n      const state = this.getGameState();\n      const key = this.getStorageKey();\n      await saveToStorage(key, state);\n\n      // Also save the current game mode separately so we know which to load\n      await saveToStorage('last_game_mode', { mode: this.gameMode, timestamp: Date.now() });\n\n      console.log('Game auto-saved successfully');\n      return true;\n    } catch (error) {\n      console.error('Auto-save failed:', error);\n      return false;\n    }\n  }",
+        "context": "Line 694",
+        "tool_id": "toolu_011G8kQbR2fNniUoGiwXKCnY"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T23:38:43.199Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "    this.allowUndo = state.allowUndo !== undefined ? state.allowUndo : true;\n    // Load orientation mode but recalculate flip state for consistency\n    this.orientationMode = state.orientationMode || 'handoff';\n    // Recalculate boardFlipped to ensure it's correct for current state\n    this.boardFlipped = this.determineOrientation();\n    console.log('[LOAD_STATE] Recalculated board orientation:', this.boardFlipped, 'Mode:', this.orientationMode);\n    this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sound preference",
+        "new_code": "    this.allowUndo = state.allowUndo !== undefined ? state.allowUndo : true;\n    // Load orientation mode but DON'T recalculate flip state yet (currentPlayer not set)\n    this.orientationMode = state.orientationMode || 'handoff';\n    // Temporarily set boardFlipped to saved value or false\n    this.boardFlipped = false; // Will be recalculated after updateCachedState()\n    this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sound preference",
+        "context": "Line 791",
+        "tool_id": "toolu_015hXML2B1DynHeZ7KqrnNs7"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T23:38:53.142Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "    // Update cached state\n    this.updateCachedState();\n\n    // CRITICAL FIX: Handle stateHistory for the new undo/redo system",
+        "new_code": "    // Update cached state\n    this.updateCachedState();\n\n    // NOW recalculate boardFlipped after currentPlayer is set\n    this.boardFlipped = this.determineOrientation();\n    console.log('[LOAD_STATE] Recalculated board orientation after updateCachedState:', this.boardFlipped, 'Mode:', this.orientationMode, 'Current Player:', this.currentPlayer);\n\n    // CRITICAL FIX: Handle stateHistory for the new undo/redo system",
+        "context": "Line 794",
+        "tool_id": "toolu_01QbkABL6gxC19omw6kFgeW2"
       },
       "status": "applied",
       "old_code_found": false,
@@ -2075,16 +2471,66 @@
     },
     {
       "patch": {
-        "timestamp": "2025-09-18T23:56:57.236Z",
+        "timestamp": "2025-09-19T01:20:24.191Z",
         "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
         "operation": "Edit",
-        "old_code": "    this.allowUndo = true; // Enable undo by default\n    this.soundEnabled = true; // Sound effects enabled by default\n\n    // Cache frequently accessed state",
-        "new_code": "    this.allowUndo = true; // Enable undo by default\n    this.soundEnabled = true; // Sound effects enabled by default\n\n    // Track changes for menu \"Back to game\" button\n    this.originalHumanColor = 'white';\n    this.colorChangedMidGame = false;\n    this.originalBotDifficulty = 1;\n    this.difficultyChangedMidGame = false;\n\n    // Cache frequently accessed state",
-        "context": "Line 61",
-        "tool_id": "toolu_01SXGL3itNBK8UTW6Cyi5Myo",
+        "old_code": "    this.gameMode = 'human-vs-bot';\n    this.humanColor = 'white';\n    this.botDifficulty = 1; // Bot difficulty: 0=random, 1=easy, 2=medium, 3=hard, 4=expert\n    this.allowUndo = true; // Enable undo by default\n    this.soundEnabled = true; // Sound effects enabled by default\n\n    // Track changes for menu \"Back to game\" button\n    this.originalHumanColor = 'white';\n    this.colorChangedMidGame = false;\n    this.originalBotDifficulty = 1;",
+        "new_code": "    this.gameMode = 'human-vs-bot';\n    this.humanColor = 'white';\n    this.botDifficulty = 4; // Bot difficulty: 0=random, 1=easy, 2=medium, 3=hard, 4=expert\n    this.allowUndo = true; // Enable undo by default\n    this.soundEnabled = true; // Sound effects enabled by default\n\n    // Track changes for menu \"Back to game\" button\n    this.originalHumanColor = 'white';\n    this.colorChangedMidGame = false;\n    this.originalBotDifficulty = 4;",
+        "context": "Line 71",
+        "tool_id": "toolu_012C98H22ibsThsLFX6RFTpA",
         "features": [
           "back.*to.*game.*button"
         ]
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-19T01:20:44.214Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "  generateMoveCommentary(fromRow, fromCol, toRow, toCol, piece, capturedPiece, special) {\n    const from = this.coordsToSquare(fromRow, fromCol);\n    const to = this.coordsToSquare(toRow, toCol);\n    const pieceColor = piece.color.charAt(0).toUpperCase() + piece.color.slice(1);\n\n    if (capturedPiece) {\n      return `${pieceColor} ${piece.type} captures ${to}`;\n    }\n    return `${pieceColor} ${piece.type} to ${to}`;\n  }",
+        "new_code": "  generateMoveCommentary(fromRow, fromCol, toRow, toCol, piece, capturedPiece, special) {\n    const from = this.coordsToSquare(fromRow, fromCol);\n    const to = this.coordsToSquare(toRow, toCol);\n    const pieceColor = piece.color.charAt(0).toUpperCase() + piece.color.slice(1);\n\n    if (capturedPiece) {\n      return `${pieceColor} ${piece.type} captures ${to} ${capturedPiece.type}`;\n    }\n    return `${pieceColor} ${piece.type} to ${to}`;\n  }",
+        "context": "Line 77",
+        "tool_id": "toolu_019Xs1JfZEbQMNKw9683m6UR"
+      },
+      "status": "applied",
+      "old_code_found": false,
+      "new_code_found": true,
+      "old_code_locations": [],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.9,
+      "notes": [
+        "Old code not found, new code found - patch appears applied"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-19T01:33:18.115Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "MultiEdit",
+        "old_code": "  showBotThinking(show) {\n    const gameMode = this.game.gameMode;\n    const isBotTurn = this.game.isBotTurn();\n    const gameStatus = this.game.gameStatus;\n    \n    debugLogger.debug('UI_SYNC', 'Bot thinking indicator update', {\n      show,\n      gameMode,\n      isBotTurn,\n      gameStatus,\n      inputEnabled: this.inputEnabled\n    });\n    \n    const instructionLabel = document.getElementById('instruction-label');\n    \n    if (show && gameMode === 'human-vs-bot' && isBotTurn && (gameStatus === 'playing' || gameStatus === 'check')) {\n      // Don't show redundant instruction label - turn indicator already shows bot thinking\n      // Just remove any existing instruction label\n      this.hideInstructionLabel();\n      \n      // Ensure input is disabled when bot is thinking\n      if (this.inputEnabled) {\n        this.setInputEnabled(false);\n      }\n      \n      // Update turn indicator to reflect bot thinking state\n      this.updatePlayerTurnIndicator(this.game.currentPlayer, gameMode);\n      \n    } else {\n      // Hide thinking indicator\n      this.hideInstructionLabel();\n      \n      // Update turn indicator when thinking stops\n      if (gameMode === 'human-vs-bot') {\n        this.updatePlayerTurnIndicator(this.game.currentPlayer, gameMode);\n      }\n    }\n  }",
+        "new_code": "  showBotThinking(show) {\n    const gameMode = this.game.gameMode;\n    const isBotTurn = this.game.isBotTurn();\n    const gameStatus = this.game.gameStatus;\n\n    debugLogger.debug('UI_SYNC', 'Bot thinking indicator update', {\n      show,\n      gameMode,\n      isBotTurn,\n      gameStatus,\n      inputEnabled: this.inputEnabled\n    });\n\n    const instructionLabel = document.getElementById('instruction-label');\n    const moveDisplay = document.getElementById('move-display');\n\n    if (show && gameMode === 'human-vs-bot' && isBotTurn && (gameStatus === 'playing' || gameStatus === 'check')) {\n      // Don't show redundant instruction label - turn indicator already shows bot thinking\n      // Just remove any existing instruction label\n      this.hideInstructionLabel();\n\n      // Add spinner to move display\n      if (moveDisplay && !document.querySelector('.bot-thinking-spinner')) {\n        const spinner = document.createElement('div');\n        spinner.className = 'bot-thinking-spinner';\n        moveDisplay.parentElement.appendChild(spinner);\n      }\n\n      // Ensure input is disabled when bot is thinking\n      if (this.inputEnabled) {\n        this.setInputEnabled(false);\n      }\n\n      // Update turn indicator to reflect bot thinking state\n      this.updatePlayerTurnIndicator(this.game.currentPlayer, gameMode);\n\n    } else {\n      // Hide thinking indicator\n      this.hideInstructionLabel();\n\n      // Remove spinner\n      const spinner = document.querySelector('.bot-thinking-spinner');\n      if (spinner) {\n        spinner.remove();\n      }\n\n      // Update turn indicator when thinking stops\n      if (gameMode === 'human-vs-bot') {\n        this.updatePlayerTurnIndicator(this.game.currentPlayer, gameMode);\n      }\n    }\n  }",
+        "context": "Line 187",
+        "tool_id": "toolu_01ESY74aHKHdrewoWzdeiQ8a"
       },
       "status": "applied",
       "old_code_found": false,
@@ -2208,13 +2654,13 @@
   "missing_patches": [
     {
       "patch": {
-        "timestamp": "2025-09-18T21:27:06.972Z",
+        "timestamp": "2025-09-18T22:06:56.174Z",
         "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
         "operation": "Edit",
-        "old_code": "  /**\n   * Generate bot move\n   */\n  generateBotMove() {",
-        "new_code": "  /**\n   * Generate bot move\n   */\n  async generateBotMove() {",
-        "context": "Line 269",
-        "tool_id": "toolu_01UeQzT6m7rbFUzKNEz5CZWx"
+        "old_code": "    // Clear the undo/redo state flag when making a new move\n    this.isInUndoRedoState = false;\n\n    // Store complete engine state AFTER the move\n    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));\n    const stateEntry = {\n      engineState: stateAfterMove,\n      move: {\n        from: moveData.from,\n        to: moveData.to,\n        piece: moveData.piece,\n        captured: moveData.captured\n      },\n      notation: moveData.notation,\n      commentary: moveData.commentary,\n      timestamp: Date.now()\n    };\n\n    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);\n    this.stateHistory.push(stateEntry);\n    this.currentStateIndex++;\n\n    // R1 Memory Management: Limit history to prevent excessive memory usage\n    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states for R1 device",
+        "new_code": "    // Clear the undo/redo state flag when making a new move\n    this.isInUndoRedoState = false;\n\n    // R1 Memory Management: Define history limit for R1 device\n    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states to prevent memory issues\n\n    // Store complete engine state AFTER the move\n    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));\n    const stateEntry = {\n      engineState: stateAfterMove,\n      move: {\n        from: moveData.from,\n        to: moveData.to,\n        piece: moveData.piece,\n        captured: moveData.captured\n      },\n      notation: moveData.notation,\n      commentary: moveData.commentary,\n      timestamp: Date.now()\n    };\n\n    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);\n    this.stateHistory.push(stateEntry);\n    this.currentStateIndex++;\n\n    // Check if we've exceeded the history limit",
+        "context": "Line 397",
+        "tool_id": "toolu_01FZdxaEEcq7k5gcNjhyQE9C"
       },
       "status": "not_applied",
       "old_code_found": true,
@@ -2233,13 +2679,13 @@
     },
     {
       "patch": {
-        "timestamp": "2025-09-18T21:27:18.918Z",
+        "timestamp": "2025-09-18T22:14:06.093Z",
         "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
         "operation": "Edit",
-        "old_code": "        // Play status sound with delay if there was a capture\n        if (this.gameStatus === 'checkmate') {\n          setTimeout(() => this.playSound('checkmate'), capturedPiece ? 100 : 0);\n        } else if (this.gameStatus === 'check') {\n          setTimeout(() => this.playSound('check'), capturedPiece ? 100 : 0);\n        }\n        \n        return {\n          from: fromCoords,\n          to: toCoords,\n          piece: movedPiece,\n          enteredCheck\n        };",
-        "new_code": "        // Play status sound with delay if there was a capture\n        if (this.gameStatus === 'checkmate') {\n          setTimeout(() => this.playSound('checkmate'), capturedPiece ? 100 : 0);\n        } else if (this.gameStatus === 'check') {\n          setTimeout(() => this.playSound('check'), capturedPiece ? 100 : 0);\n        }\n\n        // Auto-save after successful bot move\n        await this.autoSave();\n\n        return {\n          from: fromCoords,\n          to: toCoords,\n          piece: movedPiece,\n          enteredCheck\n        };",
-        "context": "Line 272",
-        "tool_id": "toolu_011gKMjnjhAkkLqdgmWqXy4V"
+        "old_code": "  // Helper to get the latest timestamp from a saved state\n  getLatestTimestamp(state) {",
+        "new_code": "  // Update menu visibility based on game mode\n  updateMenuVisibility() {\n    const colorGroup = document.getElementById('color-group');\n    const difficultyGroup = document.getElementById('difficulty-group');\n    const orientationGroup = document.getElementById('orientation-mode-group');\n\n    if (this.game.gameMode === 'human-vs-human') {\n      // Human vs Human mode\n      if (colorGroup) colorGroup.style.display = 'none';\n      if (difficultyGroup) difficultyGroup.style.display = 'none';\n      if (orientationGroup) orientationGroup.style.display = 'block';\n    } else {\n      // Human vs Bot mode\n      if (colorGroup) colorGroup.style.display = 'block';\n      if (difficultyGroup) difficultyGroup.style.display = 'block';\n      if (orientationGroup) orientationGroup.style.display = 'none';\n    }\n  }\n\n  // Helper to get the latest timestamp from a saved state\n  getLatestTimestamp(state) {",
+        "context": "Line 476",
+        "tool_id": "toolu_01Q6t2xSU96ajK1ixubX2xGT"
       },
       "status": "not_applied",
       "old_code_found": true,
@@ -2258,13 +2704,13 @@
     },
     {
       "patch": {
-        "timestamp": "2025-09-18T21:27:33.606Z",
+        "timestamp": "2025-09-18T22:21:25.505Z",
         "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
         "operation": "Edit",
-        "old_code": "    // Generate AND execute bot move (aiMove() does both!)\n    const botMove = this.generateBotMove();",
-        "new_code": "    // Generate AND execute bot move (aiMove() does both!)\n    const botMove = await this.generateBotMove();",
-        "context": "Line 278",
-        "tool_id": "toolu_017dfTubbPW2hUbTAUDnjb2h"
+        "old_code": "    debugLogger.info('BOT_INIT', 'Checking initial bot turn', {\n      humanColor,\n      currentPlayer,\n      isBotTurn,\n      gameStatus: this.game.gameStatus,\n      moveHistory: this.game.moveHistory.length\n    });",
+        "new_code": "    debugLogger.info('BOT_INIT', 'Checking initial bot turn', {\n      humanColor,\n      currentPlayer,\n      isBotTurn,\n      gameStatus: this.game.gameStatus,\n      moveHistory: this.game.moveHistory ? this.game.moveHistory.length : 0\n    });",
+        "context": "Line 599",
+        "tool_id": "toolu_017DXjCi88Zcs7WR3V98pAa5"
       },
       "status": "not_applied",
       "old_code_found": true,
@@ -2283,13 +2729,13 @@
     },
     {
       "patch": {
-        "timestamp": "2025-09-18T22:06:36.809Z",
+        "timestamp": "2025-09-18T22:27:54.308Z",
         "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
         "operation": "Edit",
-        "old_code": "  recordGameState(moveData) {\n    console.log('[STATE] Recording game state:', moveData);\n\n    // If we're not at the end of history, truncate future states (branching)\n    if (this.currentStateIndex < this.stateHistory.length - 1) {\n      console.log(`[STATE] Truncating future states from index ${this.currentStateIndex + 1}`);\n      this.stateHistory = this.stateHistory.slice(0, this.currentStateIndex + 1);\n    }\n\n    // Clear the undo/redo state flag when making a new move\n    this.isInUndoRedoState = false;\n\n    // Store complete engine state AFTER the move\n    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));\n    const stateEntry = {\n      engineState: stateAfterMove,\n      move: {\n        from: moveData.from,\n        to: moveData.to,\n        piece: moveData.piece,\n        captured: moveData.captured\n      },\n      notation: moveData.notation,\n      commentary: moveData.commentary,\n      timestamp: Date.now()\n    };\n\n    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);\n    this.stateHistory.push(stateEntry);\n    this.currentStateIndex++;",
-        "new_code": "  recordGameState(moveData) {\n    console.log('[STATE] Recording game state:', moveData);\n\n    // If we're not at the end of history, truncate future states (branching)\n    if (this.currentStateIndex < this.stateHistory.length - 1) {\n      console.log(`[STATE] Truncating future states from index ${this.currentStateIndex + 1}`);\n      this.stateHistory = this.stateHistory.slice(0, this.currentStateIndex + 1);\n    }\n\n    // Clear the undo/redo state flag when making a new move\n    this.isInUndoRedoState = false;\n\n    // Store complete engine state AFTER the move\n    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));\n    const stateEntry = {\n      engineState: stateAfterMove,\n      move: {\n        from: moveData.from,\n        to: moveData.to,\n        piece: moveData.piece,\n        captured: moveData.captured\n      },\n      notation: moveData.notation,\n      commentary: moveData.commentary,\n      timestamp: Date.now()\n    };\n\n    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);\n    this.stateHistory.push(stateEntry);\n    this.currentStateIndex++;\n\n    // R1 Memory Management: Limit history to prevent excessive memory usage\n    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states for R1 device\n    if (this.stateHistory.length > MAX_HISTORY_LENGTH) {\n      // Keep the initial state (index 0) plus the most recent states\n      const statesToKeep = MAX_HISTORY_LENGTH - 1; // Reserve one slot for initial state\n      const removedCount = this.stateHistory.length - MAX_HISTORY_LENGTH;\n\n      console.log(`[STATE] History limit exceeded (${this.stateHistory.length}), trimming to ${MAX_HISTORY_LENGTH} states`);\n\n      // Keep initial state + most recent states\n      this.stateHistory = [\n        this.stateHistory[0], // Always keep initial state for full game reset\n        ...this.stateHistory.slice(-statesToKeep)\n      ];\n\n      // Adjust current index after trimming\n      this.currentStateIndex = this.stateHistory.length - 1;\n\n      console.log(`[STATE] Trimmed ${removedCount} old states, new length: ${this.stateHistory.length}`);\n    }",
-        "context": "Line 391",
-        "tool_id": "toolu_01PVxYpCbXqictdQc4uzBHFK"
+        "old_code": "      // Load states from both game modes to find the most recent\n      const humanVsBotKey = 'chess_game_state_human_vs_bot';\n      const humanVsHumanKey = 'chess_game_state_human_vs_human';\n\n      const humanVsBotState = await loadFromStorage(humanVsBotKey);\n      const humanVsHumanState = await loadFromStorage(humanVsHumanKey);\n\n      let state = null;\n      let selectedMode = null;\n\n      // Determine which state to load based on timestamps\n      if (humanVsBotState && humanVsHumanState) {\n        // Both states exist - load the most recently saved one\n        const botTimestamp = this.getLatestTimestamp(humanVsBotState);\n        const humanTimestamp = this.getLatestTimestamp(humanVsHumanState);\n\n        if (humanTimestamp > botTimestamp) {\n          state = humanVsHumanState;\n          selectedMode = 'human-vs-human';\n          debugLogger.info('LOAD', 'Loading more recent human-vs-human game');\n        } else {\n          state = humanVsBotState;\n          selectedMode = 'human-vs-bot';\n          debugLogger.info('LOAD', 'Loading more recent human-vs-bot game');\n        }\n      } else if (humanVsHumanState) {\n        state = humanVsHumanState;\n        selectedMode = 'human-vs-human';\n        debugLogger.info('LOAD', 'Found only human-vs-human saved state');\n      } else if (humanVsBotState) {\n        state = humanVsBotState;\n        selectedMode = 'human-vs-bot';\n        debugLogger.info('LOAD', 'Found only human-vs-bot saved state');\n      }",
+        "new_code": "      // Load states from both game modes to find the most recent\n      const humanVsBotKey = 'chess_game_state_human_vs_bot';\n      const humanVsHumanKey = 'chess_game_state_human_vs_human';\n\n      console.log('[LOAD] Checking for saved states with keys:', { humanVsBotKey, humanVsHumanKey });\n\n      const humanVsBotState = await loadFromStorage(humanVsBotKey);\n      const humanVsHumanState = await loadFromStorage(humanVsHumanKey);\n\n      console.log('[LOAD] Found states:', {\n        humanVsBot: !!humanVsBotState,\n        humanVsBotMoves: humanVsBotState?.moveHistory?.length || 0,\n        humanVsHuman: !!humanVsHumanState,\n        humanVsHumanMoves: humanVsHumanState?.moveHistory?.length || 0\n      });\n\n      let state = null;\n      let selectedMode = null;\n\n      // Determine which state to load based on timestamps\n      if (humanVsBotState && humanVsHumanState) {\n        // Both states exist - load the most recently saved one\n        const botTimestamp = this.getLatestTimestamp(humanVsBotState);\n        const humanTimestamp = this.getLatestTimestamp(humanVsHumanState);\n\n        console.log('[LOAD] Comparing timestamps:', { botTimestamp, humanTimestamp });\n\n        if (humanTimestamp > botTimestamp) {\n          state = humanVsHumanState;\n          selectedMode = 'human-vs-human';\n          debugLogger.info('LOAD', 'Loading more recent human-vs-human game');\n          console.log('[LOAD] Selected human-vs-human as more recent');\n        } else {\n          state = humanVsBotState;\n          selectedMode = 'human-vs-bot';\n          debugLogger.info('LOAD', 'Loading more recent human-vs-bot game');\n          console.log('[LOAD] Selected human-vs-bot as more recent');\n        }\n      } else if (humanVsHumanState) {\n        state = humanVsHumanState;\n        selectedMode = 'human-vs-human';\n        debugLogger.info('LOAD', 'Found only human-vs-human saved state');\n        console.log('[LOAD] Found only human-vs-human state');\n      } else if (humanVsBotState) {\n        state = humanVsBotState;\n        selectedMode = 'human-vs-bot';\n        debugLogger.info('LOAD', 'Found only human-vs-bot saved state');\n        console.log('[LOAD] Found only human-vs-bot state');\n      }",
+        "context": "Line 647",
+        "tool_id": "toolu_01EeXz5R3Q3UY66TWhLwsCj9"
       },
       "status": "not_applied",
       "old_code_found": true,
@@ -2308,447 +2754,13 @@
     },
     {
       "patch": {
-        "timestamp": "2025-09-18T22:06:44.505Z",
+        "timestamp": "2025-09-18T22:28:09.996Z",
         "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
         "operation": "Edit",
-        "old_code": "    // Keep old moveHistory for backward compatibility (will remove later)\n    if (!this.moveHistory) this.moveHistory = [];\n    this.moveHistory.push({\n      from: moveData.from,\n      to: moveData.to,\n      piece: moveData.piece,\n      captured: moveData.captured,\n      notation: moveData.notation\n    });\n  }",
-        "new_code": "    // Keep old moveHistory for backward compatibility (will remove later)\n    if (!this.moveHistory) this.moveHistory = [];\n    this.moveHistory.push({\n      from: moveData.from,\n      to: moveData.to,\n      piece: moveData.piece,\n      captured: moveData.captured,\n      notation: moveData.notation\n    });\n\n    // Also limit moveHistory to match stateHistory limits\n    if (this.moveHistory.length > MAX_HISTORY_LENGTH - 1) {\n      // Keep moves in sync with stateHistory (exclude initial state)\n      this.moveHistory = this.moveHistory.slice(-(MAX_HISTORY_LENGTH - 1));\n    }\n  }",
-        "context": "Line 394",
-        "tool_id": "toolu_01H7xUwArvSHXgthT8rZUfcr"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:07:30.382Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "      // NEW: Restore saved stateHistory directly\n      console.log('[LOAD] Restoring saved state history:', state.stateHistory.length, 'states');\n      this.stateHistory = state.stateHistory;\n      this.currentStateIndex = state.currentStateIndex || (state.stateHistory.length - 1);",
-        "new_code": "      // NEW: Restore saved stateHistory directly\n      console.log('[LOAD] Restoring saved state history:', state.stateHistory.length, 'states');\n      this.stateHistory = state.stateHistory;\n      this.currentStateIndex = state.currentStateIndex || (state.stateHistory.length - 1);\n\n      // R1 Memory Management: Apply history limit during load\n      const MAX_HISTORY_LENGTH = 100;\n      if (this.stateHistory.length > MAX_HISTORY_LENGTH) {\n        const removedCount = this.stateHistory.length - MAX_HISTORY_LENGTH;\n        console.log(`[LOAD] Trimming loaded history from ${this.stateHistory.length} to ${MAX_HISTORY_LENGTH} states`);\n\n        // Keep initial state + most recent states\n        this.stateHistory = [\n          this.stateHistory[0],  // Always keep initial state\n          ...this.stateHistory.slice(-(MAX_HISTORY_LENGTH - 1))\n        ];\n\n        // Adjust current index if needed\n        const wasAtEnd = this.currentStateIndex === state.stateHistory.length - 1;\n        if (wasAtEnd) {\n          // If we were at the last state, stay at the last state\n          this.currentStateIndex = this.stateHistory.length - 1;\n        } else {\n          // Otherwise, clamp to valid range\n          this.currentStateIndex = Math.min(this.currentStateIndex, this.stateHistory.length - 1);\n        }\n\n        console.log(`[LOAD] Removed ${removedCount} old states, currentStateIndex: ${this.currentStateIndex}`);\n      }",
-        "context": "Line 407",
-        "tool_id": "toolu_01HC3EXYPweHjFUicfjJkLYw",
-        "features": [
-          "(Ella|Evy|Emmy|Asa)"
-        ]
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:07:42.403Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "    this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sound preference\n    this.moveHistory = state.moveHistory || [];\n    this.currentMoveIndex = state.currentMoveIndex !== undefined ? state.currentMoveIndex : this.moveHistory.length - 1;",
-        "new_code": "    this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sound preference\n    this.moveHistory = state.moveHistory || [];\n\n    // R1 Memory Management: Apply same limit to moveHistory\n    const MAX_HISTORY_LENGTH = 100;\n    if (this.moveHistory.length > MAX_HISTORY_LENGTH - 1) {\n      console.log(`[LOAD] Trimming moveHistory from ${this.moveHistory.length} to ${MAX_HISTORY_LENGTH - 1}`);\n      this.moveHistory = this.moveHistory.slice(-(MAX_HISTORY_LENGTH - 1));\n    }\n\n    this.currentMoveIndex = state.currentMoveIndex !== undefined ? state.currentMoveIndex : this.moveHistory.length - 1;",
-        "context": "Line 413",
-        "tool_id": "toolu_01XZ6fsN4cvKayg4LyqP8zmn"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:13:24.075Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "  async loadGameState() {\n    try {\n      debugLogger.info('LOAD', 'Attempting to load saved game state from storage');\n      console.log('Attempting to load saved game state...');\n      \n      // Try to load state for current game mode first\n      const currentModeKey = this.game.getStorageKey();\n      let state = await loadFromStorage(currentModeKey);\n      \n      if (!state) {\n        debugLogger.info('LOAD', `No saved state found for current mode (${this.game.gameMode})`);\n        // Try to load from the other game mode\n        const otherMode = this.game.gameMode === 'human-vs-human' ? 'human-vs-bot' : 'human-vs-human';\n        const otherModeKey = `chess_game_state_${otherMode.replace('-', '_')}`;\n        state = await loadFromStorage(otherModeKey);\n        \n        if (state) {\n          debugLogger.info('LOAD', `Found saved state from other mode (${otherMode}), but keeping current mode settings`);\n          // Keep current game mode and settings, only restore board state\n          state.gameMode = this.game.gameMode;\n          state.humanColor = this.game.humanColor;\n        }\n      }\n      \n      if (!state) {\n        // Finally try legacy key for backward compatibility\n        state = await loadFromStorage('chess_game_state');\n        if (state) {\n          debugLogger.info('LOAD', 'Found legacy saved state, migrating to new format');\n        }\n      }",
-        "new_code": "  async loadGameState() {\n    try {\n      debugLogger.info('LOAD', 'Attempting to load saved game state from storage');\n      console.log('Attempting to load saved game state...');\n\n      // Load states from both game modes to find the most recent\n      const humanVsBotKey = 'chess_game_state_human_vs_bot';\n      const humanVsHumanKey = 'chess_game_state_human_vs_human';\n\n      const humanVsBotState = await loadFromStorage(humanVsBotKey);\n      const humanVsHumanState = await loadFromStorage(humanVsHumanKey);\n\n      let state = null;\n      let selectedMode = null;\n\n      // Determine which state to load based on timestamps\n      if (humanVsBotState && humanVsHumanState) {\n        // Both states exist - load the most recently saved one\n        const botTimestamp = this.getLatestTimestamp(humanVsBotState);\n        const humanTimestamp = this.getLatestTimestamp(humanVsHumanState);\n\n        if (humanTimestamp > botTimestamp) {\n          state = humanVsHumanState;\n          selectedMode = 'human-vs-human';\n          debugLogger.info('LOAD', 'Loading more recent human-vs-human game');\n        } else {\n          state = humanVsBotState;\n          selectedMode = 'human-vs-bot';\n          debugLogger.info('LOAD', 'Loading more recent human-vs-bot game');\n        }\n      } else if (humanVsHumanState) {\n        state = humanVsHumanState;\n        selectedMode = 'human-vs-human';\n        debugLogger.info('LOAD', 'Found only human-vs-human saved state');\n      } else if (humanVsBotState) {\n        state = humanVsBotState;\n        selectedMode = 'human-vs-bot';\n        debugLogger.info('LOAD', 'Found only human-vs-bot saved state');\n      }\n\n      if (!state) {\n        // Try legacy key for backward compatibility\n        state = await loadFromStorage('chess_game_state');\n        if (state) {\n          debugLogger.info('LOAD', 'Found legacy saved state, migrating to new format');\n          selectedMode = state.gameMode || 'human-vs-bot';\n        }\n      }",
-        "context": "Line 460",
-        "tool_id": "toolu_013TCpfFrWRYufFoUuFU7Sx6"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:13:41.540Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "  async loadGameState() {",
-        "new_code": "  // Helper to get the latest timestamp from a saved state\n  getLatestTimestamp(state) {\n    if (!state) return 0;\n\n    // Check stateHistory for timestamp\n    if (state.stateHistory && state.stateHistory.length > 0) {\n      const lastState = state.stateHistory[state.stateHistory.length - 1];\n      if (lastState && lastState.timestamp) {\n        return lastState.timestamp;\n      }\n    }\n\n    // Fallback to checking if there are moves (assume older save)\n    if (state.moveHistory && state.moveHistory.length > 0) {\n      return 1; // Return 1 to indicate it exists but has no timestamp\n    }\n\n    return 0;\n  }\n\n  async loadGameState() {",
-        "context": "Line 466",
-        "tool_id": "toolu_01Wa5aDrdMNBJz3TGEndYMKa"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          3433,
-          "  async loadGameState() {"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:13:57.952Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "      if (this.isValidSavedState(state)) {\n        debugLogger.info('LOAD', 'State validation passed - Loading game state', {\n          moveCount: state.moveHistory.length,\n          currentPlayer: state.currentPlayer,\n          gameStatus: state.gameStatus,\n          soundEnabled: state.soundEnabled,\n          allowUndo: state.allowUndo\n        });\n        console.log('Loading valid saved state');\n        this.game.loadGameState(state);\n        this.applyTheme();\n        this.updateDisplay();\n        debugLogger.info('LOAD', 'Game state loaded and UI updated successfully');\n        console.log('Game state loaded successfully');\n        return true;",
-        "new_code": "      if (this.isValidSavedState(state)) {\n        debugLogger.info('LOAD', 'State validation passed - Loading game state', {\n          moveCount: state.moveHistory.length,\n          currentPlayer: state.currentPlayer,\n          gameStatus: state.gameStatus,\n          soundEnabled: state.soundEnabled,\n          allowUndo: state.allowUndo,\n          gameMode: selectedMode || state.gameMode\n        });\n        console.log('Loading valid saved state');\n\n        // CRITICAL: Set the correct game mode BEFORE loading state\n        if (selectedMode) {\n          this.game.gameMode = selectedMode;\n          console.log(`[LOAD] Setting game mode to: ${selectedMode}`);\n        }\n\n        this.game.loadGameState(state);\n        this.applyTheme();\n        this.updateDisplay();\n\n        // Update menu visibility based on loaded game mode\n        this.updateMenuVisibility();\n\n        debugLogger.info('LOAD', 'Game state loaded and UI updated successfully');\n        console.log('Game state loaded successfully');\n        return true;",
-        "context": "Line 473",
-        "tool_id": "toolu_01WX5RprV9QAN7spt8fp7MFd"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:15:17.986Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "  // Enhanced bot initialization for both human white/black scenarios\n  checkInitialBotTurn() {\n    console.log('[CHECK_INITIAL_BOT_TURN] Called');\n\n    if (this.game.gameMode !== 'human-vs-bot') {\n      debugLogger.info('BOT_INIT', 'Not in vs Bot mode, skipping bot turn check');\n      console.log('[CHECK_INITIAL_BOT_TURN] Not in bot mode, exiting');\n      return;\n    }\n\n    const humanColor = this.game.getHumanColor();\n    const currentPlayer = this.game.currentPlayer;\n    const isBotTurn = this.game.isBotTurn();\n    \n    debugLogger.info('BOT_INIT', 'Checking initial bot turn', {\n      humanColor,\n      currentPlayer,\n      isBotTurn,\n      gameStatus: this.game.gameStatus\n    });\n\n    // Ensure game is not ended\n    if (this.game.gameStatus === 'checkmate' || this.game.gameStatus === 'stalemate') {\n      debugLogger.warn('BOT_INIT', 'Game ended, skipping bot turn');\n      return;\n    }\n\n    // Check if bot should make the first move\n    if (isBotTurn) {\n      console.log('[CHECK_INITIAL_BOT_TURN] Bot should move first!');\n      debugLogger.info('BOT_INIT', 'Bot should make first move - initializing bot turn');\n\n      // Show bot thinking immediately\n      this.showBotThinking(true);\n      this.setInputEnabled(false);\n\n      // Ensure UI is properly updated before bot move\n      this.updateGameStateIndicators();\n\n      // Small delay to allow UI to settle, then execute bot move\n      setTimeout(() => {\n        console.log('[CHECK_INITIAL_BOT_TURN] Calling handleBotTurn after delay');\n        this.handleBotTurn();\n      }, 1000);\n    } else {\n      debugLogger.info('BOT_INIT', 'Human goes first - enabling input and waiting for human move');\n      \n      // Ensure human can make moves\n      this.setInputEnabled(true);\n      this.showBotThinking(false);\n      \n      // Update UI to show it's human's turn\n      this.updateGameStateIndicators();\n    }\n  }",
-        "new_code": "  // Enhanced bot initialization for both human white/black scenarios\n  checkInitialBotTurn() {\n    console.log('[CHECK_INITIAL_BOT_TURN] Called');\n\n    if (this.game.gameMode !== 'human-vs-bot') {\n      debugLogger.info('BOT_INIT', 'Not in vs Bot mode, skipping bot turn check');\n      console.log('[CHECK_INITIAL_BOT_TURN] Not in bot mode, exiting');\n      return;\n    }\n\n    const humanColor = this.game.getHumanColor();\n    const currentPlayer = this.game.currentPlayer;\n    const isBotTurn = this.game.isBotTurn();\n\n    debugLogger.info('BOT_INIT', 'Checking initial bot turn', {\n      humanColor,\n      currentPlayer,\n      isBotTurn,\n      gameStatus: this.game.gameStatus,\n      moveHistory: this.game.moveHistory.length\n    });\n\n    // Ensure game is not ended\n    if (this.game.gameStatus === 'checkmate' || this.game.gameStatus === 'stalemate') {\n      debugLogger.warn('BOT_INIT', 'Game ended, skipping bot turn');\n      return;\n    }\n\n    // CRITICAL: Ensure game status is 'playing' before attempting bot move\n    // This prevents the \"bot move failed\" error\n    if (this.game.gameStatus !== 'playing') {\n      console.log('[CHECK_INITIAL_BOT_TURN] Game not in playing state yet, retrying...');\n      setTimeout(() => {\n        this.checkInitialBotTurn();\n      }, 500);\n      return;\n    }\n\n    // Check if bot should make the first move\n    if (isBotTurn) {\n      console.log('[CHECK_INITIAL_BOT_TURN] Bot should move first!');\n      debugLogger.info('BOT_INIT', 'Bot should make first move - initializing bot turn');\n\n      // Show bot thinking immediately\n      this.showBotThinking(true);\n      this.setInputEnabled(false);\n\n      // Ensure UI is properly updated before bot move\n      this.updateGameStateIndicators();\n\n      // Longer delay for initial bot move to ensure everything is ready\n      setTimeout(() => {\n        console.log('[CHECK_INITIAL_BOT_TURN] Calling handleBotTurn after delay');\n        // Final check before executing bot move\n        if (this.game.gameStatus === 'playing' && this.game.isBotTurn()) {\n          this.handleBotTurn();\n        } else {\n          console.error('[CHECK_INITIAL_BOT_TURN] Conditions changed, aborting bot move');\n          this.showBotThinking(false);\n          this.setInputEnabled(true);\n        }\n      }, 1500); // Increased delay for initial moves\n    } else {\n      debugLogger.info('BOT_INIT', 'Human goes first - enabling input and waiting for human move');\n\n      // Ensure human can make moves\n      this.setInputEnabled(true);\n      this.showBotThinking(false);\n\n      // Update UI to show it's human's turn\n      this.updateGameStateIndicators();\n    }\n  }",
-        "context": "Line 490",
-        "tool_id": "toolu_01R9emr9DvBG2QCfKL3tWFu3",
-        "features": [
-          "bot.*move.*failed"
-        ]
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:15:55.944Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "    // Update cached state FIRST (this sets currentPlayer correctly)\n    this.updateCachedState();\n\n    // THEN determine board orientation based on correct currentPlayer\n    this.boardFlipped = this.determineOrientation();\n    console.log('[NEW_GAME] Set board orientation:', this.boardFlipped, 'for player:', this.currentPlayer);\n\n    // Play new game sound\n    this.playSound('newGame');\n  }",
-        "new_code": "    // Update cached state FIRST (this sets currentPlayer correctly)\n    this.updateCachedState();\n\n    // CRITICAL: Update game status to ensure it's set to 'playing'\n    this.updateGameStatus();\n    console.log('[NEW_GAME] Game status updated to:', this.gameStatus);\n\n    // THEN determine board orientation based on correct currentPlayer\n    this.boardFlipped = this.determineOrientation();\n    console.log('[NEW_GAME] Set board orientation:', this.boardFlipped, 'for player:', this.currentPlayer);\n\n    // Play new game sound\n    this.playSound('newGame');\n  }",
-        "context": "Line 502",
-        "tool_id": "toolu_01MLKiNfEz9VR2f2VpLJKR1i"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:16:08.787Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "    // Check if bot should make initial move after returning from options\n    // This handles the case where user changed color and clicked \"Back to game\"\n    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {\n      console.log('[HIDE_OPTIONS] Checking if bot should make initial move after color change');\n      // Use a small delay to let UI settle\n      setTimeout(() => {\n        this.checkInitialBotTurn();\n      }, 100);\n    }",
-        "new_code": "    // Check if bot should make initial move after returning from options\n    // This handles the case where user changed color and clicked \"Back to game\"\n    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {\n      console.log('[HIDE_OPTIONS] Checking if bot should make initial move after color change');\n      // Use longer delay to ensure game state is fully ready\n      setTimeout(() => {\n        // Double-check game is ready before attempting bot move\n        if (this.game.gameStatus === 'playing') {\n          this.checkInitialBotTurn();\n        } else {\n          console.log('[HIDE_OPTIONS] Game not ready yet, skipping bot turn check');\n        }\n      }, 800); // Increased delay from 100ms to 800ms\n    }",
-        "context": "Line 505",
-        "tool_id": "toolu_01HocVycH2wunNXqFrGxf4sN"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:20:28.255Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "    // NEW STATE HISTORY SYSTEM\n    // Store complete game states for instant undo/redo\n    // Index 0 = initial state, Index 1 = after first move, etc.\n    this.stateHistory = [];\n    this.currentStateIndex = 0;\n    this.isInUndoRedoState = false; // Track if we're in an undo/redo state where bot shouldn't auto-move\n    this.lastUndoWasBotMove = false; // Track if the last undo was a bot move for notification",
-        "new_code": "    // NEW STATE HISTORY SYSTEM\n    // Store complete game states for instant undo/redo\n    // Index 0 = initial state, Index 1 = after first move, etc.\n    this.stateHistory = [];\n    this.currentStateIndex = 0;\n    this.isInUndoRedoState = false; // Track if we're in an undo/redo state where bot shouldn't auto-move\n    this.lastUndoWasBotMove = false; // Track if the last undo was a bot move for notification\n\n    // Initialize moveHistory (for backward compatibility)\n    this.moveHistory = [];",
-        "context": "Line 571",
-        "tool_id": "toolu_01SodZfAUBAfLa736oUnL8eT"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:24:52.055Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "  // Handle new game start\n  onNewGameStart() {\n    console.log('[NEW_GAME_START] Called with:', {\n      gameMode: this.game.gameMode,\n      humanColor: this.game.humanColor,\n      currentPlayer: this.game.currentPlayer,\n      isBotTurn: this.game.isBotTurn()\n    });\n    this.updateDisplay();\n    this.checkInitialBotTurn();\n  }",
-        "new_code": "  // Handle new game start\n  onNewGameStart() {\n    console.log('[NEW_GAME_START] Called with:', {\n      gameMode: this.game.gameMode,\n      humanColor: this.game.humanColor,\n      currentPlayer: this.game.currentPlayer,\n      isBotTurn: this.game.isBotTurn(),\n      moveCount: this.game.moveHistory ? this.game.moveHistory.length : 0\n    });\n    this.updateDisplay();\n\n    // Only check for initial bot turn if no moves have been made yet\n    if (!this.game.moveHistory || this.game.moveHistory.length === 0) {\n      this.checkInitialBotTurn();\n    }\n  }",
-        "context": "Line 616",
-        "tool_id": "toolu_01GN4bJSgd9Dpz2UJqJjMA93"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:29:39.812Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "  getStorageKey() {\n    return `chess_game_state_${this.gameMode}`;\n  }",
-        "new_code": "  getStorageKey() {\n    // Replace hyphens with underscores for consistent storage keys\n    return `chess_game_state_${this.gameMode.replace(/-/g, '_')}`;\n  }",
-        "context": "Line 670",
-        "tool_id": "toolu_01Ces4KZ7v4yVRXQ1Fh2mU55"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T22:40:20.103Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "  async autoSave() {\n    try {\n      const state = this.getGameState();\n      const key = this.getStorageKey();\n      await saveToStorage(key, state);\n      console.log('Game auto-saved successfully');\n      return true;\n    } catch (error) {\n      console.error('Auto-save failed:', error);\n      return false;\n    }\n  }",
-        "new_code": "  async autoSave() {\n    try {\n      const state = this.getGameState();\n      const key = this.getStorageKey();\n      await saveToStorage(key, state);\n\n      // Also save the current game mode separately so we know which to load\n      await saveToStorage('last_game_mode', { mode: this.gameMode, timestamp: Date.now() });\n\n      console.log('Game auto-saved successfully');\n      return true;\n    } catch (error) {\n      console.error('Auto-save failed:', error);\n      return false;\n    }\n  }",
-        "context": "Line 694",
-        "tool_id": "toolu_011G8kQbR2fNniUoGiwXKCnY"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T23:38:43.199Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "    this.allowUndo = state.allowUndo !== undefined ? state.allowUndo : true;\n    // Load orientation mode but recalculate flip state for consistency\n    this.orientationMode = state.orientationMode || 'handoff';\n    // Recalculate boardFlipped to ensure it's correct for current state\n    this.boardFlipped = this.determineOrientation();\n    console.log('[LOAD_STATE] Recalculated board orientation:', this.boardFlipped, 'Mode:', this.orientationMode);\n    this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sound preference",
-        "new_code": "    this.allowUndo = state.allowUndo !== undefined ? state.allowUndo : true;\n    // Load orientation mode but DON'T recalculate flip state yet (currentPlayer not set)\n    this.orientationMode = state.orientationMode || 'handoff';\n    // Temporarily set boardFlipped to saved value or false\n    this.boardFlipped = false; // Will be recalculated after updateCachedState()\n    this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sound preference",
-        "context": "Line 791",
-        "tool_id": "toolu_015hXML2B1DynHeZ7KqrnNs7"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-18T23:38:53.142Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "    // Update cached state\n    this.updateCachedState();\n\n    // CRITICAL FIX: Handle stateHistory for the new undo/redo system",
-        "new_code": "    // Update cached state\n    this.updateCachedState();\n\n    // NOW recalculate boardFlipped after currentPlayer is set\n    this.boardFlipped = this.determineOrientation();\n    console.log('[LOAD_STATE] Recalculated board orientation after updateCachedState:', this.boardFlipped, 'Mode:', this.orientationMode, 'Current Player:', this.currentPlayer);\n\n    // CRITICAL FIX: Handle stateHistory for the new undo/redo system",
-        "context": "Line 794",
-        "tool_id": "toolu_01QbkABL6gxC19omw6kFgeW2"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-19T01:20:24.191Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "    this.gameMode = 'human-vs-bot';\n    this.humanColor = 'white';\n    this.botDifficulty = 1; // Bot difficulty: 0=random, 1=easy, 2=medium, 3=hard, 4=expert\n    this.allowUndo = true; // Enable undo by default\n    this.soundEnabled = true; // Sound effects enabled by default\n\n    // Track changes for menu \"Back to game\" button\n    this.originalHumanColor = 'white';\n    this.colorChangedMidGame = false;\n    this.originalBotDifficulty = 1;",
-        "new_code": "    this.gameMode = 'human-vs-bot';\n    this.humanColor = 'white';\n    this.botDifficulty = 4; // Bot difficulty: 0=random, 1=easy, 2=medium, 3=hard, 4=expert\n    this.allowUndo = true; // Enable undo by default\n    this.soundEnabled = true; // Sound effects enabled by default\n\n    // Track changes for menu \"Back to game\" button\n    this.originalHumanColor = 'white';\n    this.colorChangedMidGame = false;\n    this.originalBotDifficulty = 4;",
-        "context": "Line 71",
-        "tool_id": "toolu_012C98H22ibsThsLFX6RFTpA",
-        "features": [
-          "back.*to.*game.*button"
-        ]
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-19T01:20:44.214Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "Edit",
-        "old_code": "  generateMoveCommentary(fromRow, fromCol, toRow, toCol, piece, capturedPiece, special) {\n    const from = this.coordsToSquare(fromRow, fromCol);\n    const to = this.coordsToSquare(toRow, toCol);\n    const pieceColor = piece.color.charAt(0).toUpperCase() + piece.color.slice(1);\n\n    if (capturedPiece) {\n      return `${pieceColor} ${piece.type} captures ${to}`;\n    }\n    return `${pieceColor} ${piece.type} to ${to}`;\n  }",
-        "new_code": "  generateMoveCommentary(fromRow, fromCol, toRow, toCol, piece, capturedPiece, special) {\n    const from = this.coordsToSquare(fromRow, fromCol);\n    const to = this.coordsToSquare(toRow, toCol);\n    const pieceColor = piece.color.charAt(0).toUpperCase() + piece.color.slice(1);\n\n    if (capturedPiece) {\n      return `${pieceColor} ${piece.type} captures ${to} ${capturedPiece.type}`;\n    }\n    return `${pieceColor} ${piece.type} to ${to}`;\n  }",
-        "context": "Line 77",
-        "tool_id": "toolu_019Xs1JfZEbQMNKw9683m6UR"
-      },
-      "status": "not_applied",
-      "old_code_found": true,
-      "new_code_found": false,
-      "old_code_locations": [
-        [
-          0,
-          "Found in normalized content"
-        ]
-      ],
-      "new_code_locations": [],
-      "confidence": 0.9,
-      "notes": [
-        "Old code found, new code not found - patch not applied"
-      ]
-    },
-    {
-      "patch": {
-        "timestamp": "2025-09-19T01:33:18.115Z",
-        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
-        "operation": "MultiEdit",
-        "old_code": "  showBotThinking(show) {\n    const gameMode = this.game.gameMode;\n    const isBotTurn = this.game.isBotTurn();\n    const gameStatus = this.game.gameStatus;\n    \n    debugLogger.debug('UI_SYNC', 'Bot thinking indicator update', {\n      show,\n      gameMode,\n      isBotTurn,\n      gameStatus,\n      inputEnabled: this.inputEnabled\n    });\n    \n    const instructionLabel = document.getElementById('instruction-label');\n    \n    if (show && gameMode === 'human-vs-bot' && isBotTurn && (gameStatus === 'playing' || gameStatus === 'check')) {\n      // Don't show redundant instruction label - turn indicator already shows bot thinking\n      // Just remove any existing instruction label\n      this.hideInstructionLabel();\n      \n      // Ensure input is disabled when bot is thinking\n      if (this.inputEnabled) {\n        this.setInputEnabled(false);\n      }\n      \n      // Update turn indicator to reflect bot thinking state\n      this.updatePlayerTurnIndicator(this.game.currentPlayer, gameMode);\n      \n    } else {\n      // Hide thinking indicator\n      this.hideInstructionLabel();\n      \n      // Update turn indicator when thinking stops\n      if (gameMode === 'human-vs-bot') {\n        this.updatePlayerTurnIndicator(this.game.currentPlayer, gameMode);\n      }\n    }\n  }",
-        "new_code": "  showBotThinking(show) {\n    const gameMode = this.game.gameMode;\n    const isBotTurn = this.game.isBotTurn();\n    const gameStatus = this.game.gameStatus;\n\n    debugLogger.debug('UI_SYNC', 'Bot thinking indicator update', {\n      show,\n      gameMode,\n      isBotTurn,\n      gameStatus,\n      inputEnabled: this.inputEnabled\n    });\n\n    const instructionLabel = document.getElementById('instruction-label');\n    const moveDisplay = document.getElementById('move-display');\n\n    if (show && gameMode === 'human-vs-bot' && isBotTurn && (gameStatus === 'playing' || gameStatus === 'check')) {\n      // Don't show redundant instruction label - turn indicator already shows bot thinking\n      // Just remove any existing instruction label\n      this.hideInstructionLabel();\n\n      // Add spinner to move display\n      if (moveDisplay && !document.querySelector('.bot-thinking-spinner')) {\n        const spinner = document.createElement('div');\n        spinner.className = 'bot-thinking-spinner';\n        moveDisplay.parentElement.appendChild(spinner);\n      }\n\n      // Ensure input is disabled when bot is thinking\n      if (this.inputEnabled) {\n        this.setInputEnabled(false);\n      }\n\n      // Update turn indicator to reflect bot thinking state\n      this.updatePlayerTurnIndicator(this.game.currentPlayer, gameMode);\n\n    } else {\n      // Hide thinking indicator\n      this.hideInstructionLabel();\n\n      // Remove spinner\n      const spinner = document.querySelector('.bot-thinking-spinner');\n      if (spinner) {\n        spinner.remove();\n      }\n\n      // Update turn indicator when thinking stops\n      if (gameMode === 'human-vs-bot') {\n        this.updatePlayerTurnIndicator(this.game.currentPlayer, gameMode);\n      }\n    }\n  }",
-        "context": "Line 187",
-        "tool_id": "toolu_01ESY74aHKHdrewoWzdeiQ8a"
+        "old_code": "      if (this.isValidSavedState(state)) {\n        debugLogger.info('LOAD', 'State validation passed - Loading game state', {\n          moveCount: state.moveHistory.length,\n          currentPlayer: state.currentPlayer,\n          gameStatus: state.gameStatus,\n          soundEnabled: state.soundEnabled,\n          allowUndo: state.allowUndo,\n          gameMode: selectedMode || state.gameMode\n        });\n        console.log('Loading valid saved state');",
+        "new_code": "      console.log('[LOAD] About to validate state:', {\n        hasState: !!state,\n        moveCount: state?.moveHistory?.length || 0,\n        stateHistoryCount: state?.stateHistory?.length || 0,\n        currentPlayer: state?.currentPlayer,\n        gameMode: selectedMode || state?.gameMode\n      });\n\n      if (this.isValidSavedState(state)) {\n        debugLogger.info('LOAD', 'State validation passed - Loading game state', {\n          moveCount: state.moveHistory ? state.moveHistory.length : 0,\n          currentPlayer: state.currentPlayer,\n          gameStatus: state.gameStatus,\n          soundEnabled: state.soundEnabled,\n          allowUndo: state.allowUndo,\n          gameMode: selectedMode || state.gameMode\n        });\n        console.log('[LOAD] Validation PASSED - Loading valid saved state');",
+        "context": "Line 650",
+        "tool_id": "toolu_01KBeQMh6oPmtxs5wJsMJiMd"
       },
       "status": "not_applied",
       "old_code_found": true,
@@ -2955,7 +2967,7 @@
       "new_code_found": false,
       "old_code_locations": [
         [
-          1776,
+          1854,
           "    console.trace('[BOT_ACTIVATION] Bot turn handler called from:');"
         ]
       ],
@@ -2982,13 +2994,13 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          191,
+          194,
           "  async makeMove(fromRow, fromCol, toRow, toCol) {"
         ]
       ],
       "new_code_locations": [
         [
-          191,
+          194,
           "  async makeMove(fromRow, fromCol, toRow, toCol) {"
         ]
       ],
@@ -3012,13 +3024,13 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          2316,
+          2431,
           "  async handleSquareSelection(row, col) {"
         ]
       ],
       "new_code_locations": [
         [
-          2316,
+          2431,
           "  async handleSquareSelection(row, col) {"
         ]
       ],
@@ -3042,14 +3054,137 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          2395,
+          2510,
           "          const moveResult = await this.game.makeMove(fromRow, fromCol, logicalRow, logicalCol);"
         ]
       ],
       "new_code_locations": [
         [
-          2395,
+          2510,
           "          const moveResult = await this.game.makeMove(fromRow, fromCol, logicalRow, logicalCol);"
+        ]
+      ],
+      "confidence": 0.5,
+      "notes": [
+        "Both old and new code found - possible partial application"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:06:36.809Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "  recordGameState(moveData) {\n    console.log('[STATE] Recording game state:', moveData);\n\n    // If we're not at the end of history, truncate future states (branching)\n    if (this.currentStateIndex < this.stateHistory.length - 1) {\n      console.log(`[STATE] Truncating future states from index ${this.currentStateIndex + 1}`);\n      this.stateHistory = this.stateHistory.slice(0, this.currentStateIndex + 1);\n    }\n\n    // Clear the undo/redo state flag when making a new move\n    this.isInUndoRedoState = false;\n\n    // Store complete engine state AFTER the move\n    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));\n    const stateEntry = {\n      engineState: stateAfterMove,\n      move: {\n        from: moveData.from,\n        to: moveData.to,\n        piece: moveData.piece,\n        captured: moveData.captured\n      },\n      notation: moveData.notation,\n      commentary: moveData.commentary,\n      timestamp: Date.now()\n    };\n\n    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);\n    this.stateHistory.push(stateEntry);\n    this.currentStateIndex++;",
+        "new_code": "  recordGameState(moveData) {\n    console.log('[STATE] Recording game state:', moveData);\n\n    // If we're not at the end of history, truncate future states (branching)\n    if (this.currentStateIndex < this.stateHistory.length - 1) {\n      console.log(`[STATE] Truncating future states from index ${this.currentStateIndex + 1}`);\n      this.stateHistory = this.stateHistory.slice(0, this.currentStateIndex + 1);\n    }\n\n    // Clear the undo/redo state flag when making a new move\n    this.isInUndoRedoState = false;\n\n    // Store complete engine state AFTER the move\n    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));\n    const stateEntry = {\n      engineState: stateAfterMove,\n      move: {\n        from: moveData.from,\n        to: moveData.to,\n        piece: moveData.piece,\n        captured: moveData.captured\n      },\n      notation: moveData.notation,\n      commentary: moveData.commentary,\n      timestamp: Date.now()\n    };\n\n    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);\n    this.stateHistory.push(stateEntry);\n    this.currentStateIndex++;\n\n    // R1 Memory Management: Limit history to prevent excessive memory usage\n    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states for R1 device\n    if (this.stateHistory.length > MAX_HISTORY_LENGTH) {\n      // Keep the initial state (index 0) plus the most recent states\n      const statesToKeep = MAX_HISTORY_LENGTH - 1; // Reserve one slot for initial state\n      const removedCount = this.stateHistory.length - MAX_HISTORY_LENGTH;\n\n      console.log(`[STATE] History limit exceeded (${this.stateHistory.length}), trimming to ${MAX_HISTORY_LENGTH} states`);\n\n      // Keep initial state + most recent states\n      this.stateHistory = [\n        this.stateHistory[0], // Always keep initial state for full game reset\n        ...this.stateHistory.slice(-statesToKeep)\n      ];\n\n      // Adjust current index after trimming\n      this.currentStateIndex = this.stateHistory.length - 1;\n\n      console.log(`[STATE] Trimmed ${removedCount} old states, new length: ${this.stateHistory.length}`);\n    }",
+        "context": "Line 391",
+        "tool_id": "toolu_01PVxYpCbXqictdQc4uzBHFK"
+      },
+      "status": "partial",
+      "old_code_found": true,
+      "new_code_found": true,
+      "old_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.5,
+      "notes": [
+        "Both old and new code found - possible partial application"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:07:30.382Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "      // NEW: Restore saved stateHistory directly\n      console.log('[LOAD] Restoring saved state history:', state.stateHistory.length, 'states');\n      this.stateHistory = state.stateHistory;\n      this.currentStateIndex = state.currentStateIndex || (state.stateHistory.length - 1);",
+        "new_code": "      // NEW: Restore saved stateHistory directly\n      console.log('[LOAD] Restoring saved state history:', state.stateHistory.length, 'states');\n      this.stateHistory = state.stateHistory;\n      this.currentStateIndex = state.currentStateIndex || (state.stateHistory.length - 1);\n\n      // R1 Memory Management: Apply history limit during load\n      const MAX_HISTORY_LENGTH = 100;\n      if (this.stateHistory.length > MAX_HISTORY_LENGTH) {\n        const removedCount = this.stateHistory.length - MAX_HISTORY_LENGTH;\n        console.log(`[LOAD] Trimming loaded history from ${this.stateHistory.length} to ${MAX_HISTORY_LENGTH} states`);\n\n        // Keep initial state + most recent states\n        this.stateHistory = [\n          this.stateHistory[0],  // Always keep initial state\n          ...this.stateHistory.slice(-(MAX_HISTORY_LENGTH - 1))\n        ];\n\n        // Adjust current index if needed\n        const wasAtEnd = this.currentStateIndex === state.stateHistory.length - 1;\n        if (wasAtEnd) {\n          // If we were at the last state, stay at the last state\n          this.currentStateIndex = this.stateHistory.length - 1;\n        } else {\n          // Otherwise, clamp to valid range\n          this.currentStateIndex = Math.min(this.currentStateIndex, this.stateHistory.length - 1);\n        }\n\n        console.log(`[LOAD] Removed ${removedCount} old states, currentStateIndex: ${this.currentStateIndex}`);\n      }",
+        "context": "Line 407",
+        "tool_id": "toolu_01HC3EXYPweHjFUicfjJkLYw",
+        "features": [
+          "(Ella|Evy|Emmy|Asa)"
+        ]
+      },
+      "status": "partial",
+      "old_code_found": true,
+      "new_code_found": true,
+      "old_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.5,
+      "notes": [
+        "Both old and new code found - possible partial application"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:13:41.540Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "  async loadGameState() {",
+        "new_code": "  // Helper to get the latest timestamp from a saved state\n  getLatestTimestamp(state) {\n    if (!state) return 0;\n\n    // Check stateHistory for timestamp\n    if (state.stateHistory && state.stateHistory.length > 0) {\n      const lastState = state.stateHistory[state.stateHistory.length - 1];\n      if (lastState && lastState.timestamp) {\n        return lastState.timestamp;\n      }\n    }\n\n    // Fallback to checking if there are moves (assume older save)\n    if (state.moveHistory && state.moveHistory.length > 0) {\n      return 1; // Return 1 to indicate it exists but has no timestamp\n    }\n\n    return 0;\n  }\n\n  async loadGameState() {",
+        "context": "Line 466",
+        "tool_id": "toolu_01Wa5aDrdMNBJz3TGEndYMKa"
+      },
+      "status": "partial",
+      "old_code_found": true,
+      "new_code_found": true,
+      "old_code_locations": [
+        [
+          3573,
+          "  async loadGameState() {"
+        ]
+      ],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "confidence": 0.5,
+      "notes": [
+        "Both old and new code found - possible partial application"
+      ]
+    },
+    {
+      "patch": {
+        "timestamp": "2025-09-18T22:20:28.255Z",
+        "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+        "operation": "Edit",
+        "old_code": "    // NEW STATE HISTORY SYSTEM\n    // Store complete game states for instant undo/redo\n    // Index 0 = initial state, Index 1 = after first move, etc.\n    this.stateHistory = [];\n    this.currentStateIndex = 0;\n    this.isInUndoRedoState = false; // Track if we're in an undo/redo state where bot shouldn't auto-move\n    this.lastUndoWasBotMove = false; // Track if the last undo was a bot move for notification",
+        "new_code": "    // NEW STATE HISTORY SYSTEM\n    // Store complete game states for instant undo/redo\n    // Index 0 = initial state, Index 1 = after first move, etc.\n    this.stateHistory = [];\n    this.currentStateIndex = 0;\n    this.isInUndoRedoState = false; // Track if we're in an undo/redo state where bot shouldn't auto-move\n    this.lastUndoWasBotMove = false; // Track if the last undo was a bot move for notification\n\n    // Initialize moveHistory (for backward compatibility)\n    this.moveHistory = [];",
+        "context": "Line 571",
+        "tool_id": "toolu_01SodZfAUBAfLa736oUnL8eT"
+      },
+      "status": "partial",
+      "old_code_found": true,
+      "new_code_found": true,
+      "old_code_locations": [
+        [
+          0,
+          "Found in normalized content"
+        ]
+      ],
+      "new_code_locations": [
+        [
+          0,
+          "Found in normalized content"
         ]
       ],
       "confidence": 0.5,
@@ -3072,13 +3207,17 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          1784,
+          1862,
           "      moveHistoryLength: this.game.moveHistory.length"
         ]
       ],
       "new_code_locations": [
         [
-          2525,
+          2421,
+          "      moveCount: this.game.moveHistory ? this.game.moveHistory.length : 0"
+        ],
+        [
+          2640,
           "      moveIndex: this.game.moveHistory ? this.game.moveHistory.length : 'N/A'"
         ]
       ],
@@ -3102,13 +3241,13 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          1811,
+          1889,
           "    const isInitialBotMove = this.game.moveHistory.length === 0 && isBotTurn;"
         ]
       ],
       "new_code_locations": [
         [
-          1811,
+          1889,
           "    const isInitialBotMove = this.game.moveHistory.length === 0 && isBotTurn;"
         ]
       ],
@@ -3132,25 +3271,25 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          2793,
+          2908,
           "    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {"
         ]
       ],
       "new_code_locations": [
         [
-          734,
+          771,
           "    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {"
         ],
         [
-          748,
+          785,
           "    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {"
         ],
         [
-          761,
+          798,
           "    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {"
         ],
         [
-          2793,
+          2908,
           "    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {"
         ]
       ],
@@ -3174,13 +3313,17 @@
       "new_code_found": true,
       "old_code_locations": [
         [
-          3328,
+          3448,
           "    const totalMoves = this.game.moveHistory.length;"
         ]
       ],
       "new_code_locations": [
         [
-          2525,
+          2421,
+          "      moveCount: this.game.moveHistory ? this.game.moveHistory.length : 0"
+        ],
+        [
+          2640,
           "      moveIndex: this.game.moveHistory ? this.game.moveHistory.length : 'N/A'"
         ]
       ],
@@ -3210,7 +3353,7 @@
       ],
       "new_code_locations": [
         [
-          4108,
+          4277,
           "  // Initialize menu visibility based on default game mode"
         ]
       ],
@@ -3240,11 +3383,11 @@
       ],
       "new_code_locations": [
         [
-          224,
+          227,
           "      // Generate notation and commentary for the move"
         ],
         [
-          413,
+          416,
           "        // Generate notation and commentary"
         ]
       ],
@@ -3304,7 +3447,7 @@
       ],
       "new_code_locations": [
         [
-          483,
+          489,
           "    if (!isHumanVsBot || !isBotTurn || !isValidStatus) {"
         ]
       ],

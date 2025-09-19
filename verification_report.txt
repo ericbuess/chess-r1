@@ -4,93 +4,40 @@ CHESS R1 CODE VERIFICATION REPORT
 
 📊 SUMMARY:
    • Total patches checked: 78
-   • Applied patches: 10
-   • Missing patches: 30
-   • Partial patches: 12
-   • Unknown status: 26
-   • Confidence score: 56.7%
+   • Applied patches: 26
+   • Missing patches: 13
+   • Partial patches: 16
+   • Unknown status: 23
+   • Confidence score: 57.7%
 
 ✅ APPLIED PATCHES:
-   • 2025-09-18T18:55:18.403Z: Edit - Old code not found, new code found - patch appears applied
    • 2025-09-18T19:40:59.276Z: Edit - Old code not found, new code found - patch appears applied
    • 2025-09-18T21:26:53.967Z: Edit - Old code not found, new code found - patch appears applied
-   • 2025-09-18T23:56:43.093Z: MultiEdit - Old code not found, new code found - patch appears applied
-   • 2025-09-18T23:56:43.093Z: MultiEdit - Old code not found, new code found - patch appears applied
-   • 2025-09-18T23:56:57.236Z: Edit - Old code not found, new code found - patch appears applied
-   • 2025-09-19T01:41:36.799Z: Edit - Old code not found, new code found - patch appears applied
-   • 2025-09-19T13:34:28.451Z: Edit - Old code not found, new code found - patch appears applied
-   • 2025-09-19T13:38:35.148Z: MultiEdit - Old code not found, new code found - patch appears applied
-   • 2025-09-19T13:40:51.686Z: Edit - Old code not found, new code found - patch appears applied
+   • 2025-09-18T21:27:06.972Z: Edit - Old code not found, new code found - patch appears applied
+   • 2025-09-18T21:27:18.918Z: Edit - Old code not found, new code found - patch appears applied
+   • 2025-09-18T21:27:33.606Z: Edit - Old code not found, new code found - patch appears applied
+   • 2025-09-18T22:06:44.505Z: Edit - Old code not found, new code found - patch appears applied
+   • 2025-09-18T22:07:42.403Z: Edit - Old code not found, new code found - patch appears applied
+   • 2025-09-18T22:13:24.075Z: Edit - Old code not found, new code found - patch appears applied
+   • 2025-09-18T22:13:57.952Z: Edit - Old code not found, new code found - patch appears applied
+   • 2025-09-18T22:15:17.986Z: Edit - Old code not found, new code found - patch appears applied
+   ... and 16 more
 
 ❌ MISSING PATCHES:
-   • 2025-09-18T21:27:06.972Z: Edit
-     Code:   /**    * Generate bot move    */   async generateBotMove() {...
+   • 2025-09-18T22:06:56.174Z: Edit
+     Code:     // Clear the undo/redo state flag when making a new move     this.isInUndoRedoState = false;    ...
 
-   • 2025-09-18T21:27:18.918Z: Edit
-     Code:         // Play status sound with delay if there was a capture         if (this.gameStatus === 'chec...
+   • 2025-09-18T22:14:06.093Z: Edit
+     Code:   // Update menu visibility based on game mode   updateMenuVisibility() {     const colorGroup = doc...
 
-   • 2025-09-18T21:27:33.606Z: Edit
-     Code:     // Generate AND execute bot move (aiMove() does both!)     const botMove = await this.generateBo...
+   • 2025-09-18T22:21:25.505Z: Edit
+     Code:     debugLogger.info('BOT_INIT', 'Checking initial bot turn', {       humanColor,       currentPlaye...
 
-   • 2025-09-18T22:06:36.809Z: Edit
-     Code:   recordGameState(moveData) {     console.log('[STATE] Recording game state:', moveData);      // If...
+   • 2025-09-18T22:27:54.308Z: Edit
+     Code:       // Load states from both game modes to find the most recent       const humanVsBotKey = 'chess...
 
-   • 2025-09-18T22:06:44.505Z: Edit
-     Code:     // Keep old moveHistory for backward compatibility (will remove later)     if (!this.moveHistory...
-
-   • 2025-09-18T22:07:30.382Z: Edit
-     Features: (Ella|Evy|Emmy|Asa)
-     Code:       // NEW: Restore saved stateHistory directly       console.log('[LOAD] Restoring saved state hi...
-
-   • 2025-09-18T22:07:42.403Z: Edit
-     Code:     this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sou...
-
-   • 2025-09-18T22:13:24.075Z: Edit
-     Code:   async loadGameState() {     try {       debugLogger.info('LOAD', 'Attempting to load saved game st...
-
-   • 2025-09-18T22:13:41.540Z: Edit
-     Code:   // Helper to get the latest timestamp from a saved state   getLatestTimestamp(state) {     if (!st...
-
-   • 2025-09-18T22:13:57.952Z: Edit
-     Code:       if (this.isValidSavedState(state)) {         debugLogger.info('LOAD', 'State validation passed...
-
-   • 2025-09-18T22:15:17.986Z: Edit
-     Features: bot.*move.*failed
-     Code:   // Enhanced bot initialization for both human white/black scenarios   checkInitialBotTurn() {     ...
-
-   • 2025-09-18T22:15:55.944Z: Edit
-     Code:     // Update cached state FIRST (this sets currentPlayer correctly)     this.updateCachedState();  ...
-
-   • 2025-09-18T22:16:08.787Z: Edit
-     Code:     // Check if bot should make initial move after returning from options     // This handles the ca...
-
-   • 2025-09-18T22:20:28.255Z: Edit
-     Code:     // NEW STATE HISTORY SYSTEM     // Store complete game states for instant undo/redo     // Index...
-
-   • 2025-09-18T22:24:52.055Z: Edit
-     Code:   // Handle new game start   onNewGameStart() {     console.log('[NEW_GAME_START] Called with:', {  ...
-
-   • 2025-09-18T22:29:39.812Z: Edit
-     Code:   getStorageKey() {     // Replace hyphens with underscores for consistent storage keys     return `...
-
-   • 2025-09-18T22:40:20.103Z: Edit
-     Code:   async autoSave() {     try {       const state = this.getGameState();       const key = this.getSt...
-
-   • 2025-09-18T23:38:43.199Z: Edit
-     Code:     this.allowUndo = state.allowUndo !== undefined ? state.allowUndo : true;     // Load orientation...
-
-   • 2025-09-18T23:38:53.142Z: Edit
-     Code:     // Update cached state     this.updateCachedState();      // NOW recalculate boardFlipped after ...
-
-   • 2025-09-19T01:20:24.191Z: Edit
-     Features: back.*to.*game.*button
-     Code:     this.gameMode = 'human-vs-bot';     this.humanColor = 'white';     this.botDifficulty = 4; // Bo...
-
-   • 2025-09-19T01:20:44.214Z: Edit
-     Code:   generateMoveCommentary(fromRow, fromCol, toRow, toCol, piece, capturedPiece, special) {     const ...
-
-   • 2025-09-19T01:33:18.115Z: MultiEdit
-     Code:   showBotThinking(show) {     const gameMode = this.game.gameMode;     const isBotTurn = this.game.i...
+   • 2025-09-18T22:28:09.996Z: Edit
+     Code:       console.log('[LOAD] About to validate state:', {         hasState: !!state,         moveCount:...
 
    • 2025-09-19T13:26:23.530Z: MultiEdit
      Code: // R1 Chess Game - Production Build...
@@ -120,6 +67,18 @@ CHESS R1 CODE VERIFICATION REPORT
      Status: Both old and new code found - possible partial application
 
    • 2025-09-18T21:28:44.464Z: Edit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-18T22:06:36.809Z: Edit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-18T22:07:30.382Z: Edit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-18T22:13:41.540Z: Edit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-18T22:20:28.255Z: Edit
      Status: Both old and new code found - possible partial application
 
    • 2025-09-18T22:21:41.176Z: MultiEdit

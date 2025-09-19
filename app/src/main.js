@@ -1093,18 +1093,28 @@ class ChessGame {
    * Auto-save the game
    */
   async autoSave() {
+    console.log('[AUTOSAVE] Starting autoSave...');
     try {
+      console.log('[AUTOSAVE] Getting game state...');
       const state = this.getGameState();
+      console.log('[AUTOSAVE] Got state:', state ? 'State exists' : 'State is null');
+
+      console.log('[AUTOSAVE] Getting storage key...');
       const key = this.getStorageKey();
+      console.log('[AUTOSAVE] Storage key:', key);
+
+      console.log('[AUTOSAVE] Calling saveToStorage...');
       await saveToStorage(key, state);
 
       // Also save the current game mode separately so we know which to load
+      console.log('[AUTOSAVE] Saving last_game_mode...');
       await saveToStorage('last_game_mode', { mode: this.gameMode, timestamp: Date.now() });
 
-      console.log('Game auto-saved successfully');
+      console.log('[AUTOSAVE] Game auto-saved successfully');
       return true;
     } catch (error) {
-      console.error('Auto-save failed:', error);
+      console.error('[AUTOSAVE] Auto-save failed:', error);
+      console.error('[AUTOSAVE] Error stack:', error.stack);
       return false;
     }
   }
@@ -4105,8 +4115,11 @@ function getCookie(name) {
 
 // Save data to persistent storage with robust error handling
 async function saveToStorage(key, value) {
+  console.log('[SAVE_TO_STORAGE] Called with key:', key);
+  console.log('[SAVE_TO_STORAGE] Value type:', typeof value);
+
   debugLogger.debug('STORAGE', `Attempting to save data with key: ${key}`);
-  
+
   // Validate input
   if (!key || typeof key !== 'string') {
     debugLogger.error('STORAGE', `Invalid key provided to saveToStorage: ${key}`);
