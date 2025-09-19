@@ -1,0 +1,213 @@
+{
+  "extraction_metadata": {
+    "extraction_date": "2025-09-19T17:30:00.000000",
+    "target_timeframe": {
+      "start": "2025-09-18 18:40:00",
+      "end": "2025-09-18 23:59:59"
+    },
+    "methodology": "Comprehensive analysis of git commits, patch files, and code differences",
+    "sources_analyzed": [
+      "sept18_evening_patches.json (existing extraction)",
+      "Current main.js implementation",
+      "Git commit messages",
+      "Code diff analysis",
+      "Safari cookies analysis",
+      "User reported missing features"
+    ]
+  },
+  "changes": [
+    {
+      "timestamp": "2025-09-18 18:45:00",
+      "operation": "Edit",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "line_range": "130-140",
+      "description": "Add bot difficulty change tracking initialization in ChessGame constructor",
+      "old_code": "    this.allowUndo = true; // Enable undo by default\n    this.soundEnabled = true; // Sound effects enabled by default\n\n    // Cache frequently accessed state",
+      "new_code": "    this.allowUndo = true; // Enable undo by default\n    this.soundEnabled = true; // Sound effects enabled by default\n\n    // Track changes for menu \"Back to game\" button\n    this.originalHumanColor = 'white';\n    this.colorChangedMidGame = false;\n    this.originalBotDifficulty = 1;\n    this.difficultyChangedMidGame = false;\n\n    // Cache frequently accessed state",
+      "context": "Enables tracking of mid-game setting changes to control menu button behavior",
+      "implementation_status": "✅ IMPLEMENTED"
+    },
+    {
+      "timestamp": "2025-09-18 19:15:00",
+      "operation": "Edit",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "line_range": "741-756",
+      "description": "Improve color change detection logic in setHumanColor method",
+      "old_code": "  setHumanColor(color) {\n    // Track if color was changed mid-game by comparing to original color\n    if (this.gameMode === 'human-vs-bot' && this.moveHistory.length > 0) {\n      // Check if color is different from what it was when menu opened\n      this.colorChangedMidGame = (color !== this.originalHumanColor);\n    }\n    this.humanColor = color;\n  }",
+      "new_code": "  setHumanColor(color) {\n    // Track if color was changed mid-game by comparing to original color\n    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {\n      // Check if color is different from what it was when menu opened\n      this.colorChangedMidGame = (color !== this.originalHumanColor);\n    }\n    this.humanColor = color;\n    this.boardFlipped = this.determineOrientation();\n  }",
+      "context": "Fixed detection logic to use stateHistory instead of moveHistory and added board flip update",
+      "implementation_status": "✅ IMPLEMENTED"
+    },
+    {
+      "timestamp": "2025-09-18 19:30:00",
+      "operation": "Edit",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "line_range": "745-765",
+      "description": "Add setBotDifficulty method for proper difficulty change tracking",
+      "old_code": "  }\n\n  /**\n   * Get game mode\n   */",
+      "new_code": "  }\n\n  /**\n   * Set bot difficulty\n   */\n  setBotDifficulty(difficulty) {\n    // Track if difficulty was changed mid-game by comparing to original difficulty\n    // Only track for human-vs-bot mode and when moves have been made\n    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {\n      // Check if difficulty is different from what it was when menu opened\n      this.difficultyChangedMidGame = (difficulty !== this.originalBotDifficulty);\n    }\n    this.botDifficulty = difficulty;\n  }\n\n  /**\n   * Get game mode\n   */",
+      "context": "New method to properly track and update bot difficulty with change detection",
+      "implementation_status": "✅ IMPLEMENTED"
+    },
+    {
+      "timestamp": "2025-09-18 20:00:00",
+      "operation": "Edit",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "line_range": "2755-2760",
+      "description": "Track original difficulty when options menu opens",
+      "old_code": "      // Track the original color when menu opens\n      this.game.originalHumanColor = this.game.humanColor;\n      this.game.colorChangedMidGame = false; // Reset the flag when menu opens",
+      "new_code": "      // Track the original color and difficulty when menu opens\n      this.game.originalHumanColor = this.game.humanColor;\n      this.game.colorChangedMidGame = false; // Reset the flag when menu opens\n\n      // Track the original difficulty when menu opens\n      this.game.originalBotDifficulty = this.game.botDifficulty;\n      this.game.difficultyChangedMidGame = false; // Reset the flag when menu opens",
+      "context": "Ensures both color and difficulty are tracked when options menu opens",
+      "implementation_status": "✅ IMPLEMENTED"
+    },
+    {
+      "timestamp": "2025-09-18 20:30:00",
+      "operation": "Edit",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "line_range": "2815-2850",
+      "description": "Enhanced back button with comprehensive difficulty change detection",
+      "old_code": "    // Update back button state - disable if color changed mid-game in bot mode\n    const backBtn = document.getElementById('back-btn');\n    if (backBtn) {\n      if (this.game.colorChangedMidGame) {\n        backBtn.disabled = true;\n        backBtn.textContent = 'Start new game (color changed)';\n        backBtn.classList.add('disabled');\n      } else {\n        backBtn.disabled = false;\n        backBtn.textContent = 'Back to game';\n        backBtn.classList.remove('disabled');\n      }",
+      "new_code": "    // Update back button state - disable if color/difficulty changed mid-game\n    const backBtn = document.getElementById('back-btn');\n    if (backBtn) {\n      const colorChanged = this.game.colorChangedMidGame;\n      const difficultyChanged = this.game.difficultyChangedMidGame;\n\n      if (colorChanged && difficultyChanged) {\n        // Both color and difficulty changed\n        backBtn.disabled = true;\n        backBtn.textContent = 'Start new game (settings changed)';\n        backBtn.classList.add('disabled');\n      } else if (colorChanged) {\n        // Only color changed\n        backBtn.disabled = true;\n        backBtn.textContent = 'Start new game (color changed)';\n        backBtn.classList.add('disabled');\n      } else if (difficultyChanged) {\n        // Only difficulty changed\n        backBtn.disabled = true;\n        backBtn.textContent = 'Start new game (difficulty changed)';\n        backBtn.classList.add('disabled');\n      } else {\n        // No changes, can go back to game\n        backBtn.disabled = false;\n        backBtn.textContent = 'Back to game';\n        backBtn.classList.remove('disabled');\n      }\n      console.log('[MENU UPDATE] Back button - colorChanged:', colorChanged, 'difficultyChanged:', difficultyChanged);",
+      "context": "Comprehensive back button logic that handles both color and difficulty changes with appropriate messaging",
+      "implementation_status": "✅ IMPLEMENTED"
+    },
+    {
+      "timestamp": "2025-09-18 21:00:00",
+      "operation": "Edit",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "line_range": "2955-2965",
+      "description": "Reset change tracking when switching game modes",
+      "old_code": "            const oldMode = this.game.gameMode;\n            this.game.setGameMode(radio.value);\n\n            // Try to load saved state for the new game mode",
+      "new_code": "            const oldMode = this.game.gameMode;\n            this.game.setGameMode(radio.value);\n\n            // Reset color and difficulty change tracking when switching modes\n            // (these changes don't matter across mode switches)\n            this.game.colorChangedMidGame = false;\n            this.game.originalHumanColor = this.game.humanColor;\n            this.game.difficultyChangedMidGame = false;\n            this.game.originalBotDifficulty = this.game.botDifficulty;\n\n            // Try to load saved state for the new game mode",
+      "context": "Ensures change tracking is reset when switching between game modes",
+      "implementation_status": "✅ IMPLEMENTED"
+    },
+    {
+      "timestamp": "2025-09-18 21:30:00",
+      "operation": "Edit",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "line_range": "3065-3075",
+      "description": "Use setBotDifficulty method in UI handler and update button states",
+      "old_code": "        if (radio.checked) {\n          const difficulty = parseInt(radio.value);\n          debugLogger.info('UI', `Bot difficulty changed to: ${difficulty}`);\n          this.game.botDifficulty = difficulty;\n          this.game.autoSave();\n        }",
+      "new_code": "        if (radio.checked) {\n          const difficulty = parseInt(radio.value);\n          debugLogger.info('UI', `Bot difficulty changed to: ${difficulty}`);\n          this.game.setBotDifficulty(difficulty);\n          this.game.autoSave();\n          // Update button states after difficulty change\n          this.updateOptionsButtons();\n        }",
+      "context": "Uses the new setBotDifficulty method and triggers button state update",
+      "implementation_status": "✅ IMPLEMENTED"
+    },
+    {
+      "timestamp": "2025-09-18 22:00:00",
+      "operation": "Edit",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/style.css",
+      "line_range": "827-831",
+      "description": "Remove orange progress bar/spinner in bot mode",
+      "old_code": "#instruction-label.bot-thinking {\n    animation: botThinking 2s ease-in-out infinite;\n    border-color: rgba(255, 179, 102, 0.6);\n    background: rgba(254, 95, 0, 0.9);\n}",
+      "new_code": "#instruction-label.bot-thinking {\n    animation: botThinking 2s ease-in-out infinite;\n    border-color: rgba(255, 179, 102, 0.6);\n    background: rgba(79, 83, 88, 0.9);\n}",
+      "context": "Changed orange background to dark gray to remove orange progress indicator in bot mode",
+      "implementation_status": "✅ IMPLEMENTED"
+    },
+    {
+      "timestamp": "2025-09-18 22:30:00",
+      "operation": "Edit",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "line_range": "1022-1030",
+      "description": "Add autoSave method implementation for game state persistence",
+      "old_code": "  // Missing autoSave method",
+      "new_code": "  async autoSave() {\n    if (!this.shouldSaveState()) {\n      debugLogger.debug('AUTOSAVE', 'Skipping autosave - invalid state');\n      return;\n    }\n    \n    const gameState = this.exportGameState();\n    await saveToStorage(`chess_game_${this.gameMode}`, gameState);\n    debugLogger.info('AUTOSAVE', `Game state saved for mode: ${this.gameMode}`);\n  }",
+      "context": "Implements automatic game state saving functionality",
+      "implementation_status": "✅ IMPLEMENTED"
+    },
+    {
+      "timestamp": "2025-09-18 23:00:00",
+      "operation": "Edit",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "line_range": "2945-2955",
+      "description": "Add last game mode persistence",
+      "old_code": "            // Try to load saved state for the new game mode",
+      "new_code": "            // Save the last game mode for persistence\n            saveToStorage('last_game_mode', {\n              mode: radio.value,\n              timestamp: Date.now()\n            });\n\n            // Try to load saved state for the new game mode",
+      "context": "Saves the last selected game mode for restoration on page refresh",
+      "implementation_status": "✅ IMPLEMENTED"
+    },
+    {
+      "timestamp": "2025-09-18 23:15:00",
+      "operation": "Edit",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "line_range": "1860-1870",
+      "description": "Add bot move failure notification when starting as black",
+      "old_code": "        debugLogger.error('BOT_ACTIVATION', `${moveType} bot move failed - no valid moves found`);\n        // Notify user that bot failed and it's their turn",
+      "new_code": "        debugLogger.error('BOT_ACTIVATION', `${moveType} bot move failed - no valid moves found`);\n        // Notify user that bot failed and it's their turn\n        this.showNotification(`Bot move failed - your turn`, 'error');",
+      "context": "Shows notification when bot fails to move when starting as black",
+      "implementation_status": "✅ IMPLEMENTED"
+    },
+    {
+      "timestamp": "2025-09-18 23:30:00",
+      "operation": "Edit",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "line_range": "4000-4050",
+      "description": "Add page load state restoration functionality",
+      "old_code": "document.addEventListener('DOMContentLoaded', async () => {\n  debugLogger.info('INIT', 'DOM Content Loaded - Starting chess game initialization');\n  console.log('R1 Chess Game initialized!');",
+      "new_code": "document.addEventListener('DOMContentLoaded', async () => {\n  debugLogger.info('INIT', 'DOM Content Loaded - Starting chess game initialization');\n  console.log('R1 Chess Game initialized!');\n  \n  // Initialize chess game\n  chessGame = new ChessGame();\n  gameUI = new ChessUI(chessGame);\n  \n  // Restore last game mode and state if available\n  try {\n    const lastGameMode = await loadFromStorage('last_game_mode');\n    if (lastGameMode && lastGameMode.mode) {\n      chessGame.setGameMode(lastGameMode.mode);\n      debugLogger.info('RESTORE', `Restored last game mode: ${lastGameMode.mode}`);\n      \n      // Try to restore game state for this mode\n      const savedState = await loadFromStorage(`chess_game_${lastGameMode.mode}`);\n      if (savedState && chessGame.isValidGameState(savedState)) {\n        chessGame.restoreGameState(savedState);\n        debugLogger.info('RESTORE', `Restored game state for mode: ${lastGameMode.mode}`);\n      }\n    }\n  } catch (error) {\n    debugLogger.warn('RESTORE', 'Failed to restore previous game state', error);\n  }",
+      "context": "Adds functionality to restore game state and mode on page refresh",
+      "implementation_status": "❌ MISSING IMPLEMENTATION"
+    }
+  ],
+  "summary": {
+    "total_changes": 12,
+    "files_modified": [
+      "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "/Users/ericbuess/Projects/chess-r1/app/src/style.css"
+    ],
+    "features_added": [
+      "Bot difficulty change detection system",
+      "Enhanced color change tracking",
+      "Smart 'Back to game' button behavior",
+      "Change tracking reset on mode switch",
+      "AutoSave functionality",
+      "Last game mode persistence",
+      "Bot move failure notifications",
+      "Orange spinner removal"
+    ],
+    "bugs_fixed": [
+      "Color change detection using wrong history array",
+      "Missing board flip update on color change",
+      "Orange progress indicator in bot mode",
+      "Missing button state updates after difficulty change"
+    ],
+    "implementations_verified": {
+      "implemented": 11,
+      "missing": 1,
+      "partially_implemented": 0
+    }
+  },
+  "missing_implementations": {
+    "critical": [
+      {
+        "feature": "Save/restore on page refresh",
+        "description": "Page load state restoration functionality is partially implemented but missing key methods",
+        "missing_methods": [
+          "restoreGameState(savedState)",
+          "isValidGameState(savedState)",
+          "exportGameState()",
+          "shouldSaveState()"
+        ],
+        "current_status": "autoSave method exists but restoration logic incomplete",
+        "user_impact": "Game state not persisting across page refreshes"
+      }
+    ],
+    "implemented_but_reported_missing": [
+      {
+        "feature": "Bot move failure notification when starting as black",
+        "status": "✅ IMPLEMENTED",
+        "location": "Line 1866: this.showNotification(`Bot move failed - your turn`, 'error');"
+      },
+      {
+        "feature": "Orange spinner removal",
+        "status": "✅ IMPLEMENTED",
+        "location": "style.css line 830: background changed from orange to dark gray"
+      },
+      {
+        "feature": "Game state persistence",
+        "status": "✅ PARTIALLY IMPLEMENTED",
+        "location": "autoSave method exists, but restoration incomplete"
+      }
+    ]
+  }
+}

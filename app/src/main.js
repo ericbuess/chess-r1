@@ -1593,7 +1593,7 @@ class ChessUI {
         // Enhanced touch support for R1 device
         square.addEventListener('click', async (e) => await this.handleSquareClick(e));
         square.addEventListener('touchstart', (e) => this.handleTouchStart(e));
-        square.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+        square.addEventListener('touchend', async (e) => await this.handleTouchEnd(e));
         square.addEventListener('touchcancel', (e) => this.handleTouchCancel(e));
         
         this.boardElement.appendChild(square);
@@ -1606,7 +1606,7 @@ class ChessUI {
   async handleSquareClick(event) {
     const row = parseInt(event.target.dataset.row);
     const col = parseInt(event.target.dataset.col);
-    this.handleSquareSelection(row, col);
+    await this.handleSquareSelection(row, col);
   }
 
   handleTouchStart(event) {
@@ -1618,7 +1618,7 @@ class ChessUI {
     event.target.style.opacity = '0.7';
   }
 
-  handleTouchEnd(event) {
+  async handleTouchEnd(event) {
     event.preventDefault();
     
     // Remove visual feedback
@@ -1637,7 +1637,7 @@ class ChessUI {
       if (square && square.dataset.row !== undefined) {
         const row = parseInt(square.dataset.row);
         const col = parseInt(square.dataset.col);
-        this.handleSquareSelection(row, col);
+        await this.handleSquareSelection(row, col);
       }
     }
     
@@ -2313,7 +2313,7 @@ class ChessUI {
     this.checkInitialBotTurn();
   }
 
-  handleSquareSelection(row, col) {
+  async handleSquareSelection(row, col) {
     // Prevent interactions during board flip or when input is disabled
     if (this.isFlipping || this.inputEnabled === false) return;
     
