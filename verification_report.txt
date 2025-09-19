@@ -1,0 +1,177 @@
+================================================================================
+CHESS R1 CODE VERIFICATION REPORT
+================================================================================
+
+📊 SUMMARY:
+   • Total patches checked: 78
+   • Applied patches: 9
+   • Missing patches: 31
+   • Partial patches: 12
+   • Unknown status: 26
+   • Confidence score: 56.7%
+
+✅ APPLIED PATCHES:
+   • 2025-09-18T18:55:18.403Z: Edit - Old code not found, new code found - patch appears applied
+   • 2025-09-18T19:40:59.276Z: Edit - Old code not found, new code found - patch appears applied
+   • 2025-09-18T21:26:53.967Z: Edit - Old code not found, new code found - patch appears applied
+   • 2025-09-18T23:56:43.093Z: MultiEdit - Old code not found, new code found - patch appears applied
+   • 2025-09-18T23:56:43.093Z: MultiEdit - Old code not found, new code found - patch appears applied
+   • 2025-09-18T23:56:57.236Z: Edit - Old code not found, new code found - patch appears applied
+   • 2025-09-19T13:34:28.451Z: Edit - Old code not found, new code found - patch appears applied
+   • 2025-09-19T13:38:35.148Z: MultiEdit - Old code not found, new code found - patch appears applied
+   • 2025-09-19T13:40:51.686Z: Edit - Old code not found, new code found - patch appears applied
+
+❌ MISSING PATCHES:
+   • 2025-09-18T21:27:06.972Z: Edit
+     Code:   /**    * Generate bot move    */   async generateBotMove() {...
+
+   • 2025-09-18T21:27:18.918Z: Edit
+     Code:         // Play status sound with delay if there was a capture         if (this.gameStatus === 'chec...
+
+   • 2025-09-18T21:27:33.606Z: Edit
+     Code:     // Generate AND execute bot move (aiMove() does both!)     const botMove = await this.generateBo...
+
+   • 2025-09-18T22:06:36.809Z: Edit
+     Code:   recordGameState(moveData) {     console.log('[STATE] Recording game state:', moveData);      // If...
+
+   • 2025-09-18T22:06:44.505Z: Edit
+     Code:     // Keep old moveHistory for backward compatibility (will remove later)     if (!this.moveHistory...
+
+   • 2025-09-18T22:07:30.382Z: Edit
+     Features: (Ella|Evy|Emmy|Asa)
+     Code:       // NEW: Restore saved stateHistory directly       console.log('[LOAD] Restoring saved state hi...
+
+   • 2025-09-18T22:07:42.403Z: Edit
+     Code:     this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sou...
+
+   • 2025-09-18T22:13:24.075Z: Edit
+     Code:   async loadGameState() {     try {       debugLogger.info('LOAD', 'Attempting to load saved game st...
+
+   • 2025-09-18T22:13:41.540Z: Edit
+     Code:   // Helper to get the latest timestamp from a saved state   getLatestTimestamp(state) {     if (!st...
+
+   • 2025-09-18T22:13:57.952Z: Edit
+     Code:       if (this.isValidSavedState(state)) {         debugLogger.info('LOAD', 'State validation passed...
+
+   • 2025-09-18T22:15:17.986Z: Edit
+     Features: bot.*move.*failed
+     Code:   // Enhanced bot initialization for both human white/black scenarios   checkInitialBotTurn() {     ...
+
+   • 2025-09-18T22:15:55.944Z: Edit
+     Code:     // Update cached state FIRST (this sets currentPlayer correctly)     this.updateCachedState();  ...
+
+   • 2025-09-18T22:16:08.787Z: Edit
+     Code:     // Check if bot should make initial move after returning from options     // This handles the ca...
+
+   • 2025-09-18T22:20:28.255Z: Edit
+     Code:     // NEW STATE HISTORY SYSTEM     // Store complete game states for instant undo/redo     // Index...
+
+   • 2025-09-18T22:24:52.055Z: Edit
+     Code:   // Handle new game start   onNewGameStart() {     console.log('[NEW_GAME_START] Called with:', {  ...
+
+   • 2025-09-18T22:29:39.812Z: Edit
+     Code:   getStorageKey() {     // Replace hyphens with underscores for consistent storage keys     return `...
+
+   • 2025-09-18T22:40:20.103Z: Edit
+     Code:   async autoSave() {     try {       const state = this.getGameState();       const key = this.getSt...
+
+   • 2025-09-18T23:38:43.199Z: Edit
+     Code:     this.allowUndo = state.allowUndo !== undefined ? state.allowUndo : true;     // Load orientation...
+
+   • 2025-09-18T23:38:53.142Z: Edit
+     Code:     // Update cached state     this.updateCachedState();      // NOW recalculate boardFlipped after ...
+
+   • 2025-09-19T01:20:24.191Z: Edit
+     Features: back.*to.*game.*button
+     Code:     this.gameMode = 'human-vs-bot';     this.humanColor = 'white';     this.botDifficulty = 4; // Bo...
+
+   • 2025-09-19T01:20:44.214Z: Edit
+     Code:   generateMoveCommentary(fromRow, fromCol, toRow, toCol, piece, capturedPiece, special) {     const ...
+
+   • 2025-09-19T01:33:18.115Z: MultiEdit
+     Code:   showBotThinking(show) {     const gameMode = this.game.gameMode;     const isBotTurn = this.game.i...
+
+   • 2025-09-19T01:41:36.799Z: Edit
+     Features: (Ella|Evy|Emmy|Asa)
+     Code:   getBotDifficultyText() {     const difficulties = {       0: 'Random',       1: 'Eric',       2: '...
+
+   • 2025-09-19T13:26:23.530Z: MultiEdit
+     Code: // R1 Chess Game - Production Build...
+
+   • 2025-09-19T13:26:23.530Z: MultiEdit
+
+   • 2025-09-19T13:26:23.530Z: MultiEdit
+
+   • 2025-09-19T13:26:23.530Z: MultiEdit
+     Code:   // Initialize chess game   chessGame = new ChessGame();   gameUI = new ChessUI(chessGame);...
+
+   • 2025-09-19T13:26:23.530Z: MultiEdit
+     Code:   // Try to load saved game state   const loaded = await gameUI.loadGameState();   if (loaded) {    ...
+
+   • 2025-09-19T13:26:23.530Z: MultiEdit
+     Code:   // Send initialization event   sendGameEvent('game_initialized', {     theme: chessGame.theme,    ...
+
+   • 2025-09-19T13:26:23.530Z: MultiEdit
+
+   • 2025-09-19T13:34:15.724Z: Edit
+
+⚠️  PARTIAL PATCHES (need investigation):
+   • 2025-09-18T21:26:44.984Z: Edit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-18T21:28:38.647Z: Edit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-18T21:28:44.464Z: Edit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-18T22:21:41.176Z: MultiEdit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-18T22:21:41.176Z: MultiEdit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-18T22:21:41.176Z: MultiEdit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-18T22:21:41.176Z: MultiEdit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-19T13:26:23.530Z: MultiEdit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-19T13:35:27.003Z: Edit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-19T13:36:43.311Z: MultiEdit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-19T13:38:35.148Z: MultiEdit
+     Status: Both old and new code found - possible partial application
+
+   • 2025-09-19T13:41:30.268Z: Edit
+     Status: Both old and new code found - possible partial application
+
+📁 OTHER FILES WITH PATCHES:
+   • /Users/ericbuess/Projects/chess-r1-clean/clean_console.py: 1 patches
+   • /Users/ericbuess/Projects/chess-r1-clean/clean_properly.py: 1 patches
+   • /Users/ericbuess/Projects/chess-r1-clean/remove_console.py: 1 patches
+   • /Users/ericbuess/Projects/chess-r1-clean/test.html: 1 patches
+   • /Users/ericbuess/Projects/chess-r1-recovered/CLAUDE.md: 1 patches
+   • /Users/ericbuess/Projects/chess-r1-recovered/PLAN.md: 1 patches
+   • /Users/ericbuess/Projects/chess-r1-recovered/R1_DEPLOYMENT_INSTRUCTIONS.md: 1 patches
+   • /Users/ericbuess/Projects/chess-r1-recovered/RECONSTRUCTION_PLAN.md: 1 patches
+   • /Users/ericbuess/Projects/chess-r1-recovered/package.json: 1 patches
+   • /Users/ericbuess/Projects/chess-r1-recovered/vite.config.js: 1 patches
+   • /Users/ericbuess/Projects/chess-r1/HISTORY.md: 2 patches
+   • /Users/ericbuess/Projects/chess-r1/PLAN.md: 7 patches
+   • /Users/ericbuess/Projects/chess-r1/app/index.html: 5 patches
+   • /Users/ericbuess/Projects/chess-r1/app/src/style.css: 3 patches
+   • /Users/ericbuess/Projects/chess-r1/app/vite.config.js: 1 patches
+   • /Users/ericbuess/Projects/chess-r1/final_fix.py: 1 patches
+   • /Users/ericbuess/Projects/chess-r1/fix_all_syntax.py: 1 patches
+   • /Users/ericbuess/Projects/chess-r1/fix_orphans.py: 2 patches
+   • /Users/ericbuess/Projects/chess-r1/fix_syntax.py: 1 patches
+   • unknown: 16 patches
+
+================================================================================
