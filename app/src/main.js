@@ -188,7 +188,7 @@ class ChessGame {
    * @param {number} toCol - Destination column (0-7)
    * @returns {boolean} True if move was successful
    */
-  makeMove(fromRow, fromCol, toRow, toCol) {
+  async makeMove(fromRow, fromCol, toRow, toCol) {
     
     const from = this.coordsToSquare(fromRow, fromCol);
     const to = this.coordsToSquare(toRow, toCol);
@@ -255,7 +255,10 @@ class ChessGame {
       } else if (this.gameStatus === 'check') {
         setTimeout(() => this.playSound('check'), isCapture ? 100 : 0);
       }
-      
+
+      // Auto-save after successful move
+      await this.autoSave();
+
       return { success: true, enteredCheck };
     } catch (error) {
       console.error(`[MOVE] Invalid move: ${from} to ${to}`, error.message);
@@ -512,7 +515,10 @@ class ChessGame {
       piece: botMove.piece,
       newTurn: this.currentPlayer
     });
-    
+
+    // Auto-save after successful bot move
+    await this.autoSave();
+
     return { success: true, enteredCheck };
   }
   
@@ -1585,7 +1591,7 @@ class ChessUI {
         square.classList.add(isLight ? 'light-square' : 'dark-square');
         
         // Enhanced touch support for R1 device
-        square.addEventListener('click', (e) => this.handleSquareClick(e));
+        square.addEventListener('click', async (e) => await this.handleSquareClick(e));
         square.addEventListener('touchstart', (e) => this.handleTouchStart(e));
         square.addEventListener('touchend', (e) => this.handleTouchEnd(e));
         square.addEventListener('touchcancel', (e) => this.handleTouchCancel(e));
@@ -1597,7 +1603,7 @@ class ChessUI {
     this.applyTheme();
   }
 
-  handleSquareClick(event) {
+  async handleSquareClick(event) {
     const row = parseInt(event.target.dataset.row);
     const col = parseInt(event.target.dataset.col);
     this.handleSquareSelection(row, col);
@@ -2386,7 +2392,7 @@ class ChessUI {
             currentPlayer: this.game.currentPlayer
           });
           
-          const moveResult = this.game.makeMove(fromRow, fromCol, logicalRow, logicalCol);
+          const moveResult = await this.game.makeMove(fromRow, fromCol, logicalRow, logicalCol);
           if (moveResult && moveResult.success) {
             console.log('[CHECK_DEBUG] After move:', {
               wasInCheck,
@@ -2938,6 +2944,12 @@ class ChessUI {
             // Switch to new game mode
             const oldMode = this.game.gameMode;
             this.game.setGameMode(radio.value);
+
+            // Save last game mode
+            saveToStorage('last_game_mode', {
+              mode: radio.value,
+              timestamp: Date.now()
+            });
 
             // Reset color and difficulty change tracking when switching modes
             // (these changes don't matter across mode switches)
@@ -3646,7 +3658,7 @@ class ChessUI {
 // ===========================================
 
 // Handle R1 scroll wheel events for undo/redo (reversed direction)
-window.addEventListener('scrollUp', () => {
+window.addEventListener('scrollUp', async () => {
   console.log('[SCROLL UP] Event received - attempting redo move');
 
   if (chessGame && gameUI) {
@@ -3673,6 +3685,9 @@ window.addEventListener('scrollUp', () => {
         gameUI.updateCapturedPiecesDisplay();
         gameUI.updateMoveHistoryDisplay();
 
+        // Save state after redo
+        await chessGame.autoSave();
+
         // Just update UI state - NO bot triggering on undo/redo!
         if (chessGame.gameMode === 'human-vs-bot') {
           // Only update UI state based on whose turn it is
@@ -3698,7 +3713,7 @@ window.addEventListener('scrollUp', () => {
   }
 });
 
-window.addEventListener('scrollDown', () => {
+window.addEventListener('scrollDown', async () => {
   console.log('[SCROLL DOWN] Detected - attempting undo');
   console.log('[SCROLL DOWN] Move history length:', chessGame ? chessGame.moveHistory.length : 'no game');
 
@@ -3727,6 +3742,9 @@ window.addEventListener('scrollDown', () => {
         gameUI.updatePlayerTurnIndicator(chessGame.currentPlayer, chessGame.gameMode);
         gameUI.updateCapturedPiecesDisplay();
         gameUI.updateMoveHistoryDisplay();
+
+        // Save state after undo
+        await chessGame.autoSave();
 
         // Just update UI state - NO bot triggering on undo/redo!
         if (chessGame.gameMode === 'human-vs-bot') {
