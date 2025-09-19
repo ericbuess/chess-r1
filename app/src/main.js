@@ -3902,6 +3902,38 @@ function calculateChecksum(str) {
   return Math.abs(hash).toString(16);
 }
 
+// Cookie functions for persistent storage
+function setCookie(name, value, days = 365) {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+  const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
+  document.cookie = `${name}=${encodeURIComponent(stringValue)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+  console.log(`Cookie set: ${name}`);
+}
+
+function getCookie(name) {
+  const nameEQ = name + "=";
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    let c = cookies[i].trim();
+    if (c.indexOf(nameEQ) === 0) {
+      try {
+        const value = decodeURIComponent(c.substring(nameEQ.length));
+        // Try to parse as JSON, if it fails return as string
+        try {
+          return JSON.parse(value);
+        } catch {
+          return value;
+        }
+      } catch (e) {
+        console.error('Error decoding cookie:', e);
+        return null;
+      }
+    }
+  }
+  return null;
+}
+
 // Save data to persistent storage with robust error handling
 async function saveToStorage(key, value) {
   debugLogger.debug('STORAGE', `Attempting to save data with key: ${key}`);
@@ -3938,7 +3970,18 @@ async function saveToStorage(key, value) {
     }
   }
 
-  // Fallback to localStorage
+  // Try cookies next
+  try {
+    setCookie(key, value);
+    debugLogger.info('STORAGE', 'Successfully saved to cookies');
+    console.log('Data saved to cookies successfully');
+    return true;
+  } catch (e) {
+    debugLogger.error('STORAGE', 'Cookie save failed', e);
+    console.error('Error saving to cookies:', e);
+  }
+
+  // Final fallback to localStorage
   try {
     const jsonString = JSON.stringify(value);
     localStorage.setItem(key, jsonString);
@@ -3977,7 +4020,20 @@ async function loadFromStorage(key) {
     }
   }
 
-  // Fallback to localStorage
+  // Try cookies next
+  try {
+    const cookieValue = getCookie(key);
+    if (cookieValue) {
+      debugLogger.info('STORAGE', 'Successfully loaded from cookies');
+      console.log('Data loaded from cookies');
+      return cookieValue;
+    }
+  } catch (e) {
+    debugLogger.error('STORAGE', 'Cookie load failed', e);
+    console.error('Error loading from cookies:', e);
+  }
+
+  // Final fallback to localStorage
   try {
     const stored = localStorage.getItem(key);
     if (stored) {
