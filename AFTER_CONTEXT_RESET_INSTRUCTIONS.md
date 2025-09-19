@@ -1,5 +1,10 @@
 # Instructions After Context Reset
 
+## FIRST: READ THESE FILES IN ORDER
+1. **Read THIS file completely** - AFTER_CONTEXT_RESET_INSTRUCTIONS.md
+2. **Read PROPOSED_CHANGES.md** - See what user checked
+3. **Keep all_patches_extracted.json open** - Has exact code changes
+
 ## Current Situation
 You've been working on restoring the Chess R1 project after a git loss. The user has reviewed and approved changes in PROPOSED_CHANGES.md.
 
