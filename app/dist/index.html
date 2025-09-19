@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=240, height=320, user-scalable=no, initial-scale=1.0">
+    <title>Chess R1 by Eric Buess</title>
+  <script type="module" crossorigin src="./assets/main-D5PIgTmy.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-B-GkDn3V.css">
+</head>
+<body>
+    <div id="app">
+        <div id="game-header">
+            <div id="current-player">White's Turn</div>
+            <div id="move-info">
+                <div id="move-count">Move: 1</div>
+                <div id="last-move"></div>
+            </div>
+            <div id="game-status"></div>
+        </div>
+        
+        <div id="chess-board"></div>
+        
+        <div id="options-overlay" class="hidden">
+            <div id="options-menu">
+                <div id="options-title">Chess R1 by Eric Buess v0.0.1</div>
+                
+                <!-- Game Mode Section -->
+                <div class="option-group">
+                    <div class="option-label">Game Mode</div>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="gameMode" value="human-vs-human">
+                            <span class="radio-text">Human vs Human</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="gameMode" value="human-vs-bot" checked>
+                            <span class="radio-text">Human vs Bot</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Player Color Section (for Human vs Bot) -->
+                <div class="option-group" id="color-group">
+                    <div class="option-label">Play as</div>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="playerColor" value="white" checked>
+                            <span class="radio-text">White</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="playerColor" value="black">
+                            <span class="radio-text">Black</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="playerColor" value="random">
+                            <span class="radio-text">Random</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Sound Effects Section -->
+                <div class="option-group">
+                    <div class="option-label">Sound Effects</div>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="soundEffects" value="on" checked>
+                            <span class="radio-text">On</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="soundEffects" value="off">
+                            <span class="radio-text">Off</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Undo Options Section -->
+                <div class="option-group">
+                    <div class="option-label">Allow Undo</div>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="allowUndo" value="on" checked>
+                            <span class="radio-text">On</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="allowUndo" value="off">
+                            <span class="radio-text">Off</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="button-group">
+                    <button id="new-game-btn" class="action-btn primary">New game</button>
+                    <button id="back-btn" class="action-btn secondary">Back to game</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="instruction-label" class="hidden"></div>
+    </div>
+</body>
+</html>
