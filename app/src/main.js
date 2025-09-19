@@ -129,8 +129,7 @@ class ChessGame {
    * Convert the chess engine's internal state to our board representation
    */
   engineStateToBoard() {
-    const engineConfig = this.engine.exportJson();
-    const engineData = JSON.parse(engineConfig);
+    const engineData = this.engine.exportJson();
 
     // Create an 8x8 grid
     const board = Array(8).fill(null).map(() => Array(8).fill(null));
@@ -219,8 +218,7 @@ class ChessGame {
       this.board = this.engineStateToBoard();
 
       // Update current player
-      const status = this.engine.exportJson();
-      const gameData = JSON.parse(status);
+      const gameData = this.engine.exportJson();
       this.currentPlayer = gameData.turn;
 
       // Update game state
@@ -281,8 +279,7 @@ class ChessGame {
       this.board = this.engineStateToBoard();
 
       // Update current player
-      const status = this.engine.exportJson();
-      const gameData = JSON.parse(status);
+      const gameData = this.engine.exportJson();
       this.currentPlayer = gameData.turn;
 
       // Update game state
@@ -327,8 +324,7 @@ class ChessGame {
    */
   updateGameState() {
     try {
-      const status = this.engine.exportJson();
-      const gameData = JSON.parse(status);
+      const gameData = this.engine.exportJson();
 
       if (gameData.checkMate) {
         this.gameState = 'checkmate';
@@ -444,8 +440,7 @@ class ChessGame {
         this.board = this.engineStateToBoard();
 
         // Update current player
-        const status = this.engine.exportJson();
-        const gameData = JSON.parse(status);
+        const gameData = this.engine.exportJson();
         this.currentPlayer = gameData.turn;
 
         // Update game state
