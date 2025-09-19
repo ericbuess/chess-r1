@@ -3,6 +3,7 @@
 ## Summary
 - main.js was lost on 2025-09-19 when .git was deleted
 - Successfully recovered complete main.js from Sept 18, 2025 logs
+- Fixed corrupted js-chess-engine library (replaced embedded with import)
 - Updated bot names: Ella (Easiest), Evy (Medium), Emmy (Hard), Asa (Hardest)
 
 ## Features Verified
