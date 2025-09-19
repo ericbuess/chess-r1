@@ -1,0 +1,24 @@
+PATCH 005 (MultiEdit #5)
+Timestamp: 2025-09-18T23:56:43.093Z
+Source: fcbf1ff1-744b-42b7-b79e-0dc16e678298.jsonl:54
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+            // Reset color change tracking when switching modes
+            // (color changes don't matter across mode switches)
+            this.game.colorChangedMidGame = false;
+            this.game.originalHumanColor = this.game.humanColor;
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+            // Reset color and difficulty change tracking when switching modes
+            // (these changes don't matter across mode switches)
+            this.game.colorChangedMidGame = false;
+            this.game.originalHumanColor = this.game.humanColor;
+            this.game.difficultyChangedMidGame = false;
+            this.game.originalBotDifficulty = this.game.botDifficulty;
+----------------------------------------

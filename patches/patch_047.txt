@@ -1,0 +1,93 @@
+PATCH 047
+Timestamp: 2025-09-18T22:13:24.075Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:460
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+  async loadGameState() {
+    try {
+      debugLogger.info('LOAD', 'Attempting to load saved game state from storage');
+      console.log('Attempting to load saved game state...');
+      
+      // Try to load state for current game mode first
+      const currentModeKey = this.game.getStorageKey();
+      let state = await loadFromStorage(currentModeKey);
+      
+      if (!state) {
+        debugLogger.info('LOAD', `No saved state found for current mode (${this.game.gameMode})`);
+        // Try to load from the other game mode
+        const otherMode = this.game.gameMode === 'human-vs-human' ? 'human-vs-bot' : 'human-vs-human';
+        const otherModeKey = `chess_game_state_${otherMode.replace('-', '_')}`;
+        state = await loadFromStorage(otherModeKey);
+        
+        if (state) {
+          debugLogger.info('LOAD', `Found saved state from other mode (${otherMode}), but keeping current mode settings`);
+          // Keep current game mode and settings, only restore board state
+          state.gameMode = this.game.gameMode;
+          state.humanColor = this.game.humanColor;
+        }
+      }
+      
+      if (!state) {
+        // Finally try legacy key for backward compatibility
+        state = await loadFromStorage('chess_game_state');
+        if (state) {
+          debugLogger.info('LOAD', 'Found legacy saved state, migrating to new format');
+        }
+      }
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+  async loadGameState() {
+    try {
+      debugLogger.info('LOAD', 'Attempting to load saved game state from storage');
+      console.log('Attempting to load saved game state...');
+
+      // Load states from both game modes to find the most recent
+      const humanVsBotKey = 'chess_game_state_human_vs_bot';
+      const humanVsHumanKey = 'chess_game_state_human_vs_human';
+
+      const humanVsBotState = await loadFromStorage(humanVsBotKey);
+      const humanVsHumanState = await loadFromStorage(humanVsHumanKey);
+
+      let state = null;
+      let selectedMode = null;
+
+      // Determine which state to load based on timestamps
+      if (humanVsBotState && humanVsHumanState) {
+        // Both states exist - load the most recently saved one
+        const botTimestamp = this.getLatestTimestamp(humanVsBotState);
+        const humanTimestamp = this.getLatestTimestamp(humanVsHumanState);
+
+        if (humanTimestamp > botTimestamp) {
+          state = humanVsHumanState;
+          selectedMode = 'human-vs-human';
+          debugLogger.info('LOAD', 'Loading more recent human-vs-human game');
+        } else {
+          state = humanVsBotState;
+          selectedMode = 'human-vs-bot';
+          debugLogger.info('LOAD', 'Loading more recent human-vs-bot game');
+        }
+      } else if (humanVsHumanState) {
+        state = humanVsHumanState;
+        selectedMode = 'human-vs-human';
+        debugLogger.info('LOAD', 'Found only human-vs-human saved state');
+      } else if (humanVsBotState) {
+        state = humanVsBotState;
+        selectedMode = 'human-vs-bot';
+        debugLogger.info('LOAD', 'Found only human-vs-bot saved state');
+      }
+
+      if (!state) {
+        // Try legacy key for backward compatibility
+        state = await loadFromStorage('chess_game_state');
+        if (state) {
+          debugLogger.info('LOAD', 'Found legacy saved state, migrating to new format');
+          selectedMode = state.gameMode || 'human-vs-bot';
+        }
+      }
+----------------------------------------

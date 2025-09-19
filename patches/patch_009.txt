@@ -1,0 +1,58 @@
+PATCH 009
+Timestamp: 2025-09-18T19:02:58.763Z
+Source: 6e537a4c-0e0a-4b96-a685-3d920e7780bd.jsonl:539
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+  // Convert display coordinates to logical coordinates based on board flip
+  getLogicalCoordinates(displayRow, displayCol) {
+    if (this.game.shouldFlipBoard()) {
+      return {
+        row: 7 - displayRow,
+        col: 7 - displayCol
+      };
+    }
+    return { row: displayRow, col: displayCol };
+  }
+
+  // Convert logical coordinates to display coordinates based on board flip
+  getDisplayCoordinates(logicalRow, logicalCol) {
+    if (this.game.shouldFlipBoard()) {
+      return {
+        row: 7 - logicalRow,
+        col: 7 - logicalCol
+      };
+    }
+    return { row: logicalRow, col: logicalCol };
+  }
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+  // Convert display coordinates to logical coordinates based on board flip
+  getLogicalCoordinates(displayRow, displayCol) {
+    // Use boardFlipped instead of shouldFlipBoard() to support all game modes
+    if (this.game.boardFlipped) {
+      return {
+        row: 7 - displayRow,
+        col: 7 - displayCol
+      };
+    }
+    return { row: displayRow, col: displayCol };
+  }
+
+  // Convert logical coordinates to display coordinates based on board flip
+  getDisplayCoordinates(logicalRow, logicalCol) {
+    // Use boardFlipped instead of shouldFlipBoard() to support all game modes
+    if (this.game.boardFlipped) {
+      return {
+        row: 7 - logicalRow,
+        col: 7 - logicalCol
+      };
+    }
+    return { row: logicalRow, col: logicalCol };
+  }
+----------------------------------------

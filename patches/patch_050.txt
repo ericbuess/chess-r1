@@ -1,0 +1,56 @@
+PATCH 050
+Timestamp: 2025-09-18T22:13:57.952Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:473
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+      if (this.isValidSavedState(state)) {
+        debugLogger.info('LOAD', 'State validation passed - Loading game state', {
+          moveCount: state.moveHistory.length,
+          currentPlayer: state.currentPlayer,
+          gameStatus: state.gameStatus,
+          soundEnabled: state.soundEnabled,
+          allowUndo: state.allowUndo
+        });
+        console.log('Loading valid saved state');
+        this.game.loadGameState(state);
+        this.applyTheme();
+        this.updateDisplay();
+        debugLogger.info('LOAD', 'Game state loaded and UI updated successfully');
+        console.log('Game state loaded successfully');
+        return true;
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+      if (this.isValidSavedState(state)) {
+        debugLogger.info('LOAD', 'State validation passed - Loading game state', {
+          moveCount: state.moveHistory.length,
+          currentPlayer: state.currentPlayer,
+          gameStatus: state.gameStatus,
+          soundEnabled: state.soundEnabled,
+          allowUndo: state.allowUndo,
+          gameMode: selectedMode || state.gameMode
+        });
+        console.log('Loading valid saved state');
+
+        // CRITICAL: Set the correct game mode BEFORE loading state
+        if (selectedMode) {
+          this.game.gameMode = selectedMode;
+          console.log(`[LOAD] Setting game mode to: ${selectedMode}`);
+        }
+
+        this.game.loadGameState(state);
+        this.applyTheme();
+        this.updateDisplay();
+
+        // Update menu visibility based on loaded game mode
+        this.updateMenuVisibility();
+
+        debugLogger.info('LOAD', 'Game state loaded and UI updated successfully');
+        console.log('Game state loaded successfully');
+        return true;
+----------------------------------------

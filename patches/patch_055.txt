@@ -1,0 +1,38 @@
+PATCH 055
+Timestamp: 2025-09-18T22:15:55.944Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:502
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+    // Update cached state FIRST (this sets currentPlayer correctly)
+    this.updateCachedState();
+
+    // THEN determine board orientation based on correct currentPlayer
+    this.boardFlipped = this.determineOrientation();
+    console.log('[NEW_GAME] Set board orientation:', this.boardFlipped, 'for player:', this.currentPlayer);
+
+    // Play new game sound
+    this.playSound('newGame');
+  }
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+    // Update cached state FIRST (this sets currentPlayer correctly)
+    this.updateCachedState();
+
+    // CRITICAL: Update game status to ensure it's set to 'playing'
+    this.updateGameStatus();
+    console.log('[NEW_GAME] Game status updated to:', this.gameStatus);
+
+    // THEN determine board orientation based on correct currentPlayer
+    this.boardFlipped = this.determineOrientation();
+    console.log('[NEW_GAME] Set board orientation:', this.boardFlipped, 'for player:', this.currentPlayer);
+
+    // Play new game sound
+    this.playSound('newGame');
+  }
+----------------------------------------

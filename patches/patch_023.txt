@@ -1,0 +1,59 @@
+PATCH 023
+Timestamp: 2025-09-19T02:07:14.237Z
+Source: a2794a04-56f1-4646-9d38-e95c21e8bce3.jsonl:237
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+  confirmNewGame() {
+    console.log('[CONFIRM_NEW_GAME] Starting new game with:', {
+      humanColor: this.game.humanColor,
+      gameMode: this.game.gameMode
+    });
+
+    // Clear saved state and start new game BEFORE hiding menu
+    this.clearSavedState();
+    this.game.newGame();
+
+    console.log('[CONFIRM_NEW_GAME] After newGame:', {
+      humanColor: this.game.humanColor,
+      currentPlayer: this.game.currentPlayer,
+      isBotTurn: this.game.isBotTurn()
+    });
+
+    // Hide menu (this may call updateDisplay via orientation change)
+    this.hideOptionsMenu();
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+  confirmNewGame() {
+    console.log('[CONFIRM_NEW_GAME] Starting new game with:', {
+      humanColor: this.game.humanColor,
+      gameMode: this.game.gameMode,
+      botDifficulty: this.game.botDifficulty
+    });
+
+    // Clear saved state and start new game BEFORE hiding menu
+    this.clearSavedState();
+    this.game.newGame();
+
+    // Clear the change tracking flags since we're starting a fresh game
+    // This prevents hideOptionsMenu from reverting the bot difficulty
+    this.game.difficultyChangedMidGame = false;
+    this.game.colorChangedMidGame = false;
+    this.game.originalBotDifficulty = this.game.botDifficulty;
+    this.game.originalHumanColor = this.game.humanColor;
+
+    console.log('[CONFIRM_NEW_GAME] After newGame:', {
+      humanColor: this.game.humanColor,
+      currentPlayer: this.game.currentPlayer,
+      botDifficulty: this.game.botDifficulty,
+      isBotTurn: this.game.isBotTurn()
+    });
+
+    // Hide menu (this won't revert settings now that flags are cleared)
+    this.hideOptionsMenu();
+----------------------------------------

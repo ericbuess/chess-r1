@@ -1,0 +1,36 @@
+PATCH 049
+Timestamp: 2025-09-18T22:13:41.540Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:466
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+  async loadGameState() {
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+  // Helper to get the latest timestamp from a saved state
+  getLatestTimestamp(state) {
+    if (!state) return 0;
+
+    // Check stateHistory for timestamp
+    if (state.stateHistory && state.stateHistory.length > 0) {
+      const lastState = state.stateHistory[state.stateHistory.length - 1];
+      if (lastState && lastState.timestamp) {
+        return lastState.timestamp;
+      }
+    }
+
+    // Fallback to checking if there are moves (assume older save)
+    if (state.moveHistory && state.moveHistory.length > 0) {
+      return 1; // Return 1 to indicate it exists but has no timestamp
+    }
+
+    return 0;
+  }
+
+  async loadGameState() {
+----------------------------------------

@@ -1,0 +1,26 @@
+PATCH 073
+Timestamp: 2025-09-18T23:38:53.142Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:794
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+    // Update cached state
+    this.updateCachedState();
+
+    // CRITICAL FIX: Handle stateHistory for the new undo/redo system
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+    // Update cached state
+    this.updateCachedState();
+
+    // NOW recalculate boardFlipped after currentPlayer is set
+    this.boardFlipped = this.determineOrientation();
+    console.log('[LOAD_STATE] Recalculated board orientation after updateCachedState:', this.boardFlipped, 'Mode:', this.orientationMode, 'Current Player:', this.currentPlayer);
+
+    // CRITICAL FIX: Handle stateHistory for the new undo/redo system
+----------------------------------------

@@ -1,0 +1,50 @@
+PATCH 008
+Timestamp: 2025-09-18T18:55:18.403Z
+Source: 6e537a4c-0e0a-4b96-a685-3d920e7780bd.jsonl:475
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+  hideOptionsMenu() {
+    const overlay = document.getElementById('options-overlay');
+    if (overlay) {
+      overlay.classList.add('hidden');
+    }
+
+    // Apply correct orientation when menu closes using deterministic logic
+    const shouldFlip = this.game.determineOrientation();
+    if (this.game.boardFlipped !== shouldFlip) {
+      this.game.boardFlipped = shouldFlip;
+      this.updateDisplay();
+    }
+  }
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+  hideOptionsMenu() {
+    const overlay = document.getElementById('options-overlay');
+    if (overlay) {
+      overlay.classList.add('hidden');
+    }
+
+    // Apply correct orientation when menu closes using deterministic logic
+    const shouldFlip = this.game.determineOrientation();
+    if (this.game.boardFlipped !== shouldFlip) {
+      this.game.boardFlipped = shouldFlip;
+      this.updateDisplay();
+    }
+
+    // Check if bot should make initial move after returning from options
+    // This handles the case where user changed color and clicked "Back to game"
+    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {
+      console.log('[HIDE_OPTIONS] Checking if bot should make initial move after color change');
+      // Use a small delay to let UI settle
+      setTimeout(() => {
+        this.checkInitialBotTurn();
+      }, 100);
+    }
+  }
+----------------------------------------

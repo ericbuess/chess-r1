@@ -1,0 +1,33 @@
+PATCH 021 (MultiEdit #1)
+Timestamp: 2025-09-19T02:03:12.264Z
+Source: a2794a04-56f1-4646-9d38-e95c21e8bce3.jsonl:219
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+      // If no move yet, show initial state with game mode
+      if (!displayText) {
+        if (this.game.gameMode === 'human-vs-human') {
+          displayText = 'Human vs Human • Ready to play';
+        } else {
+          const botName = this.game.getBotDifficultyText();
+          const playerName = this.game.humanPlayerName || 'Eric';
+          displayText = `${playerName} vs ${botName} • Ready to play`;
+        }
+      }
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+      // If no move yet, show initial state with game mode
+      if (!displayText) {
+        if (this.game.gameMode === 'human-vs-human') {
+          displayText = 'Human vs Human • Ready to play';
+        } else {
+          const botName = this.game.getBotDifficultyText();
+          displayText = `Bot (${botName}) • Ready to play`;
+        }
+      }
+----------------------------------------

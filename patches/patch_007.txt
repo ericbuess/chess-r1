@@ -1,0 +1,94 @@
+PATCH 007
+Timestamp: 2025-09-19T00:02:35.358Z
+Source: fcbf1ff1-744b-42b7-b79e-0dc16e678298.jsonl:102
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+    // Update back button state - disable if color/difficulty changed mid-game or no moves made
+    const backBtn = document.getElementById('back-btn');
+    if (backBtn) {
+      const hasMoves = this.game.moveHistory && this.game.moveHistory.length > 0;
+      const colorChanged = this.game.colorChangedMidGame;
+      const difficultyChanged = this.game.difficultyChangedMidGame;
+
+      if (!hasMoves) {
+        // No moves made yet in this game mode
+        backBtn.disabled = true;
+        backBtn.textContent = 'Back to game (no moves yet)';
+        backBtn.classList.add('disabled');
+      } else if (colorChanged && difficultyChanged) {
+        // Both color and difficulty changed
+        backBtn.disabled = true;
+        backBtn.textContent = 'Start new game (settings changed)';
+        backBtn.classList.add('disabled');
+      } else if (colorChanged) {
+        // Only color changed
+        backBtn.disabled = true;
+        backBtn.textContent = 'Start new game (color changed)';
+        backBtn.classList.add('disabled');
+      } else if (difficultyChanged) {
+        // Only difficulty changed
+        backBtn.disabled = true;
+        backBtn.textContent = 'Start new game (difficulty changed)';
+        backBtn.classList.add('disabled');
+      } else {
+        // No changes, can go back to game
+        backBtn.disabled = false;
+        backBtn.textContent = 'Back to game';
+        backBtn.classList.remove('disabled');
+      }
+    }
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+    // Update back button state - disable if color/difficulty changed mid-game
+    const backBtn = document.getElementById('back-btn');
+    if (backBtn) {
+      const colorChanged = this.game.colorChangedMidGame;
+      const difficultyChanged = this.game.difficultyChangedMidGame;
+
+      if (colorChanged && difficultyChanged) {
+        // Both color and difficulty changed
+        backBtn.disabled = true;
+        backBtn.textContent = 'Start new game (settings changed)';
+        backBtn.classList.add('disabled');
+      } else if (colorChanged) {
+        // Only color changed
+        backBtn.disabled = true;
+        backBtn.textContent = 'Start new game (color changed)';
+        backBtn.classList.add('disabled');
+      } else if (difficultyChanged) {
+        // Only difficulty changed
+        backBtn.disabled = true;
+        backBtn.textContent = 'Start new game (difficulty changed)';
+        backBtn.classList.add('disabled');
+      } else {
+        // No changes, can go back to game
+        backBtn.disabled = false;
+        backBtn.textContent = 'Back to game';
+        backBtn.classList.remove('disabled');
+      }
+    }
+
+    // Update new game button state - disable if no moves made yet
+    const newGameBtn = document.getElementById('new-game-btn');
+    if (newGameBtn) {
+      const hasMoves = this.game.moveHistory && this.game.moveHistory.length > 0;
+
+      if (!hasMoves) {
+        // No moves made yet, already at start
+        newGameBtn.disabled = true;
+        newGameBtn.textContent = 'New game (already at start)';
+        newGameBtn.classList.add('disabled');
+      } else {
+        // Moves have been made, can start new game
+        newGameBtn.disabled = false;
+        newGameBtn.textContent = 'New game';
+        newGameBtn.classList.remove('disabled');
+      }
+    }
+----------------------------------------

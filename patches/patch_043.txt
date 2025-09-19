@@ -1,0 +1,64 @@
+PATCH 043
+Timestamp: 2025-09-18T22:06:56.174Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:397
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+    // Clear the undo/redo state flag when making a new move
+    this.isInUndoRedoState = false;
+
+    // Store complete engine state AFTER the move
+    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));
+    const stateEntry = {
+      engineState: stateAfterMove,
+      move: {
+        from: moveData.from,
+        to: moveData.to,
+        piece: moveData.piece,
+        captured: moveData.captured
+      },
+      notation: moveData.notation,
+      commentary: moveData.commentary,
+      timestamp: Date.now()
+    };
+
+    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);
+    this.stateHistory.push(stateEntry);
+    this.currentStateIndex++;
+
+    // R1 Memory Management: Limit history to prevent excessive memory usage
+    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states for R1 device
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+    // Clear the undo/redo state flag when making a new move
+    this.isInUndoRedoState = false;
+
+    // R1 Memory Management: Define history limit for R1 device
+    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states to prevent memory issues
+
+    // Store complete engine state AFTER the move
+    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));
+    const stateEntry = {
+      engineState: stateAfterMove,
+      move: {
+        from: moveData.from,
+        to: moveData.to,
+        piece: moveData.piece,
+        captured: moveData.captured
+      },
+      notation: moveData.notation,
+      commentary: moveData.commentary,
+      timestamp: Date.now()
+    };
+
+    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);
+    this.stateHistory.push(stateEntry);
+    this.currentStateIndex++;
+
+    // Check if we've exceeded the history limit
+----------------------------------------

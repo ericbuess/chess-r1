@@ -1,0 +1,18 @@
+PATCH 038
+Timestamp: 2025-09-18T21:27:33.606Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:278
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+    // Generate AND execute bot move (aiMove() does both!)
+    const botMove = this.generateBotMove();
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+    // Generate AND execute bot move (aiMove() does both!)
+    const botMove = await this.generateBotMove();
+----------------------------------------

@@ -1,0 +1,37 @@
+PATCH 056
+Timestamp: 2025-09-18T22:16:08.787Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:505
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+    // Check if bot should make initial move after returning from options
+    // This handles the case where user changed color and clicked "Back to game"
+    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {
+      console.log('[HIDE_OPTIONS] Checking if bot should make initial move after color change');
+      // Use a small delay to let UI settle
+      setTimeout(() => {
+        this.checkInitialBotTurn();
+      }, 100);
+    }
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+    // Check if bot should make initial move after returning from options
+    // This handles the case where user changed color and clicked "Back to game"
+    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {
+      console.log('[HIDE_OPTIONS] Checking if bot should make initial move after color change');
+      // Use longer delay to ensure game state is fully ready
+      setTimeout(() => {
+        // Double-check game is ready before attempting bot move
+        if (this.game.gameStatus === 'playing') {
+          this.checkInitialBotTurn();
+        } else {
+          console.log('[HIDE_OPTIONS] Game not ready yet, skipping bot turn check');
+        }
+      }, 800); // Increased delay from 100ms to 800ms
+    }
+----------------------------------------

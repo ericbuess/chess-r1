@@ -1,0 +1,129 @@
+PATCH 071
+Timestamp: 2025-09-18T22:40:52.802Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:697
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+      // Load states from both game modes to find the most recent
+      const humanVsBotKey = 'chess_game_state_human_vs_bot';
+      const humanVsHumanKey = 'chess_game_state_human_vs_human';
+
+      console.log('[LOAD] Checking for saved states with keys:', { humanVsBotKey, humanVsHumanKey });
+
+      const humanVsBotState = await loadFromStorage(humanVsBotKey);
+      const humanVsHumanState = await loadFromStorage(humanVsHumanKey);
+
+      console.log('[LOAD] Found states:', {
+        humanVsBot: !!humanVsBotState,
+        humanVsBotMoves: humanVsBotState?.moveHistory?.length || 0,
+        humanVsHuman: !!humanVsHumanState,
+        humanVsHumanMoves: humanVsHumanState?.moveHistory?.length || 0
+      });
+
+      let state = null;
+      let selectedMode = null;
+
+      // Determine which state to load based on timestamps
+      if (humanVsBotState && humanVsHumanState) {
+        // Both states exist - load the most recently saved one
+        const botTimestamp = this.getLatestTimestamp(humanVsBotState);
+        const humanTimestamp = this.getLatestTimestamp(humanVsHumanState);
+
+        console.log('[LOAD] Comparing timestamps:', { botTimestamp, humanTimestamp });
+
+        if (humanTimestamp > botTimestamp) {
+          state = humanVsHumanState;
+          selectedMode = 'human-vs-human';
+          debugLogger.info('LOAD', 'Loading more recent human-vs-human game');
+          console.log('[LOAD] Selected human-vs-human as more recent');
+        } else {
+          state = humanVsBotState;
+          selectedMode = 'human-vs-bot';
+          debugLogger.info('LOAD', 'Loading more recent human-vs-bot game');
+          console.log('[LOAD] Selected human-vs-bot as more recent');
+        }
+      } else if (humanVsHumanState) {
+        state = humanVsHumanState;
+        selectedMode = 'human-vs-human';
+        debugLogger.info('LOAD', 'Found only human-vs-human saved state');
+        console.log('[LOAD] Found only human-vs-human state');
+      } else if (humanVsBotState) {
+        state = humanVsBotState;
+        selectedMode = 'human-vs-bot';
+        debugLogger.info('LOAD', 'Found only human-vs-bot saved state');
+        console.log('[LOAD] Found only human-vs-bot state');
+      }
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+      // First check what was the last game mode used
+      const lastModeData = await loadFromStorage('last_game_mode');
+      const preferredMode = lastModeData?.mode || null;
+
+      console.log('[LOAD] Last game mode:', preferredMode);
+
+      // Load states from both game modes
+      const humanVsBotKey = 'chess_game_state_human_vs_bot';
+      const humanVsHumanKey = 'chess_game_state_human_vs_human';
+
+      console.log('[LOAD] Checking for saved states with keys:', { humanVsBotKey, humanVsHumanKey });
+
+      const humanVsBotState = await loadFromStorage(humanVsBotKey);
+      const humanVsHumanState = await loadFromStorage(humanVsHumanKey);
+
+      console.log('[LOAD] Found states:', {
+        humanVsBot: !!humanVsBotState,
+        humanVsBotMoves: humanVsBotState?.moveHistory?.length || 0,
+        humanVsHuman: !!humanVsHumanState,
+        humanVsHumanMoves: humanVsHumanState?.moveHistory?.length || 0
+      });
+
+      let state = null;
+      let selectedMode = null;
+
+      // If we have a preferred mode saved, try to use that first
+      if (preferredMode) {
+        if (preferredMode === 'human-vs-human' && humanVsHumanState) {
+          state = humanVsHumanState;
+          selectedMode = 'human-vs-human';
+          console.log('[LOAD] Using last played mode: human-vs-human');
+        } else if (preferredMode === 'human-vs-bot' && humanVsBotState) {
+          state = humanVsBotState;
+          selectedMode = 'human-vs-bot';
+          console.log('[LOAD] Using last played mode: human-vs-bot');
+        }
+      }
+
+      // If we couldn't load the preferred mode, fall back to the most recent
+      if (!state) {
+        if (humanVsBotState && humanVsHumanState) {
+          // Both states exist - load the most recently saved one
+          const botTimestamp = this.getLatestTimestamp(humanVsBotState);
+          const humanTimestamp = this.getLatestTimestamp(humanVsHumanState);
+
+          console.log('[LOAD] Comparing timestamps:', { botTimestamp, humanTimestamp });
+
+          if (humanTimestamp > botTimestamp) {
+            state = humanVsHumanState;
+            selectedMode = 'human-vs-human';
+            console.log('[LOAD] Selected human-vs-human as more recent');
+          } else {
+            state = humanVsBotState;
+            selectedMode = 'human-vs-bot';
+            console.log('[LOAD] Selected human-vs-bot as more recent');
+          }
+        } else if (humanVsHumanState) {
+          state = humanVsHumanState;
+          selectedMode = 'human-vs-human';
+          console.log('[LOAD] Found only human-vs-human state');
+        } else if (humanVsBotState) {
+          state = humanVsBotState;
+          selectedMode = 'human-vs-bot';
+          console.log('[LOAD] Found only human-vs-bot state');
+        }
+      }
+----------------------------------------

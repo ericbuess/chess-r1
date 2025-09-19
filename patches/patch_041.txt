@@ -1,0 +1,95 @@
+PATCH 041
+Timestamp: 2025-09-18T22:06:36.809Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:391
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+  recordGameState(moveData) {
+    console.log('[STATE] Recording game state:', moveData);
+
+    // If we're not at the end of history, truncate future states (branching)
+    if (this.currentStateIndex < this.stateHistory.length - 1) {
+      console.log(`[STATE] Truncating future states from index ${this.currentStateIndex + 1}`);
+      this.stateHistory = this.stateHistory.slice(0, this.currentStateIndex + 1);
+    }
+
+    // Clear the undo/redo state flag when making a new move
+    this.isInUndoRedoState = false;
+
+    // Store complete engine state AFTER the move
+    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));
+    const stateEntry = {
+      engineState: stateAfterMove,
+      move: {
+        from: moveData.from,
+        to: moveData.to,
+        piece: moveData.piece,
+        captured: moveData.captured
+      },
+      notation: moveData.notation,
+      commentary: moveData.commentary,
+      timestamp: Date.now()
+    };
+
+    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);
+    this.stateHistory.push(stateEntry);
+    this.currentStateIndex++;
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+  recordGameState(moveData) {
+    console.log('[STATE] Recording game state:', moveData);
+
+    // If we're not at the end of history, truncate future states (branching)
+    if (this.currentStateIndex < this.stateHistory.length - 1) {
+      console.log(`[STATE] Truncating future states from index ${this.currentStateIndex + 1}`);
+      this.stateHistory = this.stateHistory.slice(0, this.currentStateIndex + 1);
+    }
+
+    // Clear the undo/redo state flag when making a new move
+    this.isInUndoRedoState = false;
+
+    // Store complete engine state AFTER the move
+    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));
+    const stateEntry = {
+      engineState: stateAfterMove,
+      move: {
+        from: moveData.from,
+        to: moveData.to,
+        piece: moveData.piece,
+        captured: moveData.captured
+      },
+      notation: moveData.notation,
+      commentary: moveData.commentary,
+      timestamp: Date.now()
+    };
+
+    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);
+    this.stateHistory.push(stateEntry);
+    this.currentStateIndex++;
+
+    // R1 Memory Management: Limit history to prevent excessive memory usage
+    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states for R1 device
+    if (this.stateHistory.length > MAX_HISTORY_LENGTH) {
+      // Keep the initial state (index 0) plus the most recent states
+      const statesToKeep = MAX_HISTORY_LENGTH - 1; // Reserve one slot for initial state
+      const removedCount = this.stateHistory.length - MAX_HISTORY_LENGTH;
+
+      console.log(`[STATE] History limit exceeded (${this.stateHistory.length}), trimming to ${MAX_HISTORY_LENGTH} states`);
+
+      // Keep initial state + most recent states
+      this.stateHistory = [
+        this.stateHistory[0], // Always keep initial state for full game reset
+        ...this.stateHistory.slice(-statesToKeep)
+      ];
+
+      // Adjust current index after trimming
+      this.currentStateIndex = this.stateHistory.length - 1;
+
+      console.log(`[STATE] Trimmed ${removedCount} old states, new length: ${this.stateHistory.length}`);
+    }
+----------------------------------------

@@ -1,0 +1,21 @@
+PATCH 067
+Timestamp: 2025-09-18T22:29:39.812Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:670
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+  getStorageKey() {
+    return `chess_game_state_${this.gameMode}`;
+  }
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+  getStorageKey() {
+    // Replace hyphens with underscores for consistent storage keys
+    return `chess_game_state_${this.gameMode.replace(/-/g, '_')}`;
+  }
+----------------------------------------

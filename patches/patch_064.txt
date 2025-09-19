@@ -1,0 +1,41 @@
+PATCH 064
+Timestamp: 2025-09-18T22:24:52.055Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:616
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+  // Handle new game start
+  onNewGameStart() {
+    console.log('[NEW_GAME_START] Called with:', {
+      gameMode: this.game.gameMode,
+      humanColor: this.game.humanColor,
+      currentPlayer: this.game.currentPlayer,
+      isBotTurn: this.game.isBotTurn()
+    });
+    this.updateDisplay();
+    this.checkInitialBotTurn();
+  }
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+  // Handle new game start
+  onNewGameStart() {
+    console.log('[NEW_GAME_START] Called with:', {
+      gameMode: this.game.gameMode,
+      humanColor: this.game.humanColor,
+      currentPlayer: this.game.currentPlayer,
+      isBotTurn: this.game.isBotTurn(),
+      moveCount: this.game.moveHistory ? this.game.moveHistory.length : 0
+    });
+    this.updateDisplay();
+
+    // Only check for initial bot turn if no moves have been made yet
+    if (!this.game.moveHistory || this.game.moveHistory.length === 0) {
+      this.checkInitialBotTurn();
+    }
+  }
+----------------------------------------

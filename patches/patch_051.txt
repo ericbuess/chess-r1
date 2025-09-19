@@ -1,0 +1,37 @@
+PATCH 051
+Timestamp: 2025-09-18T22:14:06.093Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:476
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+  // Helper to get the latest timestamp from a saved state
+  getLatestTimestamp(state) {
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+  // Update menu visibility based on game mode
+  updateMenuVisibility() {
+    const colorGroup = document.getElementById('color-group');
+    const difficultyGroup = document.getElementById('difficulty-group');
+    const orientationGroup = document.getElementById('orientation-mode-group');
+
+    if (this.game.gameMode === 'human-vs-human') {
+      // Human vs Human mode
+      if (colorGroup) colorGroup.style.display = 'none';
+      if (difficultyGroup) difficultyGroup.style.display = 'none';
+      if (orientationGroup) orientationGroup.style.display = 'block';
+    } else {
+      // Human vs Bot mode
+      if (colorGroup) colorGroup.style.display = 'block';
+      if (difficultyGroup) difficultyGroup.style.display = 'block';
+      if (orientationGroup) orientationGroup.style.display = 'none';
+    }
+  }
+
+  // Helper to get the latest timestamp from a saved state
+  getLatestTimestamp(state) {
+----------------------------------------

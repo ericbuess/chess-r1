@@ -1,0 +1,44 @@
+PATCH 017
+Timestamp: 2025-09-19T01:57:00.350Z
+Source: a2794a04-56f1-4646-9d38-e95c21e8bce3.jsonl:163
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+    const initialBoard = this.game ? this.game.initializeBoard() : this.initializeBoard();
+
+    for (let row = 0; row < 8; row++) {
+      if (!board[row] || !Array.isArray(board[row])) {
+        console.log(`[VALIDATION] Board row ${row} is invalid`);
+        return false;
+      }
+      for (let col = 0; col < 8; col++) {
+        const currentPiece = board[row][col];
+        const initialPiece = initialBoard[row][col];
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+    const initialBoard = this.game ? this.game.initializeBoard() : this.initializeBoard();
+
+    // Validate initialBoard structure
+    if (!initialBoard || !Array.isArray(initialBoard)) {
+      console.log('[VALIDATION] Initial board is invalid');
+      return false;
+    }
+
+    for (let row = 0; row < 8; row++) {
+      if (!board[row] || !Array.isArray(board[row])) {
+        console.log(`[VALIDATION] Board row ${row} is invalid`);
+        return false;
+      }
+      if (!initialBoard[row] || !Array.isArray(initialBoard[row])) {
+        console.log(`[VALIDATION] Initial board row ${row} is invalid`);
+        return false;
+      }
+      for (let col = 0; col < 8; col++) {
+        const currentPiece = board[row][col];
+        const initialPiece = initialBoard[row][col];
+----------------------------------------

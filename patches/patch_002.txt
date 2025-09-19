@@ -1,0 +1,51 @@
+PATCH 002 (MultiEdit #2)
+Timestamp: 2025-09-18T23:56:43.093Z
+Source: fcbf1ff1-744b-42b7-b79e-0dc16e678298.jsonl:54
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+  /**
+   * Set human color
+   */
+  setHumanColor(color) {
+    // Track if color was changed mid-game by comparing to original color
+    // Only track for human-vs-bot mode (doesn't apply to human-vs-human)
+    if (this.gameMode === 'human-vs-bot' && this.moveHistory && this.moveHistory.length > 0) {
+      // Check if color is different from what it was when menu opened
+      this.colorChangedMidGame = (color !== this.originalHumanColor);
+    }
+    this.humanColor = color;
+  }
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+  /**
+   * Set human color
+   */
+  setHumanColor(color) {
+    // Track if color was changed mid-game by comparing to original color
+    // Only track for human-vs-bot mode (doesn't apply to human-vs-human)
+    if (this.gameMode === 'human-vs-bot' && this.moveHistory && this.moveHistory.length > 0) {
+      // Check if color is different from what it was when menu opened
+      this.colorChangedMidGame = (color !== this.originalHumanColor);
+    }
+    this.humanColor = color;
+  }
+
+  /**
+   * Set bot difficulty
+   */
+  setBotDifficulty(difficulty) {
+    // Track if difficulty was changed mid-game by comparing to original difficulty
+    // Only track for human-vs-bot mode and when moves have been made
+    if (this.gameMode === 'human-vs-bot' && this.moveHistory && this.moveHistory.length > 0) {
+      // Check if difficulty is different from what it was when menu opened
+      this.difficultyChangedMidGame = (difficulty !== this.originalBotDifficulty);
+    }
+    this.botDifficulty = difficulty;
+  }
+----------------------------------------

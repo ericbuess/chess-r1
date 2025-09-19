@@ -1,0 +1,28 @@
+PATCH 046
+Timestamp: 2025-09-18T22:07:42.403Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:413
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+    this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sound preference
+    this.moveHistory = state.moveHistory || [];
+    this.currentMoveIndex = state.currentMoveIndex !== undefined ? state.currentMoveIndex : this.moveHistory.length - 1;
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+    this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sound preference
+    this.moveHistory = state.moveHistory || [];
+
+    // R1 Memory Management: Apply same limit to moveHistory
+    const MAX_HISTORY_LENGTH = 100;
+    if (this.moveHistory.length > MAX_HISTORY_LENGTH - 1) {
+      console.log(`[LOAD] Trimming moveHistory from ${this.moveHistory.length} to ${MAX_HISTORY_LENGTH - 1}`);
+      this.moveHistory = this.moveHistory.slice(-(MAX_HISTORY_LENGTH - 1));
+    }
+
+    this.currentMoveIndex = state.currentMoveIndex !== undefined ? state.currentMoveIndex : this.moveHistory.length - 1;
+----------------------------------------

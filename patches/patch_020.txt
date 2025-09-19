@@ -1,0 +1,64 @@
+PATCH 020 (MultiEdit #2)
+Timestamp: 2025-09-19T02:00:07.641Z
+Source: a2794a04-56f1-4646-9d38-e95c21e8bce3.jsonl:197
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+  hideOptionsMenu() {
+    const overlay = document.getElementById('options-overlay');
+    if (overlay) {
+      overlay.classList.add('hidden');
+    }
+
+    // If difficulty was changed mid-game, revert to original difficulty
+    // since we can't change bot mid-game
+    if (this.game.difficultyChangedMidGame && this.game.gameMode === 'human-vs-bot') {
+      console.log('[HIDE_OPTIONS] Reverting bot difficulty from', this.game.botDifficulty, 'to', this.game.originalBotDifficulty);
+      this.game.botDifficulty = this.game.originalBotDifficulty;
+      this.game.difficultyChangedMidGame = false;
+    }
+
+    // Apply correct orientation when menu closes using deterministic logic
+    const shouldFlip = this.game.determineOrientation();
+    if (this.game.boardFlipped !== shouldFlip) {
+      this.game.boardFlipped = shouldFlip;
+      this.updateDisplay();
+    }
+
+    // Update the display to show current bot difficulty
+    if (this.game.gameMode === 'human-vs-bot') {
+      this.ui.updateMoveHistoryDisplay();
+    }
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+  hideOptionsMenu() {
+    const overlay = document.getElementById('options-overlay');
+    if (overlay) {
+      overlay.classList.add('hidden');
+    }
+
+    // If difficulty was changed, revert to original difficulty
+    // since we require a new game when changing bots
+    if (this.game.difficultyChangedMidGame && this.game.gameMode === 'human-vs-bot') {
+      console.log('[HIDE_OPTIONS] Reverting bot difficulty from', this.game.botDifficulty, 'to', this.game.originalBotDifficulty);
+      this.game.botDifficulty = this.game.originalBotDifficulty;
+      this.game.difficultyChangedMidGame = false;
+    }
+
+    // Apply correct orientation when menu closes using deterministic logic
+    const shouldFlip = this.game.determineOrientation();
+    if (this.game.boardFlipped !== shouldFlip) {
+      this.game.boardFlipped = shouldFlip;
+      this.updateDisplay();
+    }
+
+    // Update the display to show current bot difficulty
+    if (this.game.gameMode === 'human-vs-bot') {
+      this.ui.updateMoveHistoryDisplay();
+    }
+----------------------------------------

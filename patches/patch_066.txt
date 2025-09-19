@@ -1,0 +1,42 @@
+PATCH 066
+Timestamp: 2025-09-18T22:28:09.996Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:650
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+      if (this.isValidSavedState(state)) {
+        debugLogger.info('LOAD', 'State validation passed - Loading game state', {
+          moveCount: state.moveHistory.length,
+          currentPlayer: state.currentPlayer,
+          gameStatus: state.gameStatus,
+          soundEnabled: state.soundEnabled,
+          allowUndo: state.allowUndo,
+          gameMode: selectedMode || state.gameMode
+        });
+        console.log('Loading valid saved state');
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+      console.log('[LOAD] About to validate state:', {
+        hasState: !!state,
+        moveCount: state?.moveHistory?.length || 0,
+        stateHistoryCount: state?.stateHistory?.length || 0,
+        currentPlayer: state?.currentPlayer,
+        gameMode: selectedMode || state?.gameMode
+      });
+
+      if (this.isValidSavedState(state)) {
+        debugLogger.info('LOAD', 'State validation passed - Loading game state', {
+          moveCount: state.moveHistory ? state.moveHistory.length : 0,
+          currentPlayer: state.currentPlayer,
+          gameStatus: state.gameStatus,
+          soundEnabled: state.soundEnabled,
+          allowUndo: state.allowUndo,
+          gameMode: selectedMode || state.gameMode
+        });
+        console.log('[LOAD] Validation PASSED - Loading valid saved state');
+----------------------------------------

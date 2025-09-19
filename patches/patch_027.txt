@@ -1,0 +1,42 @@
+PATCH 027 (MultiEdit #3)
+Timestamp: 2025-09-19T02:10:13.134Z
+Source: a2794a04-56f1-4646-9d38-e95c21e8bce3.jsonl:271
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+    // Hide menu (this won't revert settings now that flags are cleared)
+    this.hideOptionsMenu();
+
+    // Now explicitly handle the new game start and bot turn check
+    // Use a slightly longer delay to ensure UI has fully settled
+    setTimeout(() => {
+      console.log('[CONFIRM_NEW_GAME] Calling onNewGameStart after delay');
+      this.onNewGameStart(); // This handles display update and bot turn check
+      this.showMessage('New game started!');
+    }, 250); // Increased delay to ensure UI is ready
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+    // Hide menu (this won't revert settings now that flags are cleared)
+    this.hideOptionsMenu();
+
+    // Update display immediately to show new board and bot name
+    this.ui.updateDisplay();
+    this.ui.updateMoveHistoryDisplay();
+
+    // Show success message
+    this.showMessage('New game started!');
+
+    // Check for bot turn after a short delay (but display is already updated)
+    setTimeout(() => {
+      console.log('[CONFIRM_NEW_GAME] Checking initial bot turn after delay');
+      // Only check for bot turn, display is already updated
+      if (!this.game.moveHistory || this.game.moveHistory.length === 0) {
+        this.checkInitialBotTurn();
+      }
+    }, 250); // Delay only for bot turn check, not display update
+----------------------------------------

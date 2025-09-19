@@ -1,0 +1,82 @@
+PATCH 052
+Timestamp: 2025-09-18T22:14:34.022Z
+Source: ef7adc22-1f33-4a65-9b10-05cbdc7f7f2a.jsonl:481
+File: /Users/ericbuess/Projects/chess-r1/app/src/main.js
+Replace All: False
+============================================================
+
+OLD STRING:
+----------------------------------------
+  confirmNewGame() {
+    console.log('[CONFIRM_NEW_GAME] Starting new game with:', {
+      gameMode: this.game.gameMode,
+      humanColor: this.game.humanColor,
+      currentPlayer: 'white (always starts)'
+    });
+
+    // Clear saved state and start new game BEFORE hiding menu
+    this.clearSavedState();
+    this.game.newGame();
+
+    console.log('[CONFIRM_NEW_GAME] After newGame:', {
+      humanColor: this.game.humanColor,
+      currentPlayer: this.game.currentPlayer,
+      isBotTurn: this.game.isBotTurn()
+    });
+
+    // Now hide the menu AFTER game is initialized
+    this.hideOptionsMenu();
+
+    // Update the display to reflect the new game
+    this.updateDisplay();
+
+    // Force check if bot should make the first move
+    console.log('[CONFIRM_NEW_GAME] Checking for initial bot turn');
+    setTimeout(() => {
+      this.checkInitialBotTurn();
+    }, 500);
+
+    this.showMessage('New game started!');
+  }
+----------------------------------------
+
+NEW STRING:
+----------------------------------------
+  confirmNewGame() {
+    console.log('[CONFIRM_NEW_GAME] Starting new game with:', {
+      gameMode: this.game.gameMode,
+      humanColor: this.game.humanColor,
+      currentPlayer: 'white (always starts)'
+    });
+
+    // Clear saved state and start new game BEFORE hiding menu
+    this.clearSavedState();
+    this.game.newGame();
+
+    console.log('[CONFIRM_NEW_GAME] After newGame:', {
+      humanColor: this.game.humanColor,
+      currentPlayer: this.game.currentPlayer,
+      isBotTurn: this.game.isBotTurn()
+    });
+
+    // Update the display to reflect the new game
+    this.updateDisplay();
+
+    // Now hide the menu AFTER game is initialized
+    this.hideOptionsMenu();
+
+    // Check if bot should make the first move AFTER menu is hidden
+    // Use longer delay to ensure UI is fully settled
+    if (this.game.gameMode === 'human-vs-bot' && this.game.humanColor === 'black') {
+      console.log('[CONFIRM_NEW_GAME] Bot should move first - scheduling bot turn');
+      setTimeout(() => {
+        // Double-check conditions before executing bot move
+        if (this.game.gameStatus === 'playing' && this.game.isBotTurn()) {
+          this.checkInitialBotTurn();
+        }
+      }, 1500); // Increased delay to ensure game is fully ready
+    }
+
+    this.showMessage('New game started!');
+  }
+----------------------------------------
