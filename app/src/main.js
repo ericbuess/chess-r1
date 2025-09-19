@@ -124,14 +124,14 @@ class ChessGame {
     this.orientationMode = 'handoff'; // 'none', 'table', or 'handoff' for human vs human
     this.gameMode = 'human-vs-bot';
     this.humanColor = 'white';
-    this.botDifficulty = 1; // Bot difficulty: 0=random, 1=easy, 2=medium, 3=hard, 4=expert
+    this.botDifficulty = 4; // Bot difficulty: 0=random, 1=easy, 2=medium, 3=hard, 4=expert
     this.allowUndo = true; // Enable undo by default
     this.soundEnabled = true; // Sound effects enabled by default
 
     // Track changes for menu "Back to game" button
     this.originalHumanColor = 'white';
     this.colorChangedMidGame = false;
-    this.originalBotDifficulty = 1;
+    this.originalBotDifficulty = 4;
     this.difficultyChangedMidGame = false;
 
     // Cache frequently accessed state
@@ -146,6 +146,9 @@ class ChessGame {
     this.currentStateIndex = 0;
     this.isInUndoRedoState = false; // Track if we're in an undo/redo state where bot shouldn't auto-move
     this.lastUndoWasBotMove = false; // Track if the last undo was a bot move for notification
+
+    // Initialize moveHistory (for backward compatibility)
+    this.moveHistory = [];
 
     // Store initial state as first entry
     const initialState = this.engine.exportJson();
@@ -367,7 +370,7 @@ class ChessGame {
   /**
    * Generate bot move
    */
-  generateBotMove() {
+  async generateBotMove() {
     try {
       console.log('[BOT] Generating bot move...');
 
@@ -440,7 +443,10 @@ class ChessGame {
         } else if (this.gameStatus === 'check') {
           setTimeout(() => this.playSound('check'), capturedPiece ? 100 : 0);
         }
-        
+
+        // Auto-save after successful bot move
+        await this.autoSave();
+
         return {
           from: fromCoords,
           to: toCoords,
@@ -488,7 +494,7 @@ class ChessGame {
     const startTime = Date.now();
     
     // Generate AND execute bot move (aiMove() does both!)
-    const botMove = this.generateBotMove();
+    const botMove = await this.generateBotMove();
     console.log('[BOT] Bot move completed:', botMove);
     
     if (!botMove) {
@@ -565,6 +571,27 @@ class ChessGame {
     this.stateHistory.push(stateEntry);
     this.currentStateIndex++;
 
+    // R1 Memory Management: Limit history to prevent excessive memory usage
+    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states for R1 device
+    if (this.stateHistory.length > MAX_HISTORY_LENGTH) {
+      // Keep the initial state (index 0) plus the most recent states
+      const statesToKeep = MAX_HISTORY_LENGTH - 1; // Reserve one slot for initial state
+      const removedCount = this.stateHistory.length - MAX_HISTORY_LENGTH;
+
+      console.log(`[STATE] History limit exceeded (${this.stateHistory.length}), trimming to ${MAX_HISTORY_LENGTH} states`);
+
+      // Keep initial state + most recent states
+      this.stateHistory = [
+        this.stateHistory[0], // Always keep initial state for full game reset
+        ...this.stateHistory.slice(-statesToKeep)
+      ];
+
+      // Adjust current index after trimming
+      this.currentStateIndex = this.stateHistory.length - 1;
+
+      console.log(`[STATE] Trimmed ${removedCount} old states, new length: ${this.stateHistory.length}`);
+    }
+
     // Keep old moveHistory for backward compatibility (will remove later)
     if (!this.moveHistory) this.moveHistory = [];
     this.moveHistory.push({
@@ -574,6 +601,12 @@ class ChessGame {
       captured: moveData.captured,
       notation: moveData.notation
     });
+
+    // Also limit moveHistory to match stateHistory limits
+    if (this.moveHistory.length > MAX_HISTORY_LENGTH - 1) {
+      // Keep moves in sync with stateHistory (exclude initial state)
+      this.moveHistory = this.moveHistory.slice(-(MAX_HISTORY_LENGTH - 1));
+    }
   }
 
   // ============================================
@@ -710,6 +743,10 @@ class ChessGame {
 
     // Update cached state FIRST (this sets currentPlayer correctly)
     this.updateCachedState();
+
+    // CRITICAL: Update game status to ensure it's set to 'playing'
+    this.updateGameStatus();
+    console.log('[NEW_GAME] Game status updated to:', this.gameStatus);
 
     // THEN determine board orientation based on correct currentPlayer
     this.boardFlipped = this.determineOrientation();
@@ -927,13 +964,20 @@ class ChessGame {
     this.humanColor = state.humanColor || 'white';
     this.botDifficulty = state.botDifficulty !== undefined ? state.botDifficulty : 1;
     this.allowUndo = state.allowUndo !== undefined ? state.allowUndo : true;
-    // Load orientation mode but recalculate flip state for consistency
+    // Load orientation mode but DON'T recalculate flip state yet (currentPlayer not set)
     this.orientationMode = state.orientationMode || 'handoff';
-    // Recalculate boardFlipped to ensure it's correct for current state
-    this.boardFlipped = this.determineOrientation();
-    console.log('[LOAD_STATE] Recalculated board orientation:', this.boardFlipped, 'Mode:', this.orientationMode);
+    // Temporarily set boardFlipped to saved value or false
+    this.boardFlipped = false; // Will be recalculated after updateCachedState()
     this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sound preference
     this.moveHistory = state.moveHistory || [];
+
+    // R1 Memory Management: Apply same limit to moveHistory
+    const MAX_HISTORY_LENGTH = 100;
+    if (this.moveHistory.length > MAX_HISTORY_LENGTH - 1) {
+      console.log(`[LOAD] Trimming moveHistory from ${this.moveHistory.length} to ${MAX_HISTORY_LENGTH - 1}`);
+      this.moveHistory = this.moveHistory.slice(-(MAX_HISTORY_LENGTH - 1));
+    }
+
     this.currentMoveIndex = state.currentMoveIndex !== undefined ? state.currentMoveIndex : this.moveHistory.length - 1;
 
     // Ensure initial state is properly cloned and validated
@@ -955,6 +999,10 @@ class ChessGame {
     // Update cached state
     this.updateCachedState();
 
+    // NOW recalculate boardFlipped after currentPlayer is set
+    this.boardFlipped = this.determineOrientation();
+    console.log('[LOAD_STATE] Recalculated board orientation after updateCachedState:', this.boardFlipped, 'Mode:', this.orientationMode, 'Current Player:', this.currentPlayer);
+
     // CRITICAL FIX: Handle stateHistory for the new undo/redo system
     // Check if we have saved stateHistory (new saves) or need to rebuild it (old saves)
     if (state.stateHistory && state.stateHistory.length > 0) {
@@ -962,6 +1010,31 @@ class ChessGame {
       console.log('[LOAD] Restoring saved state history:', state.stateHistory.length, 'states');
       this.stateHistory = state.stateHistory;
       this.currentStateIndex = state.currentStateIndex || (state.stateHistory.length - 1);
+
+      // R1 Memory Management: Apply history limit during load
+      const MAX_HISTORY_LENGTH = 100;
+      if (this.stateHistory.length > MAX_HISTORY_LENGTH) {
+        const removedCount = this.stateHistory.length - MAX_HISTORY_LENGTH;
+        console.log(`[LOAD] Trimming loaded history from ${this.stateHistory.length} to ${MAX_HISTORY_LENGTH} states`);
+
+        // Keep initial state + most recent states
+        this.stateHistory = [
+          this.stateHistory[0],  // Always keep initial state
+          ...this.stateHistory.slice(-(MAX_HISTORY_LENGTH - 1))
+        ];
+
+        // Adjust current index if needed
+        const wasAtEnd = this.currentStateIndex === state.stateHistory.length - 1;
+        if (wasAtEnd) {
+          // If we were at the last state, stay at the last state
+          this.currentStateIndex = this.stateHistory.length - 1;
+        } else {
+          // Otherwise, clamp to valid range
+          this.currentStateIndex = Math.min(this.currentStateIndex, this.stateHistory.length - 1);
+        }
+
+        console.log(`[LOAD] Removed ${removedCount} old states, currentStateIndex: ${this.currentStateIndex}`);
+      }
     } else {
       // OLD: Rebuild stateHistory from moveHistory for backward compatibility
       console.log('[LOAD] No stateHistory found, rebuilding from moveHistory');
@@ -1024,6 +1097,10 @@ class ChessGame {
       const state = this.getGameState();
       const key = this.getStorageKey();
       await saveToStorage(key, state);
+
+      // Also save the current game mode separately so we know which to load
+      await saveToStorage('last_game_mode', { mode: this.gameMode, timestamp: Date.now() });
+
       console.log('Game auto-saved successfully');
       return true;
     } catch (error) {
@@ -1036,7 +1113,8 @@ class ChessGame {
    * Get storage key for current game mode
    */
   getStorageKey() {
-    return `chess_game_state_${this.gameMode}`;
+    // Replace hyphens with underscores for consistent storage keys
+    return `chess_game_state_${this.gameMode.replace(/-/g, '_')}`;
   }
   
   // ============================================
@@ -1424,7 +1502,7 @@ class ChessGame {
     const pieceColor = piece.color.charAt(0).toUpperCase() + piece.color.slice(1);
 
     if (capturedPiece) {
-      return `${pieceColor} ${piece.type} captures ${to}`;
+      return `${pieceColor} ${piece.type} captures ${to} ${capturedPiece.type}`;
     }
     return `${pieceColor} ${piece.type} to ${to}`;
   }
@@ -1903,7 +1981,7 @@ class ChessUI {
     const gameMode = this.game.gameMode;
     const isBotTurn = this.game.isBotTurn();
     const gameStatus = this.game.gameStatus;
-    
+
     debugLogger.debug('UI_SYNC', 'Bot thinking indicator update', {
       show,
       gameMode,
@@ -1911,26 +1989,40 @@ class ChessUI {
       gameStatus,
       inputEnabled: this.inputEnabled
     });
-    
+
     const instructionLabel = document.getElementById('instruction-label');
-    
+    const moveDisplay = document.getElementById('move-display');
+
     if (show && gameMode === 'human-vs-bot' && isBotTurn && (gameStatus === 'playing' || gameStatus === 'check')) {
       // Don't show redundant instruction label - turn indicator already shows bot thinking
       // Just remove any existing instruction label
       this.hideInstructionLabel();
-      
+
+      // Add spinner to move display
+      if (moveDisplay && !document.querySelector('.bot-thinking-spinner')) {
+        const spinner = document.createElement('div');
+        spinner.className = 'bot-thinking-spinner';
+        moveDisplay.parentElement.appendChild(spinner);
+      }
+
       // Ensure input is disabled when bot is thinking
       if (this.inputEnabled) {
         this.setInputEnabled(false);
       }
-      
+
       // Update turn indicator to reflect bot thinking state
       this.updatePlayerTurnIndicator(this.game.currentPlayer, gameMode);
-      
+
     } else {
       // Hide thinking indicator
       this.hideInstructionLabel();
-      
+
+      // Remove spinner
+      const spinner = document.querySelector('.bot-thinking-spinner');
+      if (spinner) {
+        spinner.remove();
+      }
+
       // Update turn indicator when thinking stops
       if (gameMode === 'human-vs-bot') {
         this.updatePlayerTurnIndicator(this.game.currentPlayer, gameMode);
@@ -2258,17 +2350,28 @@ class ChessUI {
     const humanColor = this.game.getHumanColor();
     const currentPlayer = this.game.currentPlayer;
     const isBotTurn = this.game.isBotTurn();
-    
+
     debugLogger.info('BOT_INIT', 'Checking initial bot turn', {
       humanColor,
       currentPlayer,
       isBotTurn,
-      gameStatus: this.game.gameStatus
+      gameStatus: this.game.gameStatus,
+      moveHistory: this.game.moveHistory.length
     });
 
     // Ensure game is not ended
     if (this.game.gameStatus === 'checkmate' || this.game.gameStatus === 'stalemate') {
       debugLogger.warn('BOT_INIT', 'Game ended, skipping bot turn');
+      return;
+    }
+
+    // CRITICAL: Ensure game status is 'playing' before attempting bot move
+    // This prevents the "bot move failed" error
+    if (this.game.gameStatus !== 'playing') {
+      console.log('[CHECK_INITIAL_BOT_TURN] Game not in playing state yet, retrying...');
+      setTimeout(() => {
+        this.checkInitialBotTurn();
+      }, 500);
       return;
     }
 
@@ -2284,18 +2387,25 @@ class ChessUI {
       // Ensure UI is properly updated before bot move
       this.updateGameStateIndicators();
 
-      // Small delay to allow UI to settle, then execute bot move
+      // Longer delay for initial bot move to ensure everything is ready
       setTimeout(() => {
         console.log('[CHECK_INITIAL_BOT_TURN] Calling handleBotTurn after delay');
-        this.handleBotTurn();
-      }, 1000);
+        // Final check before executing bot move
+        if (this.game.gameStatus === 'playing' && this.game.isBotTurn()) {
+          this.handleBotTurn();
+        } else {
+          console.error('[CHECK_INITIAL_BOT_TURN] Conditions changed, aborting bot move');
+          this.showBotThinking(false);
+          this.setInputEnabled(true);
+        }
+      }, 1500); // Increased delay for initial moves
     } else {
       debugLogger.info('BOT_INIT', 'Human goes first - enabling input and waiting for human move');
-      
+
       // Ensure human can make moves
       this.setInputEnabled(true);
       this.showBotThinking(false);
-      
+
       // Update UI to show it's human's turn
       this.updateGameStateIndicators();
     }
@@ -2307,10 +2417,15 @@ class ChessUI {
       gameMode: this.game.gameMode,
       humanColor: this.game.humanColor,
       currentPlayer: this.game.currentPlayer,
-      isBotTurn: this.game.isBotTurn()
+      isBotTurn: this.game.isBotTurn(),
+      moveCount: this.game.moveHistory ? this.game.moveHistory.length : 0
     });
     this.updateDisplay();
-    this.checkInitialBotTurn();
+
+    // Only check for initial bot turn if no moves have been made yet
+    if (!this.game.moveHistory || this.game.moveHistory.length === 0) {
+      this.checkInitialBotTurn();
+    }
   }
 
   async handleSquareSelection(row, col) {
@@ -2792,10 +2907,15 @@ class ChessUI {
     // This handles the case where user changed color and clicked "Back to game"
     if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {
       console.log('[HIDE_OPTIONS] Checking if bot should make initial move after color change');
-      // Use a small delay to let UI settle
+      // Use longer delay to ensure game state is fully ready
       setTimeout(() => {
-        this.checkInitialBotTurn();
-      }, 100);
+        // Double-check game is ready before attempting bot move
+        if (this.game.gameStatus === 'playing') {
+          this.checkInitialBotTurn();
+        } else {
+          console.log('[HIDE_OPTIONS] Game not ready yet, skipping bot turn check');
+        }
+      }, 800); // Increased delay from 100ms to 800ms
     }
   }
 
@@ -3430,35 +3550,72 @@ class ChessUI {
     }
   }
 
+  // Helper to get the latest timestamp from a saved state
+  getLatestTimestamp(state) {
+    if (!state) return 0;
+
+    // Check stateHistory for timestamp
+    if (state.stateHistory && state.stateHistory.length > 0) {
+      const lastState = state.stateHistory[state.stateHistory.length - 1];
+      if (lastState && lastState.timestamp) {
+        return lastState.timestamp;
+      }
+    }
+
+    // Fallback to checking if there are moves (assume older save)
+    if (state.moveHistory && state.moveHistory.length > 0) {
+      return 1; // Return 1 to indicate it exists but has no timestamp
+    }
+
+    return 0;
+  }
+
   async loadGameState() {
     try {
       debugLogger.info('LOAD', 'Attempting to load saved game state from storage');
       console.log('Attempting to load saved game state...');
-      
-      // Try to load state for current game mode first
-      const currentModeKey = this.game.getStorageKey();
-      let state = await loadFromStorage(currentModeKey);
-      
-      if (!state) {
-        debugLogger.info('LOAD', `No saved state found for current mode (${this.game.gameMode})`);
-        // Try to load from the other game mode
-        const otherMode = this.game.gameMode === 'human-vs-human' ? 'human-vs-bot' : 'human-vs-human';
-        const otherModeKey = `chess_game_state_${otherMode.replace('-', '_')}`;
-        state = await loadFromStorage(otherModeKey);
-        
-        if (state) {
-          debugLogger.info('LOAD', `Found saved state from other mode (${otherMode}), but keeping current mode settings`);
-          // Keep current game mode and settings, only restore board state
-          state.gameMode = this.game.gameMode;
-          state.humanColor = this.game.humanColor;
+
+      // Load states from both game modes to find the most recent
+      const humanVsBotKey = 'chess_game_state_human_vs_bot';
+      const humanVsHumanKey = 'chess_game_state_human_vs_human';
+
+      const humanVsBotState = await loadFromStorage(humanVsBotKey);
+      const humanVsHumanState = await loadFromStorage(humanVsHumanKey);
+
+      let state = null;
+      let selectedMode = null;
+
+      // Determine which state to load based on timestamps
+      if (humanVsBotState && humanVsHumanState) {
+        // Both states exist - load the most recently saved one
+        const botTimestamp = this.getLatestTimestamp(humanVsBotState);
+        const humanTimestamp = this.getLatestTimestamp(humanVsHumanState);
+
+        if (humanTimestamp > botTimestamp) {
+          state = humanVsHumanState;
+          selectedMode = 'human-vs-human';
+          debugLogger.info('LOAD', 'Loading more recent human-vs-human game');
+        } else {
+          state = humanVsBotState;
+          selectedMode = 'human-vs-bot';
+          debugLogger.info('LOAD', 'Loading more recent human-vs-bot game');
         }
+      } else if (humanVsHumanState) {
+        state = humanVsHumanState;
+        selectedMode = 'human-vs-human';
+        debugLogger.info('LOAD', 'Found only human-vs-human saved state');
+      } else if (humanVsBotState) {
+        state = humanVsBotState;
+        selectedMode = 'human-vs-bot';
+        debugLogger.info('LOAD', 'Found only human-vs-bot saved state');
       }
-      
+
       if (!state) {
-        // Finally try legacy key for backward compatibility
+        // Try legacy key for backward compatibility
         state = await loadFromStorage('chess_game_state');
         if (state) {
           debugLogger.info('LOAD', 'Found legacy saved state, migrating to new format');
+          selectedMode = state.gameMode || 'human-vs-bot';
         }
       }
       
@@ -3482,12 +3639,24 @@ class ChessUI {
           currentPlayer: state.currentPlayer,
           gameStatus: state.gameStatus,
           soundEnabled: state.soundEnabled,
-          allowUndo: state.allowUndo
+          allowUndo: state.allowUndo,
+          gameMode: selectedMode || state.gameMode
         });
         console.log('Loading valid saved state');
+
+        // CRITICAL: Set the correct game mode BEFORE loading state
+        if (selectedMode) {
+          this.game.gameMode = selectedMode;
+          console.log(`[LOAD] Setting game mode to: ${selectedMode}`);
+        }
+
         this.game.loadGameState(state);
         this.applyTheme();
         this.updateDisplay();
+
+        // Update menu visibility based on loaded game mode
+        this.updateMenuVisibility();
+
         debugLogger.info('LOAD', 'Game state loaded and UI updated successfully');
         console.log('Game state loaded successfully');
         return true;
