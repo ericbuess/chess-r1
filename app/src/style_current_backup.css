@@ -117,7 +117,7 @@ html, body {
 }
 
 .balance-indicator.human-advantage {
-    background: linear-gradient(90deg, #FE5F00 0%, #FF8844 50%, #FE5F00 100%);
+    background: linear-gradient(90deg, #999 0%, #bbb 50%, #999 100%);
 }
 
 .balance-indicator.bot-advantage {
@@ -433,15 +433,15 @@ html, body {
 }
 
 @keyframes king-warning-pulse {
-    0% {
+    0% { 
         background-color: rgba(255, 68, 68, 0.6);
         box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.8);
     }
-    50% {
+    50% { 
         background-color: rgba(255, 68, 68, 0.8);
         box-shadow: 0 0 0 2vw rgba(255, 68, 68, 0.4);
     }
-    100% {
+    100% { 
         background-color: rgba(255, 68, 68, 0.6);
         box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.8);
     }
@@ -563,14 +563,14 @@ html, body {
 /* Chess board squares with wooden texture */
 .chess-square.light-square {
     background-color: var(--light-square);
-    background-image:
+    background-image: 
         radial-gradient(circle at 25% 25%, #c9a876 0%, transparent 50%),
         radial-gradient(circle at 75% 75%, #c9a876 0%, transparent 50%);
 }
 
 .chess-square.dark-square {
     background-color: var(--dark-square);
-    background-image:
+    background-image: 
         radial-gradient(circle at 25% 25%, #8b4513 0%, transparent 50%),
         radial-gradient(circle at 75% 75%, #8b4513 0%, transparent 50%);
 }
@@ -599,10 +599,10 @@ html, body {
 }
 
 @keyframes king-warning-pulse {
-    0% {
+    0% { 
         box-shadow: 0 0 10px #FE5F00, inset 0 0 10px rgba(254, 95, 0, 0.3);
     }
-    100% {
+    100% { 
         box-shadow: 0 0 20px #FE5F00, inset 0 0 15px rgba(254, 95, 0, 0.5);
     }
 }
@@ -784,19 +784,35 @@ html, body {
 
 /* Back button - orange styling */
 #back-btn {
-    background: #FE5F00 !important;
-    color: #fff !important;
-    border-color: #FE5F00 !important;
+    background: #FE5F00;
+    color: #fff;
+    border-color: #FE5F00;
 }
 
-#back-btn:hover {
-    background: #e55400 !important;
-    border-color: #e55400 !important;
+#back-btn:not(.disabled):hover {
+    background: #e55400;
+    border-color: #e55400;
 }
 
-#back-btn:active {
-    background: #d14800 !important;
-    color: #fff !important;
+#back-btn:not(.disabled):active {
+    background: #d14800;
+    color: #fff;
+}
+
+/* Back button disabled state uses standard gray */
+#back-btn.disabled,
+#back-btn:disabled {
+    background: #333333 !important;
+    color: #666666 !important;
+    border-color: #333333 !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+#back-btn.disabled:hover,
+#back-btn:disabled:hover {
+    background: #333333 !important;
+    border-color: #333333 !important;
 }
 
 /* Enhanced Instruction Label with bot thinking states */
@@ -838,6 +854,35 @@ html, body {
     50% {
         opacity: 0.7;
         transform: translateX(-50%) scale(1.02);
+    }
+}
+
+/* Bot thinking spinner */
+.bot-thinking-spinner {
+    display: inline-block;
+    width: 3vw;
+    height: 3vw;
+    margin-left: 2vw;
+    vertical-align: middle;
+}
+
+.bot-thinking-spinner:after {
+    content: " ";
+    display: block;
+    width: 2.5vw;
+    height: 2.5vw;
+    border-radius: 50%;
+    border: 0.3vw solid #FE5F00;
+    border-color: #FE5F00 transparent #FE5F00 transparent;
+    animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }
 
@@ -978,3 +1023,4 @@ html, body {
 .log-level-debug {
     color: #00aaff;
 }
+
