@@ -827,7 +827,7 @@ html, body {
 #instruction-label.bot-thinking {
     animation: botThinking 2s ease-in-out infinite;
     border-color: rgba(255, 179, 102, 0.6);
-    background: rgba(254, 95, 0, 0.9);
+    background: rgba(79, 83, 88, 0.9);
 }
 
 @keyframes botThinking {

@@ -1,0 +1,114 @@
+{
+  "extraction_date": "2025-09-19T17:11:56.935457",
+  "target_date_range": {
+    "start": "2025-09-18 18:40:00",
+    "end": "2025-09-18 23:59:59"
+  },
+  "source_analysis": {
+    "git_commits_analyzed": [
+      "51af1de - Restore main.js with all improvements from Sept 18 evening",
+      "630692d - Restore complete main.js and style.css from Sept 18, 2025 logs"
+    ],
+    "files_compared": [
+      "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "/Users/ericbuess/Projects/chess-r1/app/src/main_complete.js"
+    ],
+    "safari_cookies_analyzed": true
+  },
+  "patches": [
+    {
+      "timestamp": "2025-09-18 18:45:00",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "description": "Add bot difficulty change tracking initialization",
+      "type": "feature_addition",
+      "location": "ChessGame constructor",
+      "old_code": "    this.allowUndo = true; // Enable undo by default\n    this.soundEnabled = true; // Sound effects enabled by default\n\n    // Cache frequently accessed state",
+      "new_code": "    this.allowUndo = true; // Enable undo by default\n    this.soundEnabled = true; // Sound effects enabled by default\n\n    // Track changes for menu \"Back to game\" button\n    this.originalHumanColor = 'white';\n    this.colorChangedMidGame = false;\n    this.originalBotDifficulty = 1;\n    this.difficultyChangedMidGame = false;\n\n    // Cache frequently accessed state",
+      "notes": "Adds tracking variables for both color and difficulty changes to enable proper menu button behavior"
+    },
+    {
+      "timestamp": "2025-09-18 19:15:00",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "description": "Improve color change detection logic",
+      "type": "bug_fix",
+      "location": "ChessGame.setHumanColor method",
+      "old_code": "  setHumanColor(color) {\n    // Track if color was changed mid-game by comparing to original color\n    if (this.gameMode === 'human-vs-bot' && this.moveHistory.length > 0) {\n      // Check if color is different from what it was when menu opened\n      this.colorChangedMidGame = (color !== this.originalHumanColor);\n    }\n    this.humanColor = color;\n  }",
+      "new_code": "  setHumanColor(color) {\n    // Track if color was changed mid-game by comparing to original color\n    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {\n      // Check if color is different from what it was when menu opened\n      this.colorChangedMidGame = (color !== this.originalHumanColor);\n    }\n    this.humanColor = color;\n    this.boardFlipped = this.determineOrientation();\n  }",
+      "notes": "Fixed detection logic to use stateHistory instead of moveHistory and added board flip update"
+    },
+    {
+      "timestamp": "2025-09-18 19:30:00",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "description": "Add bot difficulty change tracking method",
+      "type": "feature_addition",
+      "location": "After setHumanColor method",
+      "old_code": "  }\n\n  /**\n   * Get game mode\n   */",
+      "new_code": "  }\n\n  /**\n   * Set bot difficulty\n   */\n  setBotDifficulty(difficulty) {\n    // Track if difficulty was changed mid-game by comparing to original difficulty\n    // Only track for human-vs-bot mode and when moves have been made\n    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {\n      // Check if difficulty is different from what it was when menu opened\n      this.difficultyChangedMidGame = (difficulty !== this.originalBotDifficulty);\n    }\n    this.botDifficulty = difficulty;\n  }\n\n  /**\n   * Get game mode\n   */",
+      "notes": "New method to properly track and update bot difficulty with change detection"
+    },
+    {
+      "timestamp": "2025-09-18 20:00:00",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "description": "Track original difficulty when menu opens",
+      "type": "enhancement",
+      "location": "ChessUI.showOptionsMenu method",
+      "old_code": "      // Track the original color when menu opens\n      this.game.originalHumanColor = this.game.humanColor;\n      this.game.colorChangedMidGame = false; // Reset the flag when menu opens",
+      "new_code": "      // Track the original color and difficulty when menu opens\n      this.game.originalHumanColor = this.game.humanColor;\n      this.game.colorChangedMidGame = false; // Reset the flag when menu opens\n\n      // Track the original difficulty when menu opens\n      this.game.originalBotDifficulty = this.game.botDifficulty;\n      this.game.difficultyChangedMidGame = false; // Reset the flag when menu opens",
+      "notes": "Ensures both color and difficulty are tracked when options menu opens"
+    },
+    {
+      "timestamp": "2025-09-18 20:30:00",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "description": "Enhanced back button with difficulty change detection",
+      "type": "feature_enhancement",
+      "location": "ChessUI.updateOptionsButtons method",
+      "old_code": "    // Update back button state - disable if color changed mid-game in bot mode\n    const backBtn = document.getElementById('back-btn');\n    if (backBtn) {\n      if (this.game.colorChangedMidGame) {\n        backBtn.disabled = true;\n        backBtn.textContent = 'Start new game (color changed)';\n        backBtn.classList.add('disabled');\n      } else {\n        backBtn.disabled = false;\n        backBtn.textContent = 'Back to game';\n        backBtn.classList.remove('disabled');\n      }",
+      "new_code": "    // Update back button state - disable if color/difficulty changed mid-game\n    const backBtn = document.getElementById('back-btn');\n    if (backBtn) {\n      const colorChanged = this.game.colorChangedMidGame;\n      const difficultyChanged = this.game.difficultyChangedMidGame;\n\n      if (colorChanged && difficultyChanged) {\n        // Both color and difficulty changed\n        backBtn.disabled = true;\n        backBtn.textContent = 'Start new game (settings changed)';\n        backBtn.classList.add('disabled');\n      } else if (colorChanged) {\n        // Only color changed\n        backBtn.disabled = true;\n        backBtn.textContent = 'Start new game (color changed)';\n        backBtn.classList.add('disabled');\n      } else if (difficultyChanged) {\n        // Only difficulty changed\n        backBtn.disabled = true;\n        backBtn.textContent = 'Start new game (difficulty changed)';\n        backBtn.classList.add('disabled');\n      } else {\n        // No changes, can go back to game\n        backBtn.disabled = false;\n        backBtn.textContent = 'Back to game';\n        backBtn.classList.remove('disabled');\n      }\n      console.log('[MENU UPDATE] Back button - colorChanged:', colorChanged, 'difficultyChanged:', difficultyChanged);",
+      "notes": "Comprehensive back button logic that handles both color and difficulty changes with appropriate messaging"
+    },
+    {
+      "timestamp": "2025-09-18 21:00:00",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "description": "Reset change tracking when switching game modes",
+      "type": "bug_fix",
+      "location": "ChessUI game mode radio change handler",
+      "old_code": "            const oldMode = this.game.gameMode;\n            this.game.setGameMode(radio.value);\n\n            // Try to load saved state for the new game mode",
+      "new_code": "            const oldMode = this.game.gameMode;\n            this.game.setGameMode(radio.value);\n\n            // Reset color and difficulty change tracking when switching modes\n            // (these changes don't matter across mode switches)\n            this.game.colorChangedMidGame = false;\n            this.game.originalHumanColor = this.game.humanColor;\n            this.game.difficultyChangedMidGame = false;\n            this.game.originalBotDifficulty = this.game.botDifficulty;\n\n            // Try to load saved state for the new game mode",
+      "notes": "Ensures change tracking is reset when switching between game modes"
+    },
+    {
+      "timestamp": "2025-09-18 21:30:00",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+      "description": "Use setBotDifficulty method in UI handler",
+      "type": "improvement",
+      "location": "ChessUI bot difficulty radio change handler",
+      "old_code": "        if (radio.checked) {\n          const difficulty = parseInt(radio.value);\n          debugLogger.info('UI', `Bot difficulty changed to: ${difficulty}`);\n          this.game.botDifficulty = difficulty;\n          this.game.autoSave();\n        }",
+      "new_code": "        if (radio.checked) {\n          const difficulty = parseInt(radio.value);\n          debugLogger.info('UI', `Bot difficulty changed to: ${difficulty}`);\n          this.game.setBotDifficulty(difficulty);\n          this.game.autoSave();\n          // Update button states after difficulty change\n          this.updateOptionsButtons();\n        }",
+      "notes": "Uses the new setBotDifficulty method and triggers button state update"
+    },
+    {
+      "timestamp": "2025-09-18 22:00:00",
+      "file": "/Users/ericbuess/Projects/chess-r1/app/src/style.css",
+      "description": "Remove orange progress bar/spinner in bot mode",
+      "type": "bug_fix",
+      "location": "CSS bot-thinking style",
+      "old_code": "#instruction-label.bot-thinking {\n    animation: botThinking 2s ease-in-out infinite;\n    border-color: rgba(255, 179, 102, 0.6);\n    background: rgba(254, 95, 0, 0.9);\n}",
+      "new_code": "#instruction-label.bot-thinking {\n    animation: botThinking 2s ease-in-out infinite;\n    border-color: rgba(255, 179, 102, 0.6);\n    background: rgba(79, 83, 88, 0.9);\n}",
+      "notes": "Changed orange background to dark gray to remove orange progress indicator in bot mode"
+    }
+  ],
+  "summary": {
+    "total_patches": 8,
+    "features_added": 3,
+    "bugs_fixed": 3,
+    "improvements": 2,
+    "key_features": [
+      "Bot difficulty change detection",
+      "Enhanced color change tracking",
+      "Smart 'Back to game' button behavior",
+      "Change tracking reset on mode switch",
+      "Improved menu state management",
+      "Orange spinner removal in bot mode"
+    ]
+  }
+}

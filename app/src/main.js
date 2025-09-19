@@ -747,6 +747,19 @@ class ChessGame {
   }
 
   /**
+   * Set bot difficulty
+   */
+  setBotDifficulty(difficulty) {
+    // Track if difficulty was changed mid-game by comparing to original difficulty
+    // Only track for human-vs-bot mode and when moves have been made
+    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {
+      // Check if difficulty is different from what it was when menu opened
+      this.difficultyChangedMidGame = (difficulty !== this.originalBotDifficulty);
+    }
+    this.botDifficulty = difficulty;
+  }
+
+  /**
    * Get game mode
    */
   getGameMode() {
