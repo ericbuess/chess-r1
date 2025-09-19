@@ -128,6 +128,12 @@ class ChessGame {
     this.allowUndo = true; // Enable undo by default
     this.soundEnabled = true; // Sound effects enabled by default
 
+    // Track changes for menu "Back to game" button
+    this.originalHumanColor = 'white';
+    this.colorChangedMidGame = false;
+    this.originalBotDifficulty = 1;
+    this.difficultyChangedMidGame = false;
+
     // Cache frequently accessed state
     this.board = this.engineStateToBoard();
     this.currentPlayer = 'white';
@@ -719,13 +725,27 @@ class ChessGame {
    */
   setHumanColor(color) {
     // Track if color was changed mid-game by comparing to original color
-    if (this.gameMode === 'human-vs-bot' && this.moveHistory.length > 0) {
+    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {
       // Check if color is different from what it was when menu opened
       this.colorChangedMidGame = (color !== this.originalHumanColor);
     }
     this.humanColor = color;
+    this.boardFlipped = this.determineOrientation();
   }
-  
+
+  /**
+   * Set bot difficulty
+   */
+  setBotDifficulty(difficulty) {
+    // Track if difficulty was changed mid-game by comparing to original difficulty
+    // Only track for human-vs-bot mode and when moves have been made
+    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {
+      // Check if difficulty is different from what it was when menu opened
+      this.difficultyChangedMidGame = (difficulty !== this.originalBotDifficulty);
+    }
+    this.botDifficulty = difficulty;
+  }
+
   /**
    * Get game mode
    */
@@ -2711,9 +2731,13 @@ class ChessUI {
     if (overlay) {
       overlay.classList.remove('hidden');
 
-      // Track the original color when menu opens
+      // Track the original color and difficulty when menu opens
       this.game.originalHumanColor = this.game.humanColor;
       this.game.colorChangedMidGame = false; // Reset the flag when menu opens
+
+      // Track the original difficulty when menu opens
+      this.game.originalBotDifficulty = this.game.botDifficulty;
+      this.game.difficultyChangedMidGame = false; // Reset the flag when menu opens
 
       // Always scroll to top when opening options menu
       const optionsMenu = document.getElementById('options-menu');
@@ -2770,18 +2794,34 @@ class ChessUI {
       console.log('[MENU UPDATE] Updated title to:', optionsTitle.textContent);
     }
 
-    // Update back button state - disable if color changed mid-game in bot mode
+    // Update back button state - disable if color/difficulty changed mid-game
     const backBtn = document.getElementById('back-btn');
     if (backBtn) {
-      if (this.game.colorChangedMidGame) {
+      const colorChanged = this.game.colorChangedMidGame;
+      const difficultyChanged = this.game.difficultyChangedMidGame;
+
+      if (colorChanged && difficultyChanged) {
+        // Both color and difficulty changed
+        backBtn.disabled = true;
+        backBtn.textContent = 'Start new game (settings changed)';
+        backBtn.classList.add('disabled');
+      } else if (colorChanged) {
+        // Only color changed
         backBtn.disabled = true;
         backBtn.textContent = 'Start new game (color changed)';
         backBtn.classList.add('disabled');
+      } else if (difficultyChanged) {
+        // Only difficulty changed
+        backBtn.disabled = true;
+        backBtn.textContent = 'Start new game (difficulty changed)';
+        backBtn.classList.add('disabled');
       } else {
+        // No changes, can go back to game
         backBtn.disabled = false;
         backBtn.textContent = 'Back to game';
         backBtn.classList.remove('disabled');
       }
+      console.log('[MENU UPDATE] Back button - colorChanged:', colorChanged, 'difficultyChanged:', difficultyChanged);
     }
     // Update game mode radio buttons
     const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
@@ -2885,6 +2925,13 @@ class ChessUI {
             // Switch to new game mode
             const oldMode = this.game.gameMode;
             this.game.setGameMode(radio.value);
+
+            // Reset color and difficulty change tracking when switching modes
+            // (these changes don't matter across mode switches)
+            this.game.colorChangedMidGame = false;
+            this.game.originalHumanColor = this.game.humanColor;
+            this.game.difficultyChangedMidGame = false;
+            this.game.originalBotDifficulty = this.game.botDifficulty;
 
             // Try to load saved state for the new game mode
             const newModeKey = this.game.getStorageKey();
@@ -2995,8 +3042,10 @@ class ChessUI {
         if (radio.checked) {
           const difficulty = parseInt(radio.value);
           debugLogger.info('UI', `Bot difficulty changed to: ${difficulty}`);
-          this.game.botDifficulty = difficulty;
+          this.game.setBotDifficulty(difficulty);
           this.game.autoSave();
+          // Update button states after difficulty change
+          this.updateOptionsButtons();
         }
       });
     });
