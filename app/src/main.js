@@ -8,6 +8,8 @@
 
 // Import js-chess-engine from npm package - prevents tree-shaking issues
 import * as ChessEngine from 'js-chess-engine';
+// Import sound data directly to avoid 403 path issues on Rabbit device
+import { woodenSoundData } from './woodenSoundData.js';
 window.jsChessEngine = ChessEngine;
 console.log('Chess engine modules:', Object.keys(ChessEngine)); // Forces usage
 
@@ -1136,8 +1138,8 @@ class ChessGame {
   createSoundSystem() {
     const sounds = {};
 
-    // Get wooden sound data from global
-    const woodenData = window.woodenSoundData || {};
+    // Use imported wooden sound data (no longer need window global)
+    const woodenData = woodenSoundData;
 
     // Organize sounds for smart system
     const soundFiles = {

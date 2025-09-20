@@ -1,10 +1,12 @@
 # 🐰 RABBIT R1 CREATION AGENT INSTRUCTIONS
 
+**PLUGIN NAME**: Chess R1
+
 **CRITICAL: READ THIS ENTIRE FILE BEFORE MAKING ANY CHANGES**
 
 ## ⚠️ CRITICAL CONVERSION INSTRUCTIONS
 
-**YOUR TASK**: Convert this web app into an R1 plugin WITHOUT modifying the source code.
+**YOUR TASK**: Convert this web app into an R1 plugin called "Chess R1" WITHOUT modifying the source code.
 
 ### DO NOT MODIFY SOURCE FILES
 
@@ -54,48 +56,68 @@ console.log('Chess engine modules:', Object.keys(ChessEngine));
 
 ### Build Steps
 
-1. **Verify package.json has js-chess-engine**:
+1. **Create plugin configuration files** to ensure correct naming:
    ```bash
    cd apps/app
+
+   # Create plugin.json manifest
+   cat > plugin.json << 'EOF'
+   {
+     "manifest_version": 1,
+     "name": "Chess R1",
+     "version": "0.0.2",
+     "description": "Complete chess game for Rabbit R1",
+     "author": "Eric Buess",
+     "entry": "dist/index.html"
+   }
+   EOF
+
+   # Create .rabbit-r1-config.yml (if using community tools)
+   cat > .rabbit-r1-config.yml << 'EOF'
+   project:
+     name: "Chess R1"
+     version: "0.0.2"
+     type: "web"
+   EOF
+   ```
+
+2. **Verify package.json has js-chess-engine**:
+   ```bash
    cat package.json | grep js-chess-engine
    # Should show: "js-chess-engine": "^1.0.4"
    ```
 
-2. **Install dependencies (REQUIRED - do not skip)**:
+3. **Install dependencies (REQUIRED - do not skip)**:
    ```bash
    npm install
    ```
 
-3. **Verify chess engine installed**:
+4. **Verify chess engine installed**:
    ```bash
    ls node_modules/js-chess-engine
    # Should list the library files
    ```
 
-4. **Clean build (remove old artifacts)**:
+5. **Clean build (remove old artifacts)**:
    ```bash
    rm -rf dist
    npm run build
    ```
 
-5. **Verify chess engine is bundled**:
+6. **Verify chess engine is bundled**:
    ```bash
    grep -c "ChessEngine" dist/assets/main-*.js
    # Should return a number > 0
    ```
 
-6. **Copy sound data to dist**:
-   ```bash
-   cp src/woodenSoundData.js dist/
-   ```
-
 7. **Verify complete dist structure**:
    ```bash
    ls -la dist/
-   # Should have: index.html, woodenSoundData.js, assets/main-*.js, assets/main-*.css
+   # Should have: index.html, assets/main-*.js, assets/main-*.css
+   # Note: woodenSoundData.js is now embedded in main bundle (no separate file)
    ```
 
-8. **Deploy the dist folder** to your R1 plugin system
+8. **Deploy the dist folder** to your R1 plugin system with the configuration files
 
 ## ⚠️ CRITICAL RULES
 
@@ -194,13 +216,14 @@ After building, verify:
 - [ ] `src/main.js` uses ES6 import
 - [ ] No inline chess engine (uses npm package)
 - [ ] Protective comments intact
+- [ ] `plugin.json` created with name "Chess R1"
+- [ ] `.rabbit-r1-config.yml` created (if using community tools)
 
 ### Build Output
 - [ ] `dist/index.html` exists
-- [ ] `dist/assets/main-*.js` created (minified)
+- [ ] `dist/assets/main-*.js` created (minified, includes sound data)
 - [ ] `dist/assets/main-*.css` created (minified)
-- [ ] `dist/woodenSoundData.js` copied
-- [ ] Total dist size < 200KB
+- [ ] Total dist size < 300KB
 
 ### Build Log
 - [ ] No errors during `npm install`
@@ -214,9 +237,11 @@ After building, verify:
 ```
 ✅ RABBITOS PLUGIN CONVERSION STATUS
 =====================================
+Plugin Name: Chess R1
 Source Files: [PRESERVED/MODIFIED]
 Build Status: [SUCCESS/FAILED]
 Chess Engine Bundled: [YES/NO] (grep count: X)
+Configuration Files: [CREATED/FAILED]
 File Integrity: X/6 files verified
 Build Size: XXX KB
 Errors: [None/List any errors]
