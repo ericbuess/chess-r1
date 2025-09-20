@@ -589,6 +589,11 @@ class ChessGame {
       // Keep moves in sync with stateHistory (exclude initial state)
       this.moveHistory = this.moveHistory.slice(-(MAX_HISTORY_LENGTH - 1));
     }
+
+    // Auto-save after recording state
+    this.autoSave().catch(error => {
+      console.error('[STATE] Failed to auto-save after recording state:', error);
+    });
   }
 
   // ============================================
@@ -1295,7 +1300,45 @@ class ChessGame {
     // Can redo if we're not at the last state
     return this.allowUndo && this.currentStateIndex < this.stateHistory.length - 1;
   }
-  
+
+  // Reconstruct engine state by replaying moves from initial state
+  reconstructEngineState(targetIndex) {
+    if (targetIndex === 0) {
+      return this.stateHistory[0].engineState;
+    }
+
+    // Start with initial state
+    const initialState = this.stateHistory[0].engineState;
+    if (!initialState) {
+      console.error('[RECONSTRUCT] No initial state found!');
+      return null;
+    }
+
+    // Create new engine with initial state
+    const tempEngine = new jsChessEngine.Game(JSON.parse(JSON.stringify(initialState)));
+
+    // Replay moves up to target index
+    for (let i = 1; i <= targetIndex; i++) {
+      const moveData = this.stateHistory[i].move;
+      if (!moveData) {
+        console.error(`[RECONSTRUCT] No move data at index ${i}`);
+        break;
+      }
+
+      const from = this.coordsToSquare(moveData.from.row, moveData.from.col);
+      const to = this.coordsToSquare(moveData.to.row, moveData.to.col);
+
+      try {
+        tempEngine.move(from, to);
+      } catch (e) {
+        console.error(`[RECONSTRUCT] Failed to replay move ${from}-${to}:`, e);
+        break;
+      }
+    }
+
+    return tempEngine.exportJson();
+  }
+
   undoMove() {
     // NEW SIMPLIFIED UNDO - Direct state restoration
     if (!this.canUndo()) {
@@ -1312,13 +1355,25 @@ class ChessGame {
     // Move index back
     this.currentStateIndex--;
 
-    // Restore the engine to the previous state instantly (O(1) operation)
+    // Restore the engine to the previous state
     const targetState = this.stateHistory[this.currentStateIndex];
 
+    // Get engine state - either stored or reconstructed
+    let engineState;
+    if (targetState.engineState) {
+      // Use stored state if available (index 0)
+      engineState = JSON.parse(JSON.stringify(targetState.engineState));
+    } else {
+      // Reconstruct state by replaying moves from initial
+      engineState = this.reconstructEngineState(this.currentStateIndex);
+    }
 
-    // CRITICAL: Deep clone the state to prevent engine from mutating our stored history
-    const clonedState = JSON.parse(JSON.stringify(targetState.engineState));
-    this.engine = new jsChessEngine.Game(clonedState);
+    if (!engineState) {
+      console.error('[UNDO] Failed to get engine state');
+      return false;
+    }
+
+    this.engine = new jsChessEngine.Game(engineState);
 
 
     // Update cached state (this will call engineStateToBoard internally)
@@ -1377,11 +1432,25 @@ class ChessGame {
     // Move index forward
     this.currentStateIndex++;
 
-    // Restore the engine to the next state instantly (O(1) operation)
+    // Restore the engine to the next state
     const targetState = this.stateHistory[this.currentStateIndex];
-    // CRITICAL: Deep clone the state to prevent engine from mutating our stored history
-    const clonedState = JSON.parse(JSON.stringify(targetState.engineState));
-    this.engine = new jsChessEngine.Game(clonedState);
+
+    // Get engine state - either stored or reconstructed
+    let engineState;
+    if (targetState.engineState) {
+      // Use stored state if available (index 0)
+      engineState = JSON.parse(JSON.stringify(targetState.engineState));
+    } else {
+      // Reconstruct state by replaying moves from initial
+      engineState = this.reconstructEngineState(this.currentStateIndex);
+    }
+
+    if (!engineState) {
+      console.error('[REDO] Failed to get engine state');
+      return false;
+    }
+
+    this.engine = new jsChessEngine.Game(engineState);
 
     // Update cached state (this will call engineStateToBoard internally)
     this.updateCachedState();
