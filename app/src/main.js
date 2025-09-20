@@ -1,37 +1,7 @@
 // R1 Chess Game
 // Two-player chess game with full rule implementation including en passant
 
-// ===========================================
-// Simple Console Logging (Production)
-// ===========================================
-
-const debugLogger = {
-  info: (category, message, data = null) => {
-    if (data) console.log(`[${category}] ${message}`, data);
-    else console.log(`[${category}] ${message}`);
-  },
-  warn: (category, message, data = null) => {
-    if (data) console.warn(`[${category}] ${message}`, data);
-    else console.warn(`[${category}] ${message}`);
-  },
-  error: (category, message, data = null) => {
-    if (data) console.error(`[${category}] ${message}`, data);
-    else console.error(`[${category}] ${message}`);
-  },
-  debug: (category, message, data = null) => {
-    if (data) console.log(`[${category}] ${message}`, data);
-    else console.log(`[${category}] ${message}`);
-  }
-};
-
-// Check if running as R1 plugin
-if (typeof PluginMessageHandler !== 'undefined') {
-  console.log('Running as R1 Creation');
-  debugLogger.info('SYSTEM', 'Running as R1 Creation');
-} else {
-  console.log('Running in browser mode');
-  debugLogger.info('SYSTEM', 'Running in browser mode');
-}
+// R1 Chess Game - Production Build
 
 // ===========================================
 // js-chess-engine Library Integration
@@ -552,6 +522,9 @@ class ChessGame {
     // Clear the undo/redo state flag when making a new move
     this.isInUndoRedoState = false;
 
+    // R1 Memory Management: Define history limit for R1 device
+    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states to prevent memory issues
+
     // Store complete engine state AFTER the move
     const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));
     const stateEntry = {
@@ -571,8 +544,7 @@ class ChessGame {
     this.stateHistory.push(stateEntry);
     this.currentStateIndex++;
 
-    // R1 Memory Management: Limit history to prevent excessive memory usage
-    const MAX_HISTORY_LENGTH = 100; // Keep last 100 states for R1 device
+    // Check if we've exceeded the history limit
     if (this.stateHistory.length > MAX_HISTORY_LENGTH) {
       // Keep the initial state (index 0) plus the most recent states
       const statesToKeep = MAX_HISTORY_LENGTH - 1; // Reserve one slot for initial state
@@ -1093,28 +1065,18 @@ class ChessGame {
    * Auto-save the game
    */
   async autoSave() {
-    console.log('[AUTOSAVE] Starting autoSave...');
     try {
-      console.log('[AUTOSAVE] Getting game state...');
       const state = this.getGameState();
-      console.log('[AUTOSAVE] Got state:', state ? 'State exists' : 'State is null');
-
-      console.log('[AUTOSAVE] Getting storage key...');
       const key = this.getStorageKey();
-      console.log('[AUTOSAVE] Storage key:', key);
-
-      console.log('[AUTOSAVE] Calling saveToStorage...');
       await saveToStorage(key, state);
 
       // Also save the current game mode separately so we know which to load
-      console.log('[AUTOSAVE] Saving last_game_mode...');
       await saveToStorage('last_game_mode', { mode: this.gameMode, timestamp: Date.now() });
 
-      console.log('[AUTOSAVE] Game auto-saved successfully');
+      console.log('Game auto-saved successfully');
       return true;
     } catch (error) {
-      console.error('[AUTOSAVE] Auto-save failed:', error);
-      console.error('[AUTOSAVE] Error stack:', error.stack);
+      console.error('Auto-save failed:', error);
       return false;
     }
   }
@@ -1869,7 +1831,7 @@ class ChessUI {
       gameStatus,
       currentPlayer,
       humanColor,
-      moveHistoryLength: this.game.moveHistory.length
+      moveHistoryLength: this.game.moveHistory ? this.game.moveHistory.length : 0
     });
 
     // Validate bot turn conditions
@@ -1896,7 +1858,7 @@ class ChessUI {
     }
 
     // Determine if this is an initial bot move (first move of game)
-    const isInitialBotMove = this.game.moveHistory.length === 0 && isBotTurn;
+    const isInitialBotMove = (!this.game.moveHistory || this.game.moveHistory.length === 0) && isBotTurn;
     const moveType = isInitialBotMove ? 'INITIAL' : 'SUBSEQUENT';
 
     debugLogger.info('BOT_ACTIVATION', `Executing ${moveType} bot move`);
@@ -2366,7 +2328,7 @@ class ChessUI {
       currentPlayer,
       isBotTurn,
       gameStatus: this.game.gameStatus,
-      moveHistory: this.game.moveHistory.length
+      moveHistory: this.game.moveHistory ? this.game.moveHistory.length : 0
     });
 
     // Ensure game is not ended
@@ -2915,7 +2877,7 @@ class ChessUI {
 
     // Check if bot should make initial move after returning from options
     // This handles the case where user changed color and clicked "Back to game"
-    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {
+    if (this.game.gameMode === 'human-vs-bot' && (!this.game.moveHistory || this.game.moveHistory.length === 0)) {
       console.log('[HIDE_OPTIONS] Checking if bot should make initial move after color change');
       // Use longer delay to ensure game state is fully ready
       setTimeout(() => {
@@ -3455,7 +3417,7 @@ class ChessUI {
 
     // Show move information
     const currentIndex = this.game.getCurrentMoveIndex();
-    const totalMoves = this.game.moveHistory.length;
+    const totalMoves = this.game.moveHistory ? this.game.moveHistory.length : 0;
     const currentMoveNumber = Math.ceil((currentIndex + 1) / 2);
 
     // Store if we just undid a bot move for later notification
@@ -3560,6 +3522,25 @@ class ChessUI {
     }
   }
 
+  // Update menu visibility based on game mode
+  updateMenuVisibility() {
+    const colorGroup = document.getElementById('color-group');
+    const difficultyGroup = document.getElementById('difficulty-group');
+    const orientationGroup = document.getElementById('orientation-mode-group');
+
+    if (this.game.gameMode === 'human-vs-human') {
+      // Human vs Human mode
+      if (colorGroup) colorGroup.style.display = 'none';
+      if (difficultyGroup) difficultyGroup.style.display = 'none';
+      if (orientationGroup) orientationGroup.style.display = 'block';
+    } else {
+      // Human vs Bot mode
+      if (colorGroup) colorGroup.style.display = 'block';
+      if (difficultyGroup) difficultyGroup.style.display = 'block';
+      if (orientationGroup) orientationGroup.style.display = 'none';
+    }
+  }
+
   // Helper to get the latest timestamp from a saved state
   getLatestTimestamp(state) {
     if (!state) return 0;
@@ -3589,8 +3570,17 @@ class ChessUI {
       const humanVsBotKey = 'chess_game_state_human_vs_bot';
       const humanVsHumanKey = 'chess_game_state_human_vs_human';
 
+      console.log('[LOAD] Checking for saved states with keys:', { humanVsBotKey, humanVsHumanKey });
+
       const humanVsBotState = await loadFromStorage(humanVsBotKey);
       const humanVsHumanState = await loadFromStorage(humanVsHumanKey);
+
+      console.log('[LOAD] Found states:', {
+        humanVsBot: !!humanVsBotState,
+        humanVsBotMoves: humanVsBotState?.moveHistory?.length || 0,
+        humanVsHuman: !!humanVsHumanState,
+        humanVsHumanMoves: humanVsHumanState?.moveHistory?.length || 0
+      });
 
       let state = null;
       let selectedMode = null;
@@ -3601,23 +3591,29 @@ class ChessUI {
         const botTimestamp = this.getLatestTimestamp(humanVsBotState);
         const humanTimestamp = this.getLatestTimestamp(humanVsHumanState);
 
+        console.log('[LOAD] Comparing timestamps:', { botTimestamp, humanTimestamp });
+
         if (humanTimestamp > botTimestamp) {
           state = humanVsHumanState;
           selectedMode = 'human-vs-human';
           debugLogger.info('LOAD', 'Loading more recent human-vs-human game');
+          console.log('[LOAD] Selected human-vs-human as more recent');
         } else {
           state = humanVsBotState;
           selectedMode = 'human-vs-bot';
           debugLogger.info('LOAD', 'Loading more recent human-vs-bot game');
+          console.log('[LOAD] Selected human-vs-bot as more recent');
         }
       } else if (humanVsHumanState) {
         state = humanVsHumanState;
         selectedMode = 'human-vs-human';
         debugLogger.info('LOAD', 'Found only human-vs-human saved state');
+        console.log('[LOAD] Found only human-vs-human state');
       } else if (humanVsBotState) {
         state = humanVsBotState;
         selectedMode = 'human-vs-bot';
         debugLogger.info('LOAD', 'Found only human-vs-bot saved state');
+        console.log('[LOAD] Found only human-vs-bot state');
       }
 
       if (!state) {
@@ -3643,16 +3639,24 @@ class ChessUI {
         gameStatus: state.gameStatus
       });
       
+      console.log('[LOAD] About to validate state:', {
+        hasState: !!state,
+        moveCount: state?.moveHistory?.length || 0,
+        stateHistoryCount: state?.stateHistory?.length || 0,
+        currentPlayer: state?.currentPlayer,
+        gameMode: selectedMode || state?.gameMode
+      });
+
       if (this.isValidSavedState(state)) {
         debugLogger.info('LOAD', 'State validation passed - Loading game state', {
-          moveCount: state.moveHistory.length,
+          moveCount: state.moveHistory ? state.moveHistory.length : 0,
           currentPlayer: state.currentPlayer,
           gameStatus: state.gameStatus,
           soundEnabled: state.soundEnabled,
           allowUndo: state.allowUndo,
           gameMode: selectedMode || state.gameMode
         });
-        console.log('Loading valid saved state');
+        console.log('[LOAD] Validation PASSED - Loading valid saved state');
 
         // CRITICAL: Set the correct game mode BEFORE loading state
         if (selectedMode) {
@@ -4115,9 +4119,6 @@ function getCookie(name) {
 
 // Save data to persistent storage with robust error handling
 async function saveToStorage(key, value) {
-  console.log('[SAVE_TO_STORAGE] Called with key:', key);
-  console.log('[SAVE_TO_STORAGE] Value type:', typeof value);
-
   debugLogger.debug('STORAGE', `Attempting to save data with key: ${key}`);
 
   // Validate input
@@ -4273,22 +4274,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Initialize chess game
-  debugLogger.info('INIT', 'Creating ChessGame instance');
   chessGame = new ChessGame();
-  
-  // Verify critical methods are available
-  console.log('[DEBUG] ChessGame prototype methods:', Object.getOwnPropertyNames(ChessGame.prototype).filter(m => m.includes('Check')));
-  console.log('[DEBUG] wouldBeInCheck exists:', typeof chessGame.wouldBeInCheck === 'function');
-  console.log('[DEBUG] isInCheck exists:', typeof chessGame.isInCheck === 'function');
-  
-  window.chessGame = chessGame; // Make globally available for testing
-  
-  debugLogger.info('INIT', 'Creating ChessUI instance');
   gameUI = new ChessUI(chessGame);
-  window.gameUI = gameUI; // Make globally available for testing
 
   // Initialize menu visibility based on default game mode
-  debugLogger.info('INIT', 'Setting initial menu visibility');
   const colorGroup = document.getElementById('color-group');
   const difficultyGroup = document.getElementById('difficulty-group');
   const orientationGroup = document.getElementById('orientation-mode-group');
@@ -4301,11 +4290,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (undoGroup) undoGroup.style.display = 'block';
   
   // Try to load saved game state
-  debugLogger.info('INIT', 'Attempting to load saved game state');
   const loaded = await gameUI.loadGameState();
   if (loaded) {
-    debugLogger.info('INIT', 'Successfully loaded saved game state - Game resumed');
-    console.log('Loaded saved game state');
     gameUI.updateDisplay();
     gameUI.updateCapturedPiecesDisplay(); // Ensure display shows after loading
     gameUI.gameStatusElement.textContent = 'Game resumed';
@@ -4313,8 +4299,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       gameUI.gameStatusElement.textContent = '';
     }, 2000);
   } else {
-    debugLogger.info('INIT', 'No valid saved state found - Starting new game');
-    console.log('No saved state found - initializing new game');
     chessGame.newGame();
     gameUI.updateDisplay();
   }
@@ -4323,13 +4307,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   gameUI.updateCapturedPiecesDisplay();
 
   // Send initialization event
-  debugLogger.info('INIT', 'Sending game initialization event');
   sendGameEvent('game_initialized', {
     theme: chessGame.theme,
     currentPlayer: chessGame.currentPlayer
   });
-  
-  debugLogger.info('INIT', 'Chess game initialization complete');
 });
 
 // ===========================================

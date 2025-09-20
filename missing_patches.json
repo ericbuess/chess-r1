@@ -1,0 +1,97 @@
+[
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-18T22:06:56.174Z",
+    "preview": "    // Clear the undo/redo state flag when making a new move\n    this.isInUndoRedoState = false;\n\n  "
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-18T22:14:06.093Z",
+    "preview": "  // Update menu visibility based on game mode\n  updateMenuVisibility() {\n    const colorGroup = doc"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-18T22:21:25.505Z",
+    "preview": "    debugLogger.info('BOT_INIT', 'Checking initial bot turn', {\n      humanColor,\n      currentPlaye"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-18T22:21:41.176Z",
+    "preview": "      moveHistoryLength: this.game.moveHistory ? this.game.moveHistory.length : 0"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-18T22:21:41.176Z",
+    "preview": "    const isInitialBotMove = (!this.game.moveHistory || this.game.moveHistory.length === 0) && isBot"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-18T22:21:41.176Z",
+    "preview": "    if (this.game.gameMode === 'human-vs-bot' && (!this.game.moveHistory || this.game.moveHistory.le"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-18T22:21:41.176Z",
+    "preview": "    const totalMoves = this.game.moveHistory ? this.game.moveHistory.length : 0;"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-18T22:27:54.308Z",
+    "preview": "      // Load states from both game modes to find the most recent\n      const humanVsBotKey = 'chess"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-18T22:28:09.996Z",
+    "preview": "      console.log('[LOAD] About to validate state:', {\n        hasState: !!state,\n        moveCount:"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-19T13:26:23.530Z",
+    "preview": "// R1 Chess Game - Production Build"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-19T13:26:23.530Z",
+    "preview": "No new code"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-19T13:26:23.530Z",
+    "preview": "No new code"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-19T13:26:23.530Z",
+    "preview": "  // Initialize chess game\n  chessGame = new ChessGame();\n  gameUI = new ChessUI(chessGame);"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-19T13:26:23.530Z",
+    "preview": "  // Try to load saved game state\n  const loaded = await gameUI.loadGameState();\n  if (loaded) {\n   "
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-19T13:26:23.530Z",
+    "preview": "  // Send initialization event\n  sendGameEvent('game_initialized', {\n    theme: chessGame.theme,\n   "
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-19T13:26:23.530Z",
+    "preview": "No new code"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/main.js",
+    "timestamp": "2025-09-19T13:34:15.724Z",
+    "preview": "No new code"
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/style.css",
+    "timestamp": "2025-09-19T01:32:36.644Z",
+    "preview": ".balance-indicator.human-advantage {\n    background: linear-gradient(90deg, #999 0%, #bbb 50%, #999 "
+  },
+  {
+    "file": "/Users/ericbuess/Projects/chess-r1/app/src/style.css",
+    "timestamp": "2025-09-19T01:42:11.394Z",
+    "preview": "/* Back button - orange styling */\n#back-btn {\n    background: #FE5F00;\n    color: #fff;\n    border-"
+  }
+]
