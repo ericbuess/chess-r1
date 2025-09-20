@@ -1,34 +1,28 @@
-# Chess R1 - Production Ready
+# Chess R1 - Development Plan
 
-## Status: ✅ PRODUCTION READY FOR RABBIT R1
+## Current Issue: Production Build Fails
 
-### Completed Features
-- ✅ Full chess game with js-chess-engine
-- ✅ Bot opponents: Ella (Normal), Evy (Hard), Emmy (Harder), Asa (Hardest)
-- ✅ Save/restore game state across sessions
-- ✅ Undo/redo functionality
-- ✅ Human vs Bot and Human vs Human modes
-- ✅ Orange spinner when bot is thinking
-- ✅ Proper button states for game settings
-- ✅ **All logging removed for production** (2025-09-19)
-- ✅ **Memory optimized for R1 constraints** (< 5MB)
+### Problem
+The production build crashes with "Cannot read properties of undefined (reading 'Game')" even though:
+- Dev server works perfectly
+- All code references have been changed to `window.jsChessEngine.Game`
+- The minified code contains the correct references
 
-### Production Optimizations
-- ✅ Removed 326+ console.log/error/warn statements
-- ✅ Disabled debugLogger with no-op functions
-- ✅ Reduced file size: main.js from 4540 to 4195 lines
-- ✅ Fixed all syntax issues from logging removal
-- ✅ Tested and verified working without logging
+### Root Cause
+Minification/bundling creates an execution order issue where something tries to use jsChessEngine before it's initialized.
 
-### Ready for RabbitOS Plugin
-- Clean production code without debug output
-- Optimized for R1's 240x320 viewport
-- Memory efficient for device constraints
-- Ready to be packaged as RabbitOS plugin
+### Fix Required
+1. [ ] Ensure jsChessEngine is initialized before any class definitions
+2. [ ] Add defensive checks in ChessGame constructor
+3. [ ] Consider wrapping chess engine initialization in an IIFE
+4. [ ] Test production build with Puppeteer to verify fix
 
-## Deployment Notes
-- App runs on port 5187
-- Viewport: 240x320 (Rabbit R1 dimensions)
-- Uses localStorage for game persistence
-- No external dependencies beyond js-chess-engine
-- Production branch: `rabbitos-plugin` (to be created)
+## Directory Structure
+- `/app` - Main application source and build
+- `/rabbitos-plugin` - Deployment package structure for Rabbit R1
+- No other directories or test files needed
+
+## Key Files
+- `app/src/main.js` - Main application code
+- `app/dist/` - Production build output
+- `rabbitos-plugin/apps/app/dist/` - Deployment package location
