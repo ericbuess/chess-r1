@@ -1,7 +1,6 @@
-// R1 Chess Game
+// CRITICAL: DO NOT MODIFY THIS FILE except for updating paths for linking or imports
+// R1 Chess Game v0.0.2
 // Two-player chess game with full rule implementation including en passant
-
-// R1 Chess Game - Production Build
 
 // ===========================================
 // js-chess-engine Library Integration
