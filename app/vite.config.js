@@ -1,3 +1,5 @@
+// CRITICAL: DO NOT MODIFY THIS FILE except for updating paths for linking or imports
+
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
 

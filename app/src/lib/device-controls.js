@@ -1,3 +1,5 @@
+// CRITICAL: DO NOT MODIFY THIS FILE except for updating paths for linking or imports
+
 /**
  * Device Controls Library
  * Handles scroll wheel and side button interactions for the R1 device

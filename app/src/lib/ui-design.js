@@ -1,3 +1,5 @@
+// CRITICAL: DO NOT MODIFY THIS FILE except for updating paths for linking or imports
+
 /**
  * UI Design Library for R1 Device (240x320px portrait screen)
  * Provides utilities and components for responsive design on small screens

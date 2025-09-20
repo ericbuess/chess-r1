@@ -1,3 +1,5 @@
+// CRITICAL: DO NOT MODIFY THIS FILE except for updating paths for linking or imports
+
 /**
  * Flutter Channel Communication Library
  * Handles bidirectional communication between WebView and Flutter app
