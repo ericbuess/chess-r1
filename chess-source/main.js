@@ -14,9 +14,6 @@ const jsChessEngine = (function() {
   return lib["js-chess-engine"];
 })();
 
-// Expose jsChessEngine globally to prevent minification issues
-window.jsChessEngine = jsChessEngine;
-
 // ChessConverter class to translate between our format and js-chess-engine format
 class ChessConverter {
   // Convert our board array to js-chess-engine format
