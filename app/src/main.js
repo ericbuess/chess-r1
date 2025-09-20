@@ -2998,7 +2998,14 @@ class ChessUI {
     // Update back button state - disable if color/difficulty changed mid-game or no moves made
     const backBtn = document.getElementById('back-btn');
     if (backBtn) {
-      const hasMoves = this.game.moveHistory && this.game.moveHistory.length > 0;
+      // Check both moveHistory and stateHistory for moves (stateHistory > 1 means has moves)
+      const hasMoveHistory = this.game.moveHistory && this.game.moveHistory.length > 0;
+      const hasStateHistory = this.game.stateHistory && this.game.stateHistory.length > 1;
+      const hasMoves = hasMoveHistory || hasStateHistory;
+
+      console.log('[MENU UPDATE] Move check - moveHistory:', this.game.moveHistory?.length || 0,
+                  'stateHistory:', this.game.stateHistory?.length || 0,
+                  'hasMoves:', hasMoves);
       const modeChanged = this.game.gameMode !== this.game.originalGameMode;
       const colorChanged = this.game.colorChangedMidGame;
       const difficultyChanged = this.game.difficultyChangedMidGame;
@@ -3028,7 +3035,8 @@ class ChessUI {
         backBtn.textContent = 'Back to game';
         backBtn.classList.remove('disabled');
       }
-      console.log('[MENU UPDATE] Back button - modeChanged:', modeChanged, 'colorChanged:', colorChanged, 'difficultyChanged:', difficultyChanged);
+      console.log('[MENU UPDATE] Back button - modeChanged:', modeChanged, 'colorChanged:', colorChanged, 'difficultyChanged:', difficultyChanged,
+                  'hasMoves:', hasMoves, 'settingsChangedWithinMode:', settingsChangedWithinMode);
     }
     // Update game mode radio buttons
     const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
@@ -3126,11 +3134,12 @@ class ChessUI {
           debugLogger.info('UI', `Game mode changing from ${this.game.gameMode} to ${radio.value}`);
 
           try {
-            // Save current game state before switching
+            // Save current game state before switching (save to current mode's key)
+            const oldMode = this.game.gameMode;
             await this.game.autoSave();
+            console.log(`[MODE SWITCH] Saved ${oldMode} game before switching`);
 
             // Switch to new game mode
-            const oldMode = this.game.gameMode;
             this.game.setGameMode(radio.value);
 
             // Save last game mode
@@ -3148,7 +3157,33 @@ class ChessUI {
 
             // Try to load saved state for the new game mode
             const newModeKey = this.game.getStorageKey();
+            console.log('[MODE SWITCH] Loading saved state for key:', newModeKey);
+
+            // Check localStorage directly to debug
+            const localStorageState = localStorage.getItem(newModeKey);
+            if (localStorageState) {
+              try {
+                const parsed = JSON.parse(localStorageState);
+                console.log('[MODE SWITCH] Found in localStorage:', {
+                  moveHistory: parsed.moveHistory?.length || 0,
+                  stateHistory: parsed.stateHistory?.length || 0
+                });
+              } catch (e) {
+                console.log('[MODE SWITCH] localStorage parse error:', e);
+              }
+            } else {
+              console.log('[MODE SWITCH] Not found in localStorage');
+            }
+
             const savedState = await loadFromStorage(newModeKey);
+            console.log('[MODE SWITCH] loadFromStorage returned:',
+              savedState ? {
+                exists: true,
+                moveHistory: savedState.moveHistory?.length || 0,
+                stateHistory: savedState.stateHistory?.length || 0,
+                hasBoard: !!savedState.board,
+                gameMode: savedState.gameMode
+              } : 'null');
 
             let validState = false;
             try {
@@ -3157,6 +3192,7 @@ class ChessUI {
               console.error('[MODE SWITCH] Error validating state:', e);
               validState = false;
             }
+            console.log('[MODE SWITCH] State validation result:', validState);
 
             if (validState) {
             debugLogger.info('UI', `Loading saved state for ${radio.value} mode`);
@@ -3164,6 +3200,8 @@ class ChessUI {
             // Load saved state but preserve the newly selected game mode
             this.game.loadGameState(savedState, { preserveGameMode: true });
             console.log('[MODE SWITCH] After loadGameState, gameMode:', this.game.gameMode);
+            console.log('[MODE SWITCH] Loaded state - moveHistory:', this.game.moveHistory?.length || 0,
+                        'stateHistory:', this.game.stateHistory?.length || 0);
             this.updateDisplay();
             this.showMessage(`Switched to ${radio.value === 'human-vs-human' ? 'Human vs Human' : 'Human vs Bot'} - Game restored!`);
           } else {
@@ -3355,11 +3393,13 @@ class ChessUI {
 
   async clearSavedState() {
     debugLogger.info('CLEANUP', 'Clearing saved game state from storage');
+    // Only clear the current mode's saved state, not all modes
+    const currentKey = this.game.getStorageKey();
     const keysToRemove = [
-      'chess_game_state_human_vs_human',
-      'chess_game_state_human_vs_bot',
+      currentKey,
       'chess_game_state' // Legacy key
     ];
+    console.log(`[CLEAR] Clearing saved state for current mode: ${currentKey}`);
     
     if (window.creationStorage) {
       try {
