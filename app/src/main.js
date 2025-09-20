@@ -81,6 +81,14 @@ class ChessConverter {
   }
 }
 
+// Debug Logger - Simple console wrapper for debugging
+const debugLogger = {
+  debug: (category, message, data) => console.log(`[${category}]`, message, data || ''),
+  info: (category, message, data) => console.log(`[${category}]`, message, data || ''),
+  warn: (category, message, data) => console.warn(`[${category}]`, message, data || ''),
+  error: (category, message, data) => console.error(`[${category}]`, message, data || '')
+};
+
 // Chess Game State
 class ChessGame {
   constructor() {
