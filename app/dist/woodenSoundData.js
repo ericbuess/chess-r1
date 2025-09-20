@@ -1,3 +1,5 @@
+// CRITICAL: DO NOT MODIFY THIS FILE except for updating paths for linking or imports
+
 // Wooden chess sounds - optimized from chess-pieces.mp3
 // This file is imported by main.js for the sound system
 window.woodenSoundData = {
