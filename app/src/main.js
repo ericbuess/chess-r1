@@ -68,7 +68,7 @@ class ChessConverter {
   static validateEndgame(board, currentPlayer, castlingRights, enPassantTarget) {
     try {
       const config = this.toLibraryFormat(board, currentPlayer, castlingRights, enPassantTarget);
-      const game = new jsChessEngine.Game(config);
+      const game = new window.jsChessEngine.Game(config);
       const status = game.exportJson();
       
       return {
@@ -96,7 +96,7 @@ const debugLogger = {
 class ChessGame {
   constructor() {
     // Initialize js-chess-engine
-    this.engine = new jsChessEngine.Game();
+    this.engine = new window.jsChessEngine.Game();
     
     // UI state management (separate from chess logic)
     this.selectedSquare = null;
@@ -670,7 +670,7 @@ class ChessGame {
    */
   newGame() {
     // Reset engine
-    this.engine = new jsChessEngine.Game();
+    this.engine = new window.jsChessEngine.Game();
 
     // Reset UI state
     this.selectedSquare = null;
@@ -870,7 +870,7 @@ class ChessGame {
   loadGameState(state, options = {}) {
     // Restore engine state if available
     if (state.engineState) {
-      this.engine = new jsChessEngine.Game(state.engineState);
+      this.engine = new window.jsChessEngine.Game(state.engineState);
     } else {
       // Fallback: recreate from board position
       const config = {
@@ -904,7 +904,7 @@ class ChessGame {
         }
       }
       
-      this.engine = new jsChessEngine.Game(config);
+      this.engine = new window.jsChessEngine.Game(config);
     }
     
     // Restore UI state
@@ -941,14 +941,14 @@ class ChessGame {
       this.initialEngineState = JSON.parse(JSON.stringify(state.initialEngineState));
     } else {
       // If no initial state in save, create fresh one
-      const freshGame = new jsChessEngine.Game();
+      const freshGame = new window.jsChessEngine.Game();
       this.initialEngineState = JSON.parse(JSON.stringify(freshGame.exportJson()));
     }
 
     // Validate loaded initial state
     if (!this.initialEngineState.pieces || !this.initialEngineState.pieces['E2']) {
       
-      const freshGame = new jsChessEngine.Game();
+      const freshGame = new window.jsChessEngine.Game();
       this.initialEngineState = JSON.parse(JSON.stringify(freshGame.exportJson()));
     }
 
@@ -998,7 +998,7 @@ class ChessGame {
       this.currentStateIndex = 0;
 
       // First, store the TRUE initial state (empty board)
-      const freshGame = new jsChessEngine.Game();
+      const freshGame = new window.jsChessEngine.Game();
       this.stateHistory.push({
         engineState: JSON.parse(JSON.stringify(freshGame.exportJson())),
         move: null,
@@ -1011,7 +1011,7 @@ class ChessGame {
         
 
         // Start with a fresh engine to replay moves
-        const replayEngine = new jsChessEngine.Game();
+        const replayEngine = new window.jsChessEngine.Game();
 
         // Replay each move and store the state after each move
         for (let i = 0; i < state.moveHistory.length; i++) {
@@ -1283,7 +1283,7 @@ class ChessGame {
     }
 
     // Create new engine with initial state
-    const tempEngine = new jsChessEngine.Game(JSON.parse(JSON.stringify(initialState)));
+    const tempEngine = new window.jsChessEngine.Game(JSON.parse(JSON.stringify(initialState)));
 
     // Replay moves up to target index
     for (let i = 1; i <= targetIndex; i++) {
@@ -1341,7 +1341,7 @@ class ChessGame {
       return false;
     }
 
-    this.engine = new jsChessEngine.Game(engineState);
+    this.engine = new window.jsChessEngine.Game(engineState);
 
 
     // Update cached state (this will call engineStateToBoard internally)
@@ -1418,7 +1418,7 @@ class ChessGame {
       return false;
     }
 
-    this.engine = new jsChessEngine.Game(engineState);
+    this.engine = new window.jsChessEngine.Game(engineState);
 
     // Update cached state (this will call engineStateToBoard internally)
     this.updateCachedState();
