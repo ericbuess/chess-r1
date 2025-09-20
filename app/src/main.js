@@ -217,7 +217,7 @@ class ChessGame {
         notation: notation,
         commentary: commentary
       });
-      
+
       // Play sound - action first, then status
       // Play action sound (capture or move)
       if (isCapture) {
@@ -431,12 +431,6 @@ class ChessGame {
    * Execute bot move
    */
   async executeBotMove() {
-    
-    ,
-      gameStatus: this.gameStatus,
-      currentPlayer: this.currentPlayer,
-      humanColor: this.humanColor
-    });
     
     // Debug each condition separately
     const isHumanVsBot = this.gameMode === 'human-vs-bot';
@@ -2380,9 +2374,6 @@ class ChessUI {
 
   // Handle new game start
   onNewGameStart() {
-    ,
-      moveCount: this.game.moveHistory ? this.game.moveHistory.length : 0
-    });
     this.updateDisplay();
 
     // Only check for initial bot turn if no moves have been made yet
@@ -2460,10 +2451,6 @@ class ChessUI {
           const wasInCheck = this.game.gameStatus === 'check';
           const moveResult = await this.game.makeMove(fromRow, fromCol, logicalRow, logicalCol);
           if (moveResult && moveResult.success) {
-            ,
-              currentPlayer: this.game.currentPlayer,
-              humanColor: this.game.humanColor
-            });
 
             // Clear undo/redo flags now that a move was successfully made
             this.game.isInUndoRedoState = false;
@@ -2487,10 +2474,6 @@ class ChessUI {
               // Just update display if needed later
             } else if (this.game.gameMode === 'human-vs-bot' && !this.game.isUndoRedoAction) {
               // In vs Bot mode, board remains static - no flipping
-              ,
-                isBotTurn: this.game.isBotTurn(),
-                gameStatus: this.game.gameStatus
-              });
               
               // Check if game is still in progress and it's bot's turn
               // Bot should play when status is 'playing' OR 'check' (not checkmate/stalemate)
@@ -2510,7 +2493,6 @@ class ChessUI {
                   this.handleBotTurn();
                 }, 150);
               } else {
-                });
                 
                 // Ensure input is enabled if game ended
                 if (this.game.gameStatus === 'checkmate' || this.game.gameStatus === 'stalemate') {
@@ -3173,14 +3155,10 @@ class ChessUI {
   }
 
   confirmNewGame() {
-    '
-    });
 
     // Clear saved state and start new game BEFORE hiding menu
     this.clearSavedState();
     this.game.newGame();
-
-    });
 
     // Update the display to reflect the new game
     this.updateDisplay();
@@ -3650,8 +3628,6 @@ class ChessUI {
     
     // Accept states where the current player is black (white made first move)
     if (state.currentPlayer === 'black') {
-      ');
-      
       return true;
     }
     
