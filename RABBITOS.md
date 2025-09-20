@@ -36,31 +36,86 @@ apps/app/
 
 ## 🚀 BUILD INSTRUCTIONS
 
-1. **Install dependencies**:
+### ⚠️ CRITICAL: Chess Engine Import Pattern
+
+The chess engine MUST be imported and exposed exactly like this in `src/main.js`:
+
+```javascript
+// FORCE INCLUDE - DO NOT REMOVE
+import * as ChessEngine from 'js-chess-engine';
+window.jsChessEngine = ChessEngine;
+console.log('Chess engine modules:', Object.keys(ChessEngine));
+```
+
+**WHY THIS MATTERS:**
+- The `import *` pattern prevents Vite from tree-shaking the library
+- The `console.log` forces Vite to recognize the dependency is used
+- Without this exact pattern, the chess engine won't be bundled
+
+### Build Steps
+
+1. **Verify package.json has js-chess-engine**:
    ```bash
    cd apps/app
+   cat package.json | grep js-chess-engine
+   # Should show: "js-chess-engine": "^1.0.4"
+   ```
+
+2. **Install dependencies (REQUIRED - do not skip)**:
+   ```bash
    npm install
    ```
 
-2. **Build the application**:
+3. **Verify chess engine installed**:
    ```bash
+   ls node_modules/js-chess-engine
+   # Should list the library files
+   ```
+
+4. **Clean build (remove old artifacts)**:
+   ```bash
+   rm -rf dist
    npm run build
    ```
 
-3. **Copy sound data to dist**:
+5. **Verify chess engine is bundled**:
+   ```bash
+   grep -c "ChessEngine" dist/assets/main-*.js
+   # Should return a number > 0
+   ```
+
+6. **Copy sound data to dist**:
    ```bash
    cp src/woodenSoundData.js dist/
    ```
 
-4. **Deploy the dist folder** to your R1 plugin system
+7. **Verify complete dist structure**:
+   ```bash
+   ls -la dist/
+   # Should have: index.html, woodenSoundData.js, assets/main-*.js, assets/main-*.css
+   ```
+
+8. **Deploy the dist folder** to your R1 plugin system
 
 ## ⚠️ CRITICAL RULES
 
 1. **DO NOT modify any game logic** - it's fully tested and working
 2. **DO NOT remove protective comments** from source files
-3. **DO NOT change ES6 imports** - uses js-chess-engine from npm
-4. **DO NOT modify chess engine** - uses proven js-chess-engine library
-5. **ONLY update paths** if your build system requires it
+3. **DO NOT change the import pattern** - MUST use `import * as ChessEngine`
+4. **DO NOT skip npm install** - dependencies must be installed
+5. **DO NOT use cached builds** - always clean build with `rm -rf dist`
+6. **VERIFY chess engine is bundled** - grep the output to confirm
+7. **ONLY update paths** if your build system requires it
+
+### Common Failures and Solutions
+
+| Problem | Symptom | Solution |
+|---------|---------|----------|
+| Chess engine not bundled | "undefined is not an object" error | Use exact import pattern shown above |
+| Tree-shaking removes import | Game loads but can't create new game | Add console.log to force usage |
+| Wrong import syntax | Build succeeds but runtime fails | Must use `import * as ChessEngine` |
+| Dependencies not installed | Build fails or missing modules | Always run `npm install` first |
+| Cached build artifacts | Old errors persist | Delete dist/ before building |
 
 ## ✅ What This App Contains
 
@@ -161,6 +216,7 @@ After building, verify:
 =====================================
 Source Files: [PRESERVED/MODIFIED]
 Build Status: [SUCCESS/FAILED]
+Chess Engine Bundled: [YES/NO] (grep count: X)
 File Integrity: X/6 files verified
 Build Size: XXX KB
 Errors: [None/List any errors]
@@ -169,15 +225,35 @@ Warnings: [None/List any warnings]
 Ready for R1 deployment: [YES/NO]
 ```
 
+### Deployment Success Criteria
+
+✅ **Build is successful when:**
+- npm install completes without errors
+- npm run build completes without errors
+- Chess engine bundled (grep returns > 0)
+- dist/ contains all required files
+- No source files modified
+
+❌ **Build failed if:**
+- Chess engine not found in output
+- Missing dist files
+- Source files were modified
+- Build errors occurred
+
 ## 🎯 YOUR ONLY TASK
 
-1. Take these source files AS-IS
-2. Build them with Vite
-3. Verify file integrity
-4. Report conversion status
-5. DO NOT modify the chess game code
+1. **Install dependencies** with `npm install`
+2. **Clean build** with `rm -rf dist && npm run build`
+3. **Verify chess engine** with grep check
+4. **Copy sound data** to dist/
+5. **Report status** with verification results
+6. **DO NOT modify** any source code
 
-The app is COMPLETE and TESTED. Just build and deploy it!
+The app is COMPLETE and TESTED. Focus on:
+- Proper dependency installation
+- Clean build process
+- Verification of chess engine bundling
+- Accurate status reporting
 
 ---
 
