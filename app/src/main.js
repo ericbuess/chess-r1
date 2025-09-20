@@ -4141,8 +4141,24 @@ function setCookie(name, value, days = 365) {
   const expires = new Date();
   expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
   const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
-  document.cookie = `${name}=${encodeURIComponent(stringValue)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
-  console.log(`Cookie set: ${name}`);
+  const encodedValue = encodeURIComponent(stringValue);
+  const cookieString = `${name}=${encodedValue}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+
+  // Check cookie size (4KB limit)
+  if (cookieString.length > 4096) {
+    console.warn(`[COOKIE WARNING] Cookie "${name}" is ${cookieString.length} bytes (exceeds 4KB limit)`);
+    // Fallback to localStorage for large data
+    try {
+      localStorage.setItem(name, stringValue);
+      console.log(`[COOKIE] Too large for cookie, saved to localStorage: ${name}`);
+      return;
+    } catch (e) {
+      console.error('Failed to save to localStorage:', e);
+    }
+  }
+
+  document.cookie = cookieString;
+  console.log(`Cookie set: ${name} (${cookieString.length} bytes)`);
 }
 
 function getCookie(name) {
