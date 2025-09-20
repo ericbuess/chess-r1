@@ -3,7 +3,7 @@
 ## ✅ ALL MAJOR FEATURES WORKING
 
 ### Completed & Verified
-- [x] ✅ Bot names: Eric, Emmy, Asa, Bayes
+- [x] ✅ Bot names: Ella (Easy), Evy (Normal), Emmy (Hard), Asa (Hardest)
 - [x] ✅ Orange spinner when bot thinking
 - [x] ✅ Button state tracking - all scenarios working
 - [x] ✅ Bot plays first when human is black

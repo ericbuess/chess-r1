@@ -1136,12 +1136,12 @@ class ChessGame {
   getBotDifficultyText() {
     const difficulties = {
       0: 'Random',
-      1: 'Eric',
-      2: 'Emmy',
-      3: 'Asa',
-      4: 'Bayes'
+      1: 'Ella',
+      2: 'Evy',
+      3: 'Emmy',
+      4: 'Asa'
     };
-    return difficulties[this.botDifficulty] || 'Eric';
+    return difficulties[this.botDifficulty] || 'Ella';
   }
   
   /**
