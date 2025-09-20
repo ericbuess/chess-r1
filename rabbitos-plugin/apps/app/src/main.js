@@ -4075,8 +4075,32 @@ async function loadFromStorage(key) {
 document.addEventListener('DOMContentLoaded', async () => {
   
   
-  // Keyboard fallbacks removed for RabbitOS plugin
-  // The R1 device uses hardware buttons instead of keyboard input
+  // Add keyboard fallback for development
+  if (typeof PluginMessageHandler === 'undefined') {
+    window.addEventListener('keydown', (event) => {
+      // P key shortcut for Push-To-Talk (options menu)
+      if (event.code === 'KeyP') {
+        event.preventDefault();
+        // Trigger the same event as sideClick (PTT button)
+        window.dispatchEvent(new CustomEvent('sideClick'));
+      }
+
+      // Temporary arrow key shortcuts for undo/redo (will be removed for R1)
+      if (event.code === 'ArrowLeft') {
+        event.preventDefault();
+        // Trigger the same event as scroll down (which does undo)
+        window.dispatchEvent(new CustomEvent('scrollDown'));
+      }
+
+      if (event.code === 'ArrowRight') {
+        event.preventDefault();
+        
+        // Trigger the same event as scroll up (which does redo)
+        window.dispatchEvent(new CustomEvent('scrollUp'));
+        
+      }
+    });
+  }
 
   // Initialize chess game
   chessGame = new ChessGame();

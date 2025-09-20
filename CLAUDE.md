@@ -26,13 +26,18 @@
 
 ## 🚀 Rabbit R1 Deployment
 
+**CRITICAL**: Use RABBITOS.md for all plugin creation. This file contains the unified, proven approach.
+
+**Key Discovery**: RabbitOS Creation Agent expects SOURCE files, not built dist files.
+- Provide source structure with `/src/` paths
+- Let the Agent handle the build process
+- See RABBITOS.md for complete instructions
+
 **NEVER prepare the final Rabbit package until user explicitly says:**
 - "Prepare the Rabbit package"
 - "Create the upload package"
 - "Ready for Rabbit upload"
 - Or similar explicit approval
-
-The app will be merged by rabbitos creation agent for R1 device.
 
 ## 📊 Performance Requirements
 

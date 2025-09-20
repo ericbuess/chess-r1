@@ -1,220 +1,143 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0, user-scalable=no"
-        />
-        <title>Chess R1 by Eric Buess</title>
-        <link rel="stylesheet" href="/src/style.css" />
-    </head>
-    <body>
-        <div id="app">
-            <div id="game-container">
-                <div id="game-header">
-                    <div id="move-info">
-                        <span id="move-display">Ready to play</span>
-                        <span id="move-expand">...</span>
-                    </div>
-                    <div id="captured-pieces"></div>
-                    <div id="game-status" style="display: none"></div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Chess R1 by Eric Buess</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+    <div id="app">
+        <div id="game-container">
+            <div id="game-header">
+                <div id="move-info">
+                    <span id="move-display">Ready to play</span>
+                    <span id="move-expand">...</span>
                 </div>
-
-                <div id="chess-board"></div>
-
-                <div id="instruction-label" class="hidden"></div>
+                <div id="captured-pieces"></div>
+                <div id="game-status" style="display: none;"></div>
             </div>
 
-            <div id="options-overlay" class="hidden">
-                <div id="options-menu">
-                    <div id="options-title">Chess R1 by Eric Buess v0.0.2</div>
+            <div id="chess-board"></div>
 
-                    <!-- Game Mode Section -->
-                    <div class="option-group">
-                        <div class="option-label">Game Mode</div>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input
-                                    type="radio"
-                                    name="gameMode"
-                                    value="human-vs-bot"
-                                    checked
-                                />
-                                <span class="radio-text">Human vs Bot</span>
-                            </label>
-                            <label class="radio-option">
-                                <input
-                                    type="radio"
-                                    name="gameMode"
-                                    value="human-vs-human"
-                                />
-                                <span class="radio-text">Human vs Human</span>
-                            </label>
-                        </div>
-                    </div>
+            <div id="instruction-label" class="hidden"></div>
+        </div>
 
-                    <!-- Player Color Section (for Human vs Bot) -->
-                    <div class="option-group" id="color-group">
-                        <div class="option-label">Play as</div>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input
-                                    type="radio"
-                                    name="playerColor"
-                                    value="white"
-                                    checked
-                                />
-                                <span class="radio-text">White</span>
-                            </label>
-                            <label class="radio-option">
-                                <input
-                                    type="radio"
-                                    name="playerColor"
-                                    value="black"
-                                />
-                                <span class="radio-text">Black</span>
-                            </label>
-                        </div>
+        <div id="options-overlay" class="hidden">
+            <div id="options-menu">
+                <div id="options-title">Chess R1 by Eric Buess v0.0.2</div>
+                
+                <!-- Game Mode Section -->
+                <div class="option-group">
+                    <div class="option-label">Game Mode</div>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="gameMode" value="human-vs-bot" checked>
+                            <span class="radio-text">Human vs Bot</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="gameMode" value="human-vs-human">
+                            <span class="radio-text">Human vs Human</span>
+                        </label>
                     </div>
+                </div>
 
-                    <!-- Bot Difficulty Section (for Human vs Bot) -->
-                    <div class="option-group" id="difficulty-group">
-                        <div class="option-label">Bot Difficulty</div>
-                        <div class="radio-group">
-                            <label class="radio-option difficulty-option">
-                                <input
-                                    type="radio"
-                                    name="botDifficulty"
-                                    value="1"
-                                    checked
-                                />
-                                <span class="radio-text">Ella (Normal)</span>
-                            </label>
-                            <label class="radio-option difficulty-option">
-                                <input
-                                    type="radio"
-                                    name="botDifficulty"
-                                    value="2"
-                                />
-                                <span class="radio-text">Evy (Hard)</span>
-                            </label>
-                            <label class="radio-option difficulty-option">
-                                <input
-                                    type="radio"
-                                    name="botDifficulty"
-                                    value="3"
-                                />
-                                <span class="radio-text">Emmy (Harder)</span>
-                            </label>
-                            <label class="radio-option difficulty-option">
-                                <input
-                                    type="radio"
-                                    name="botDifficulty"
-                                    value="4"
-                                />
-                                <span class="radio-text">Asa (Hardest)</span>
-                            </label>
-                        </div>
+                <!-- Player Color Section (for Human vs Bot) -->
+                <div class="option-group" id="color-group">
+                    <div class="option-label">Play as</div>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="playerColor" value="white" checked>
+                            <span class="radio-text">White</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="playerColor" value="black">
+                            <span class="radio-text">Black</span>
+                        </label>
                     </div>
+                </div>
 
-                    <!-- Undo Options Section -->
-                    <div class="option-group" id="undo-group">
-                        <div class="option-label">Allow Undo</div>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input
-                                    type="radio"
-                                    name="allowUndo"
-                                    value="on"
-                                    checked
-                                />
-                                <span class="radio-text">On</span>
-                            </label>
-                            <label class="radio-option">
-                                <input
-                                    type="radio"
-                                    name="allowUndo"
-                                    value="off"
-                                />
-                                <span class="radio-text">Off</span>
-                            </label>
-                        </div>
+                <!-- Bot Difficulty Section (for Human vs Bot) -->
+                <div class="option-group" id="difficulty-group">
+                    <div class="option-label">Bot Difficulty</div>
+                    <div class="radio-group">
+                        <label class="radio-option difficulty-option">
+                            <input type="radio" name="botDifficulty" value="1" checked>
+                            <span class="radio-text">Ella (Normal)</span>
+                        </label>
+                        <label class="radio-option difficulty-option">
+                            <input type="radio" name="botDifficulty" value="2">
+                            <span class="radio-text">Evy (Hard)</span>
+                        </label>
+                        <label class="radio-option difficulty-option">
+                            <input type="radio" name="botDifficulty" value="3">
+                            <span class="radio-text">Emmy (Harder)</span>
+                        </label>
+                        <label class="radio-option difficulty-option">
+                            <input type="radio" name="botDifficulty" value="4">
+                            <span class="radio-text">Asa (Hardest)</span>
+                        </label>
                     </div>
+                </div>
 
-                    <!-- Orientation Mode (Human vs Human only) -->
-                    <div class="option-group" id="orientation-mode-group">
-                        <div class="option-label">Orientation Mode</div>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input
-                                    type="radio"
-                                    name="orientationMode"
-                                    value="handoff"
-                                    checked
-                                />
-                                <span class="radio-text"
-                                    >Handoff (pass device)</span
-                                >
-                            </label>
-                            <label class="radio-option">
-                                <input
-                                    type="radio"
-                                    name="orientationMode"
-                                    value="table"
-                                />
-                                <span class="radio-text"
-                                    >Table (sitting across)</span
-                                >
-                            </label>
-                            <label class="radio-option">
-                                <input
-                                    type="radio"
-                                    name="orientationMode"
-                                    value="none"
-                                />
-                                <span class="radio-text">None</span>
-                            </label>
-                        </div>
+                <!-- Undo Options Section -->
+                <div class="option-group" id="undo-group">
+                    <div class="option-label">Allow Undo</div>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="allowUndo" value="on" checked>
+                            <span class="radio-text">On</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="allowUndo" value="off">
+                            <span class="radio-text">Off</span>
+                        </label>
                     </div>
+                </div>
 
-                    <!-- Sound Effects Section -->
-                    <div class="option-group">
-                        <div class="option-label">Sound Effects</div>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input
-                                    type="radio"
-                                    name="soundEffects"
-                                    value="on"
-                                    checked
-                                />
-                                <span class="radio-text">On</span>
-                            </label>
-                            <label class="radio-option">
-                                <input
-                                    type="radio"
-                                    name="soundEffects"
-                                    value="off"
-                                />
-                                <span class="radio-text">Off</span>
-                            </label>
-                        </div>
+                <!-- Orientation Mode (Human vs Human only) -->
+                <div class="option-group" id="orientation-mode-group">
+                    <div class="option-label">Orientation Mode</div>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="orientationMode" value="handoff" checked>
+                            <span class="radio-text">Handoff (pass device)</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="orientationMode" value="table">
+                            <span class="radio-text">Table (sitting across)</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="orientationMode" value="none">
+                            <span class="radio-text">None</span>
+                        </label>
                     </div>
+                </div>
 
-                    <!-- Action Buttons -->
-                    <div class="button-group">
-                        <button id="new-game-btn" class="action-btn primary">
-                            New game
-                        </button>
-                        <button id="back-btn" class="action-btn secondary">
-                            Back to game
-                        </button>
+                <!-- Sound Effects Section -->
+                <div class="option-group">
+                    <div class="option-label">Sound Effects</div>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="soundEffects" value="on" checked>
+                            <span class="radio-text">On</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="soundEffects" value="off">
+                            <span class="radio-text">Off</span>
+                        </label>
                     </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="button-group">
+                    <button id="new-game-btn" class="action-btn primary">New game</button>
+                    <button id="back-btn" class="action-btn secondary">Back to game</button>
                 </div>
             </div>
         </div>
-        <script src="./src/woodenSoundData.js"></script>
-        <script type="module" src="./src/main.js"></script>
-    </body>
+    </div>
+    <script src="/src/woodenSoundData.js"></script>
+    <script type="module" src="/src/main.js"></script>
+</body>
 </html>

@@ -8,7 +8,10 @@
     "build": "vite build",
     "preview": "vite preview"
   },
+  "dependencies": {
+    "js-chess-engine": "^1.0.0"
+  },
   "devDependencies": {
-    "vite": "^5.4.20"
+    "vite": "^5.0.0"
   }
 }
