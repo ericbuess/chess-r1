@@ -1158,12 +1158,60 @@ class ChessGame {
     // Track last played move sound to avoid repeats
     let lastMoveIndex = -1;
 
+    // Track if audio has been initialized (for Chrome/Android)
+    let audioInitialized = false;
+    let audioContext = null;
+
+    // Initialize audio context on first user interaction
+    const initializeAudio = () => {
+      if (audioInitialized) return;
+
+      try {
+        // Create AudioContext for Chrome/Android compatibility
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext && !audioContext) {
+          audioContext = new AudioContext();
+          // Resume if suspended (Chrome autoplay policy)
+          if (audioContext.state === 'suspended') {
+            audioContext.resume();
+          }
+        }
+
+        // Play a silent sound to unlock audio
+        const silentAudio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhCDS');
+        silentAudio.volume = 0.01;
+        silentAudio.play().catch(() => {});
+
+        audioInitialized = true;
+      } catch (e) {
+        console.log('Audio initialization failed:', e);
+      }
+    };
+
     // Helper to play audio with volume control
     const playAudio = (base64Data, volume = 0.4) => {
       if (!this.soundEnabled || !base64Data) return Promise.resolve();
+
+      // Initialize audio on first play attempt
+      initializeAudio();
+
       const audio = new Audio(base64Data);
       audio.volume = volume;
-      return audio.play().catch(() => {});
+
+      // Handle Chrome/Android autoplay restrictions
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        return playPromise.catch((error) => {
+          // If autoplay blocked, try to play on next user interaction
+          if (error.name === 'NotAllowedError') {
+            // Store for retry on next user interaction
+            document.addEventListener('click', () => {
+              audio.play().catch(() => {});
+            }, { once: true });
+          }
+        });
+      }
+      return Promise.resolve();
     };
 
     // Smart move sound - no repeats
@@ -1649,6 +1697,23 @@ class ChessUI {
     this.inputEnabled = true; // Flag to control user input during bot turns
     this.lastAlertTime = 0; // Prevent double alerts
     this.alertCooldown = 1000; // Minimum time between alerts (ms)
+    this.audioInitialized = false; // Track audio initialization for Chrome/Android
+
+    // Initialize audio on first user interaction (Chrome/Android requirement)
+    const initAudioOnInteraction = () => {
+      if (!this.audioInitialized) {
+        // Trigger a dummy sound play to initialize the audio system
+        this.game.playSound('move');
+        this.audioInitialized = true;
+        // Remove all initialization listeners after first interaction
+        document.removeEventListener('click', initAudioOnInteraction);
+        document.removeEventListener('touchstart', initAudioOnInteraction);
+      }
+    };
+
+    // Add listeners for audio initialization
+    document.addEventListener('click', initAudioOnInteraction, { once: true });
+    document.addEventListener('touchstart', initAudioOnInteraction, { once: true });
 
     // Add click handler for expand button
     const expandButton = document.getElementById('move-expand');
@@ -1877,9 +1942,26 @@ class ChessUI {
     // Always ensure user input is disabled and thinking indicator is shown
     this.setInputEnabled(false);
     this.showBotThinking(true);
-    
+
     // Update UI state to reflect bot's turn
     this.updateGameStateIndicators();
+
+    // Show delayed notification for harder bots (difficulty 3+ takes longer)
+    let thinkingNotificationTimer = null;
+    let notificationShown = false;
+
+    if (this.game.botDifficulty >= 3) {
+      thinkingNotificationTimer = setTimeout(() => {
+        // Store flag that notification was shown
+        notificationShown = true;
+        console.log(`Showing bot thinking notification for ${this.game.getBotDifficultyText()}`);
+        this.showNotification(
+          `${this.game.getBotDifficultyText()} is analyzing deeply...`,
+          'info',
+          10000 // Show for 10 seconds max (bot should finish before this)
+        );
+      }, 5000); // Show after 5 seconds
+    }
 
     try {
       // Add slight delay for initial moves to allow UI to settle
@@ -1889,6 +1971,24 @@ class ChessUI {
 
       // Execute bot move with enhanced error handling
       const botResult = await this.game.executeBotMove();
+
+      // Clear the thinking notification timer if bot finishes quickly
+      if (thinkingNotificationTimer) {
+        clearTimeout(thinkingNotificationTimer);
+      }
+
+      // If notification was shown, hide it immediately
+      if (notificationShown) {
+        const label = document.getElementById('instruction-label');
+        if (label && !label.classList.contains('hidden')) {
+          label.classList.add('hidden');
+          // Clear any notification timeout to prevent conflicts
+          if (this.notificationTimeout) {
+            clearTimeout(this.notificationTimeout);
+            this.notificationTimeout = null;
+          }
+        }
+      }
       
       if (botResult && botResult.success) {
         // Update display after bot move
@@ -1896,8 +1996,9 @@ class ChessUI {
         
         // Check if bot put human in check
         if (botResult.enteredCheck) {
-          // Bot put human in check - status shown in header
-          // this.showCheckAlert('You are in check!');
+          // Bot put human in check - highlight human's king
+          // After bot moves, currentPlayer is now humanColor (it's human's turn)
+          // So we should highlight the human's king who is in check
           this.highlightKing(this.game.humanColor);
         }
 
@@ -1961,9 +2062,10 @@ class ChessUI {
     const moveDisplay = document.getElementById('move-display');
 
     if (show && gameMode === 'human-vs-bot' && isBotTurn && (gameStatus === 'playing' || gameStatus === 'check')) {
-      // Don't show redundant instruction label - turn indicator already shows bot thinking
-      // Just remove any existing instruction label
-      this.hideInstructionLabel();
+      // Don't hide instruction label if it contains bot thinking message
+      if (instructionLabel && !instructionLabel.textContent.includes('analyzing deeply')) {
+        this.hideInstructionLabel();
+      }
 
       // Add spinner to move display
       if (moveDisplay && !document.querySelector('.bot-thinking-spinner')) {
@@ -2460,8 +2562,8 @@ class ChessUI {
             // Check if we need to show check alert
             if (moveResult.enteredCheck) {
               // Someone just entered check - status shown in header
-              // const checkedPlayer = this.game.currentPlayer === this.game.humanColor ? 'You are' : 'Bot is';
-              // this.showCheckAlert(`${checkedPlayer} in check!`);
+              // After a move, currentPlayer has switched to the opponent
+              // So we need to highlight the opponent's king (who is now in check)
               this.highlightKing(this.game.currentPlayer);
             }
 
@@ -3286,12 +3388,14 @@ class ChessUI {
       for (let col = 0; col < 8; col++) {
         const piece = this.game.board[row][col];
         if (piece && piece.type === 'king' && piece.color === color) {
-          const square = this.boardElement.children[row * 8 + col];
+          // Convert logical coordinates to display coordinates for proper highlighting
+          const display = this.getDisplayCoordinates(row, col);
+          const square = this.boardElement.children[display.row * 8 + display.col];
           if (square) {
             // Prevent double highlighting - only add if not already highlighted
             if (!square.classList.contains('king-warning')) {
               square.classList.add('king-warning');
-              
+
               // Remove highlight after 2 seconds
               setTimeout(() => {
                 square.classList.remove('king-warning');
