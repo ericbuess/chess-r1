@@ -15,14 +15,17 @@ DEPLOYMENT APPROACH:
    - All paths are relative (no leading slashes)
    - No console logging or debug code present
 
-2. The package structure:
+2. CRITICAL - The package structure:
    - rabbitos-plugin/index.html → redirects to apps/app/dist/index.html
-   - rabbitos-plugin/apps/app/dist/ → complete built application
-     * index.html - main entry point
-     * assets/ - bundled CSS and JavaScript
+   - rabbitos-plugin/apps/app/dist/ → ALL GAME FILES MUST BE HERE
+     * index.html - main entry point (MUST be in dist/)
+     * assets/ - bundled CSS and JavaScript (MUST be in dist/assets/)
      * icon.png - app icon (240x240)
      * screenshot.jpg - preview image
-     * woodenSoundData.js - sound effects data
+     * woodenSoundData.js - sound effects data (MUST be in dist/)
+
+   ⚠️ IMPORTANT: Do NOT put game files directly in apps/app/
+   ⚠️ ALL files must be in apps/app/dist/ for the redirect to work
 
 3. If you encounter any issues with the pre-built files:
    - Source files are included in apps/app/src/ for modifications
