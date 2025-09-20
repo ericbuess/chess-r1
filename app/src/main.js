@@ -102,7 +102,7 @@ class ChessGame {
     this.orientationMode = 'handoff'; // 'none', 'table', or 'handoff' for human vs human
     this.gameMode = 'human-vs-bot';
     this.humanColor = 'white';
-    this.botDifficulty = 4; // Bot difficulty: 0=random, 1=easy, 2=medium, 3=hard, 4=expert
+    this.botDifficulty = 1; // Bot difficulty: 0=random, 1=Ella(easy), 2=Evy(medium), 3=Emmy(hard), 4=Asa(expert)
     this.allowUndo = true; // Enable undo by default
     this.soundEnabled = true; // Sound effects enabled by default
 
@@ -110,7 +110,7 @@ class ChessGame {
     this.originalGameMode = 'human-vs-bot';
     this.originalHumanColor = 'white';
     this.colorChangedMidGame = false;
-    this.originalBotDifficulty = 4;
+    this.originalBotDifficulty = 1;
     this.difficultyChangedMidGame = false;
 
     // Cache frequently accessed state
