@@ -4285,17 +4285,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   chessGame = new ChessGame();
   gameUI = new ChessUI(chessGame);
 
-  // Try to load saved game state
-  debugLogger.info('INIT', 'Attempting to load saved game state');
-  const loaded = await gameUI.loadGameState();
-  if (loaded) {
-    debugLogger.info('INIT', 'Successfully loaded saved game state - Game resumed');
-    console.log('Game restored from saved state');
-  } else {
-    debugLogger.info('INIT', 'No saved state found - Starting fresh game');
-    console.log('Starting fresh game - no saved state found');
-  }
-
   // Initialize menu visibility based on default game mode
   const colorGroup = document.getElementById('color-group');
   const difficultyGroup = document.getElementById('difficulty-group');
