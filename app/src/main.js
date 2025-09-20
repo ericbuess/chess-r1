@@ -75,18 +75,18 @@ class ChessConverter {
         hasValidMoves: Object.keys(status.moves || {}).length > 0
       };
     } catch (error) {
-      debugLogger.error('VALIDATION', 'Library validation error:', error);
+      // Error handling silently
       return null;
     }
   }
 }
 
-// Debug Logger - Simple console wrapper for debugging
+// Debug Logger - Disabled for production
 const debugLogger = {
-  debug: (category, message, data) => console.log(`[${category}]`, message, data || ''),
-  info: (category, message, data) => console.log(`[${category}]`, message, data || ''),
-  warn: (category, message, data) => console.warn(`[${category}]`, message, data || ''),
-  error: (category, message, data) => console.error(`[${category}]`, message, data || '')
+  debug: () => {},
+  info: () => {},
+  warn: () => {},
+  error: () => {}
 };
 
 // Chess Game State
@@ -175,7 +175,7 @@ class ChessGame {
     const from = this.coordsToSquare(fromRow, fromCol);
     const to = this.coordsToSquare(toRow, toCol);
     
-    console.log('[MOVE] Converted to chess notation:', { from, to });
+    
     
     try {
       // Check if this was a capture for sound
@@ -184,23 +184,23 @@ class ChessGame {
       const movedPiece = this.board[fromRow][fromCol];
 
       // Execute move in engine
-      console.log('[MOVE] Calling engine.move()...');
+      
       const moveResult = this.engine.move(from, to);
-      console.log('[MOVE] Engine move result:', moveResult);
+      
 
       // Update our cached state
       this.updateCachedState();
 
       // Update board orientation after player change
       this.boardFlipped = this.determineOrientation();
-      console.log('[MOVE] Updated orientation after move - BoardFlipped:', this.boardFlipped, 'CurrentPlayer:', this.currentPlayer);
+      
 
       // Update game status from engine and check for transitions
       const enteredCheck = this.updateGameStatus();
       if (enteredCheck) {
         // We just entered check - determine who's in check
         const checkedPlayer = this.currentPlayer === 'white' ? 'White' : 'Black';
-        console.log(`[CHECK] ${checkedPlayer} is now in check!`);
+        
       }
 
       // Generate notation and commentary for the move
@@ -216,11 +216,6 @@ class ChessGame {
         captured: targetPiece,
         notation: notation,
         commentary: commentary
-      });
-      
-      console.log('[MOVE] Move successful, new state:', {
-        currentPlayer: this.currentPlayer,
-        gameStatus: this.gameStatus
       });
       
       // Play sound - action first, then status
@@ -243,8 +238,8 @@ class ChessGame {
 
       return { success: true, enteredCheck };
     } catch (error) {
-      console.error(`[MOVE] Invalid move: ${from} to ${to}`, error.message);
-      console.error(`[MOVE] Full error:`, error);
+      
+      
       return { success: false, enteredCheck: false };
     }
   }
@@ -351,7 +346,7 @@ class ChessGame {
    */
   async generateBotMove() {
     try {
-      console.log('[BOT] Generating bot move...');
+      
 
       // Get the piece positions before the move for history tracking
       const boardBefore = this.board;
@@ -360,7 +355,7 @@ class ChessGame {
       // It doesn't just return a move suggestion - it plays it
       // Difficulty: 0 = random, 1 = easy, 2 = medium, 3 = hard, 4 = expert
       const aiMove = this.engine.aiMove(this.botDifficulty);
-      console.log('[BOT] AI move EXECUTED by engine:', aiMove);
+      
       
       // The move has already been made in the engine
       // Update our cached state to reflect the new position
@@ -370,7 +365,7 @@ class ChessGame {
       const enteredCheck = this.updateGameStatus();
       if (enteredCheck) {
         // Bot just put human in check
-        console.log('[CHECK] Bot put human king in check!');
+        
       }
       
       // Convert to our format for UI and history
@@ -383,14 +378,6 @@ class ChessGame {
         // Get the piece that was moved (now at the destination after updateCachedState)
         const movedPiece = this.board[toCoords.row][toCoords.col];
         const capturedPiece = boardBefore[toCoords.row][toCoords.col];
-        
-        console.log('[BOT] Move details:', { 
-          from, to, 
-          fromCoords, toCoords, 
-          movedPiece,
-          capturedPiece,
-          newTurn: this.currentPlayer 
-        });
         
         // Generate notation and commentary
         const notation = this.generateMoveNotation(fromCoords.row, fromCoords.col, toCoords.row, toCoords.col,
@@ -434,7 +421,7 @@ class ChessGame {
         };
       }
     } catch (error) {
-      console.error('Bot move generation failed:', error.message, error);
+      
     }
     
     return null;
@@ -444,10 +431,8 @@ class ChessGame {
    * Execute bot move
    */
   async executeBotMove() {
-    console.log('[BOT] executeBotMove called');
-    console.log('[BOT] Game state:', {
-      gameMode: this.gameMode,
-      isBotTurn: this.isBotTurn(),
+    
+    ,
       gameStatus: this.gameStatus,
       currentPlayer: this.currentPlayer,
       humanColor: this.humanColor
@@ -458,15 +443,8 @@ class ChessGame {
     const isBotTurn = this.isBotTurn();
     const isValidStatus = this.gameStatus === 'playing' || this.gameStatus === 'check';
     
-    console.log('[BOT] Condition checks:', {
-      isHumanVsBot,
-      isBotTurn,
-      isValidStatus,
-      willExecute: isHumanVsBot && isBotTurn && isValidStatus
-    });
-    
     if (!isHumanVsBot || !isBotTurn || !isValidStatus) {
-      console.log('[BOT] Conditions not met for bot move - execution blocked');
+      
       return { success: false, enteredCheck: false };
     }
     
@@ -474,10 +452,10 @@ class ChessGame {
     
     // Generate AND execute bot move (aiMove() does both!)
     const botMove = await this.generateBotMove();
-    console.log('[BOT] Bot move completed:', botMove);
+    
     
     if (!botMove) {
-      console.error('[BOT] Failed to generate/execute bot move');
+      
       return { success: false, enteredCheck: false };
     }
     
@@ -494,13 +472,6 @@ class ChessGame {
     
     // Move was already executed by generateBotMove()
     // Just log success
-    console.log('[BOT] Strategic bot move executed successfully:', {
-      from: `${botMove.from.row},${botMove.from.col}`,
-      to: `${botMove.to.row},${botMove.to.col}`,
-      piece: botMove.piece,
-      newTurn: this.currentPlayer
-    });
-
     // Auto-save after successful bot move
     await this.autoSave();
 
@@ -520,11 +491,11 @@ class ChessGame {
    * @param {string} moveData.commentary - Move commentary
    */
   recordGameState(moveData) {
-    console.log('[STATE] Recording game state:', moveData);
+    
 
     // If we're not at the end of history, truncate future states (branching)
     if (this.currentStateIndex < this.stateHistory.length - 1) {
-      console.log(`[STATE] Truncating future states from index ${this.currentStateIndex + 1}`);
+      
       this.stateHistory = this.stateHistory.slice(0, this.currentStateIndex + 1);
     }
 
@@ -550,7 +521,7 @@ class ChessGame {
       timestamp: Date.now()
     };
 
-    console.log(`[STATE] Storing state at index ${this.currentStateIndex + 1}`);
+    
     this.stateHistory.push(stateEntry);
     this.currentStateIndex++;
 
@@ -560,7 +531,7 @@ class ChessGame {
       const statesToKeep = MAX_HISTORY_LENGTH - 1; // Reserve one slot for initial state
       const removedCount = this.stateHistory.length - MAX_HISTORY_LENGTH;
 
-      console.log(`[STATE] History limit exceeded (${this.stateHistory.length}), trimming to ${MAX_HISTORY_LENGTH} states`);
+      
 
       // Keep initial state + most recent states
       this.stateHistory = [
@@ -571,7 +542,7 @@ class ChessGame {
       // Adjust current index after trimming
       this.currentStateIndex = this.stateHistory.length - 1;
 
-      console.log(`[STATE] Trimmed ${removedCount} old states, new length: ${this.stateHistory.length}`);
+      
     }
 
     // Keep old moveHistory for backward compatibility (will remove later)
@@ -592,7 +563,7 @@ class ChessGame {
 
     // Auto-save after recording state
     this.autoSave().catch(error => {
-      console.error('[STATE] Failed to auto-save after recording state:', error);
+      
     });
   }
 
@@ -632,10 +603,10 @@ class ChessGame {
     const state = this.engine.exportJson();
     const board = Array(8).fill(null).map(() => Array(8).fill(null));
 
-    console.log('[ENGINE->BOARD] Converting engine state');
-    console.log('[ENGINE->BOARD] Total pieces in engine:', Object.keys(state.pieces).length);
-    console.log('[ENGINE->BOARD] White pawns - E2:', state.pieces['E2'], 'E4:', state.pieces['E4']);
-    console.log('[ENGINE->BOARD] Black pawns - E7:', state.pieces['E7'], 'E5:', state.pieces['E5']);
+    
+    
+    
+    
 
     for (const [square, piece] of Object.entries(state.pieces)) {
       const coords = this.squareToCoords(square);
@@ -643,17 +614,17 @@ class ChessGame {
 
       // CRITICAL BUG FIX: Skip corrupted pieces that return null
       if (parsedPiece === null) {
-        console.error(`[ENGINE->BOARD] Skipping corrupted piece at ${square}:`, piece);
+        
         continue; // Don't place corrupted pieces on board
       }
 
       board[coords.row][coords.col] = parsedPiece;
       if (square === 'E2' || square === 'E4' || square === 'E7' || square === 'E5') {
-        console.log(`[ENGINE->BOARD] Placing ${piece} (${parsedPiece.color} ${parsedPiece.type}) at ${square} -> board[${coords.row}][${coords.col}]`);
+        
       }
     }
 
-    console.log('[ENGINE->BOARD] Board after conversion - [6][4] (e2):', board[6][4], '[4][4] (e4):', board[4][4]);
+    
     return board;
   }
   
@@ -663,12 +634,12 @@ class ChessGame {
   parsePiece(enginePiece) {
     // CRITICAL BUG FIX: Validate input to prevent corruption
     if (typeof enginePiece !== 'string') {
-      console.error('[PARSE_PIECE] Invalid piece data:', enginePiece, 'Type:', typeof enginePiece);
+      
       return null; // Return null for invalid pieces to filter them out
     }
 
     if (enginePiece.length !== 1) {
-      console.error('[PARSE_PIECE] Invalid piece notation length:', enginePiece);
+      
       return null;
     }
 
@@ -684,7 +655,7 @@ class ChessGame {
 
     const type = pieceMap[enginePiece.toUpperCase()];
     if (!type) {
-      console.error('[PARSE_PIECE] Unknown piece type:', enginePiece);
+      
       return null;
     }
 
@@ -733,11 +704,11 @@ class ChessGame {
 
     // CRITICAL: Update game status to ensure it's set to 'playing'
     this.updateGameStatus();
-    console.log('[NEW_GAME] Game status updated to:', this.gameStatus);
+    
 
     // THEN determine board orientation based on correct currentPlayer
     this.boardFlipped = this.determineOrientation();
-    console.log('[NEW_GAME] Set board orientation:', this.boardFlipped, 'for player:', this.currentPlayer);
+    
 
     // Play new game sound
     this.playSound('newGame');
@@ -834,15 +805,15 @@ class ChessGame {
         // Device rotates when passed between players
         shouldFlip = this.currentPlayer === 'black';
       }
-      console.log(`[ORIENTATION] Mode: ${this.orientationMode}, Current Player: ${this.currentPlayer}, Should Flip: ${shouldFlip}`);
+      
     } else {
       // In human vs bot, flip when playing as black so black pieces are at bottom
       shouldFlip = this.humanColor === 'black';
-      console.log(`[ORIENTATION] Bot Mode, Human Color: ${this.humanColor}, Should Flip: ${shouldFlip}`);
+      
     }
 
     if (prevFlipped !== shouldFlip) {
-      console.log(`[ORIENTATION] Board flip state changing from ${prevFlipped} to ${shouldFlip}`);
+      
     }
 
     return shouldFlip;
@@ -944,10 +915,10 @@ class ChessGame {
     this.possibleMoves = state.possibleMoves || [];
     // Only restore gameMode if not explicitly preserving the current one
     if (!options.preserveGameMode) {
-      console.log('[LOAD STATE] Restoring gameMode from state:', state.gameMode);
+      
       this.gameMode = state.gameMode || 'human-vs-bot';
     } else {
-      console.log('[LOAD STATE] Preserving current gameMode:', this.gameMode);
+      
     }
     this.humanColor = state.humanColor || 'white';
     this.botDifficulty = state.botDifficulty !== undefined ? state.botDifficulty : 1;
@@ -962,7 +933,7 @@ class ChessGame {
     // R1 Memory Management: Apply same limit to moveHistory
     const MAX_HISTORY_LENGTH = 100;
     if (this.moveHistory.length > MAX_HISTORY_LENGTH - 1) {
-      console.log(`[LOAD] Trimming moveHistory from ${this.moveHistory.length} to ${MAX_HISTORY_LENGTH - 1}`);
+      
       this.moveHistory = this.moveHistory.slice(-(MAX_HISTORY_LENGTH - 1));
     }
 
@@ -979,7 +950,7 @@ class ChessGame {
 
     // Validate loaded initial state
     if (!this.initialEngineState.pieces || !this.initialEngineState.pieces['E2']) {
-      console.error('[LOAD] WARNING: Loaded initial state is corrupted! Creating fresh initial state.');
+      
       const freshGame = new jsChessEngine.Game();
       this.initialEngineState = JSON.parse(JSON.stringify(freshGame.exportJson()));
     }
@@ -989,13 +960,13 @@ class ChessGame {
 
     // NOW recalculate boardFlipped after currentPlayer is set
     this.boardFlipped = this.determineOrientation();
-    console.log('[LOAD_STATE] Recalculated board orientation after updateCachedState:', this.boardFlipped, 'Mode:', this.orientationMode, 'Current Player:', this.currentPlayer);
+    
 
     // CRITICAL FIX: Handle stateHistory for the new undo/redo system
     // Check if we have saved stateHistory (new saves) or need to rebuild it (old saves)
     if (state.stateHistory && state.stateHistory.length > 0) {
       // NEW: Restore saved stateHistory directly
-      console.log('[LOAD] Restoring saved state history:', state.stateHistory.length, 'states');
+      
       this.stateHistory = state.stateHistory;
       this.currentStateIndex = state.currentStateIndex || (state.stateHistory.length - 1);
 
@@ -1003,7 +974,7 @@ class ChessGame {
       const MAX_HISTORY_LENGTH = 100;
       if (this.stateHistory.length > MAX_HISTORY_LENGTH) {
         const removedCount = this.stateHistory.length - MAX_HISTORY_LENGTH;
-        console.log(`[LOAD] Trimming loaded history from ${this.stateHistory.length} to ${MAX_HISTORY_LENGTH} states`);
+        
 
         // Keep initial state + most recent states
         this.stateHistory = [
@@ -1021,11 +992,11 @@ class ChessGame {
           this.currentStateIndex = Math.min(this.currentStateIndex, this.stateHistory.length - 1);
         }
 
-        console.log(`[LOAD] Removed ${removedCount} old states, currentStateIndex: ${this.currentStateIndex}`);
+        
       }
     } else {
       // OLD: Rebuild stateHistory from moveHistory for backward compatibility
-      console.log('[LOAD] No stateHistory found, rebuilding from moveHistory');
+      
       this.stateHistory = [];
       this.currentStateIndex = 0;
 
@@ -1040,7 +1011,7 @@ class ChessGame {
 
       // If we have moves in history, rebuild states by replaying them
       if (state.moveHistory && state.moveHistory.length > 0) {
-        console.log('[LOAD] Rebuilding state history from', state.moveHistory.length, 'moves');
+        
 
         // Start with a fresh engine to replay moves
         const replayEngine = new jsChessEngine.Game();
@@ -1063,16 +1034,16 @@ class ChessGame {
             });
             this.currentStateIndex++;
           } catch (error) {
-            console.error('[LOAD] Error replaying move:', from, to, error);
+            
             // Stop rebuilding if a move fails
             break;
           }
         }
 
-        console.log('[LOAD] State history rebuilt:', this.stateHistory.length, 'states, current index:', this.currentStateIndex);
+        
       } else {
         // No moves, just the initial state
-        console.log('[LOAD] No moves to replay, keeping initial state only');
+        
       }
     }
   }
@@ -1089,10 +1060,10 @@ class ChessGame {
       // Also save the current game mode separately so we know which to load
       await saveToStorage('last_game_mode', { mode: this.gameMode, timestamp: Date.now() });
 
-      console.log('Game auto-saved successfully');
+      
       return true;
     } catch (error) {
-      console.error('Auto-save failed:', error);
+      
       return false;
     }
   }
@@ -1269,7 +1240,7 @@ class ChessGame {
    * Play a sound
    */
   playSound(soundName) {
-    console.log(`[SOUND] Playing sound: ${soundName}`);
+    
     if (this.sounds && this.sounds[soundName]) {
       this.sounds[soundName]();
     }
@@ -1310,7 +1281,7 @@ class ChessGame {
     // Start with initial state
     const initialState = this.stateHistory[0].engineState;
     if (!initialState) {
-      console.error('[RECONSTRUCT] No initial state found!');
+      
       return null;
     }
 
@@ -1321,7 +1292,7 @@ class ChessGame {
     for (let i = 1; i <= targetIndex; i++) {
       const moveData = this.stateHistory[i].move;
       if (!moveData) {
-        console.error(`[RECONSTRUCT] No move data at index ${i}`);
+        
         break;
       }
 
@@ -1331,7 +1302,7 @@ class ChessGame {
       try {
         tempEngine.move(from, to);
       } catch (e) {
-        console.error(`[RECONSTRUCT] Failed to replay move ${from}-${to}:`, e);
+        
         break;
       }
     }
@@ -1342,11 +1313,11 @@ class ChessGame {
   undoMove() {
     // NEW SIMPLIFIED UNDO - Direct state restoration
     if (!this.canUndo()) {
-      console.log('[UNDO] Cannot undo - already at initial state');
+      
       return false;
     }
 
-    console.log(`[UNDO] Moving from state ${this.currentStateIndex} to ${this.currentStateIndex - 1}`);
+    
 
     // Check if the move we're undoing was a capture (for sound replay)
     const undoingState = this.stateHistory[this.currentStateIndex];
@@ -1369,7 +1340,7 @@ class ChessGame {
     }
 
     if (!engineState) {
-      console.error('[UNDO] Failed to get engine state');
+      
       return false;
     }
 
@@ -1386,9 +1357,9 @@ class ChessGame {
     // Don't recalculate orientation here - updateDisplay will handle it
     // This prevents double rotation during undo
     // this.boardFlipped = this.determineOrientation();
-    console.log(`[UNDO] Skipping orientation recalc to prevent double rotation - CurrentPlayer: ${this.currentPlayer}`);
+    
 
-    console.log(`[UNDO] Restored to state ${this.currentStateIndex}`);
+    
 
     // Clear selection
     this.selectedSquare = null;
@@ -1401,20 +1372,20 @@ class ChessGame {
     // Play action sound (capture or move)
     if (wasCapture) {
       this.playSound('capture');
-      console.log('[UNDO] Playing capture sound for undoing capture move');
+      
     } else {
       this.playSound('move');
-      console.log('[UNDO] Playing move sound for undoing regular move');
+      
     }
 
     // Play status sound with delay if there was a capture
     // Check the restored state for check/checkmate status
     if (this.gameStatus === 'checkmate') {
       setTimeout(() => this.playSound('checkmate'), wasCapture ? 100 : 0);
-      console.log('[UNDO] Scheduling checkmate sound');
+      
     } else if (this.gameStatus === 'check') {
       setTimeout(() => this.playSound('check'), wasCapture ? 100 : 0);
-      console.log('[UNDO] Scheduling check sound');
+      
     }
 
     return true;
@@ -1423,11 +1394,11 @@ class ChessGame {
   redoMove() {
     // NEW SIMPLIFIED REDO - Direct state restoration
     if (!this.canRedo()) {
-      console.log('[REDO] Cannot redo - already at latest state');
+      
       return false;
     }
 
-    console.log(`[REDO] Moving from state ${this.currentStateIndex} to ${this.currentStateIndex + 1}`);
+    
 
     // Move index forward
     this.currentStateIndex++;
@@ -1446,7 +1417,7 @@ class ChessGame {
     }
 
     if (!engineState) {
-      console.error('[REDO] Failed to get engine state');
+      
       return false;
     }
 
@@ -1462,11 +1433,11 @@ class ChessGame {
     // Don't recalculate orientation here - updateDisplay will handle it
     // This prevents double rotation during redo
     // this.boardFlipped = this.determineOrientation();
-    console.log(`[REDO] Skipping orientation recalc to prevent double rotation - CurrentPlayer: ${this.currentPlayer}`);
+    
 
-    console.log(`[REDO] Restored to state ${this.currentStateIndex}`);
+    
     if (targetState.move) {
-      console.log(`[REDO] Now at position after: ${targetState.notation}`);
+      
     }
 
     // Clear selection
@@ -1483,20 +1454,20 @@ class ChessGame {
     // Play action sound (capture or move)
     if (wasCapture) {
       this.playSound('capture');
-      console.log('[REDO] Playing capture sound for redoing capture move');
+      
     } else {
       this.playSound('move');
-      console.log('[REDO] Playing move sound for redoing regular move');
+      
     }
 
     // Play status sound with delay if there was a capture
     // Check the restored state for check/checkmate status
     if (this.gameStatus === 'checkmate') {
       setTimeout(() => this.playSound('checkmate'), wasCapture ? 100 : 0);
-      console.log('[REDO] Scheduling checkmate sound');
+      
     } else if (this.gameStatus === 'check') {
       setTimeout(() => this.playSound('check'), wasCapture ? 100 : 0);
-      console.log('[REDO] Scheduling check sound');
+      
     }
 
     return true;
@@ -1834,8 +1805,6 @@ class ChessUI {
     if (this.isFlipping) return; // Prevent multiple simultaneous flips
 
     this.isFlipping = true;
-    debugLogger.info('UI', 'Starting board flip animation');
-
     // Add flip animation class
     this.boardElement.style.transform = 'rotateY(90deg)';
     this.boardElement.style.transition = 'transform 0.3s ease-in-out';
@@ -1852,8 +1821,6 @@ class ChessUI {
       setTimeout(() => {
         this.boardElement.style.transition = '';
         this.isFlipping = false;
-        debugLogger.info('UI', 'Board flip animation completed');
-        
         if (callback) callback();
       }, 150);
     }, 150);
@@ -1866,16 +1833,8 @@ class ChessUI {
     const currentFlipState = this.game.boardFlipped;
     const wasFlipped = this.boardElement.classList.contains('flipped');
 
-    console.log('[UPDATE_PERSPECTIVE] Called - CurrentFlip:', currentFlipState, 'WasFlipped:', wasFlipped, 'OrientationMode:', this.game.orientationMode);
-
-    debugLogger.info('UI', 'Updating board perspective without animation', {
-      currentFlipState: currentFlipState,
-      wasFlipped: wasFlipped,
-      gameMode: this.game.gameMode,
-      currentPlayer: this.game.currentPlayer,
-      isUndoRedo: this.game.isUndoRedoAction
-    });
     
+
     // Update the board flip state immediately without animation
     if (currentFlipState && !wasFlipped) {
       this.boardElement.classList.add('flipped');
@@ -1892,7 +1851,7 @@ class ChessUI {
   async handleBotTurn() {
     // CRITICAL: Never trigger bot during redo
     if (this.game.isPerformingRedo) {
-      console.log('[BOT_ACTIVATION] Bot turn BLOCKED - redo in progress');
+      
       return;
     }
 
@@ -1902,36 +1861,19 @@ class ChessUI {
     const currentPlayer = this.game.currentPlayer;
     const humanColor = this.game.getHumanColor();
 
-    // Log the call stack to see where this was triggered from
-    console.trace('[BOT_ACTIVATION] Bot turn handler called from:');
-
-    debugLogger.info('BOT_ACTIVATION', 'Bot turn handler called', {
-      gameMode,
-      isBotTurn,
-      gameStatus,
-      currentPlayer,
-      humanColor,
-      moveHistoryLength: this.game.moveHistory ? this.game.moveHistory.length : 0
-    });
+    // Bot activation check
 
     // Validate bot turn conditions
     if (gameMode !== 'human-vs-bot') {
-      debugLogger.warn('BOT_ACTIVATION', 'Not in vs Bot mode, exiting');
       return;
     }
 
     if (!isBotTurn) {
-      debugLogger.warn('BOT_ACTIVATION', 'Not bot\'s turn, exiting', {
-        currentPlayer,
-        humanColor,
-        expectedBotColor: humanColor === 'white' ? 'black' : 'white'
-      });
       return;
     }
 
     // Check if game is over
     if (gameStatus !== 'playing' && gameStatus !== 'check') {
-      debugLogger.info('BOT_ACTIVATION', 'Game over, cleaning up bot turn state');
       this.showBotThinking(false);
       this.setInputEnabled(false); // Keep disabled for game end
       return;
@@ -1940,8 +1882,6 @@ class ChessUI {
     // Determine if this is an initial bot move (first move of game)
     const isInitialBotMove = (!this.game.moveHistory || this.game.moveHistory.length === 0) && isBotTurn;
     const moveType = isInitialBotMove ? 'INITIAL' : 'SUBSEQUENT';
-
-    debugLogger.info('BOT_ACTIVATION', `Executing ${moveType} bot move`);
 
     // Always ensure user input is disabled and thinking indicator is shown
     this.setInputEnabled(false);
@@ -1960,8 +1900,6 @@ class ChessUI {
       const botResult = await this.game.executeBotMove();
       
       if (botResult && botResult.success) {
-        debugLogger.info('BOT_ACTIVATION', `${moveType} bot move completed successfully`);
-        
         // Update display after bot move
         this.updateDisplay();
         
@@ -1979,18 +1917,14 @@ class ChessUI {
         
         // Check if game ended after bot move
         if (this.game.gameStatus === 'checkmate' || this.game.gameStatus === 'stalemate') {
-          debugLogger.info('BOT_ACTIVATION', 'Game ended after bot move');
           this.setInputEnabled(false); // Keep disabled for game end
           this.handleGameEnd();
         } else {
           // Game continues - enable input for human's turn
           this.setInputEnabled(true);
-          debugLogger.info('BOT_ACTIVATION', 'Bot move complete, human\'s turn now');
-        }
+          }
         
       } else {
-        debugLogger.error('BOT_ACTIVATION', `${moveType} bot move failed - no valid moves found`);
-        
         // Hide thinking indicator and show error
         this.showBotThinking(false);
         this.showNotification(`Bot move failed - your turn`, 'error');
@@ -2001,8 +1935,6 @@ class ChessUI {
         }, 3000);
       }
     } catch (error) {
-      debugLogger.error('BOT_ACTIVATION', `Error during ${moveType} bot turn`, error);
-      
       // Hide thinking indicator and re-enable input on error
       this.showBotThinking(false);
       this.setInputEnabled(true);
@@ -2033,14 +1965,6 @@ class ChessUI {
     const gameMode = this.game.gameMode;
     const isBotTurn = this.game.isBotTurn();
     const gameStatus = this.game.gameStatus;
-
-    debugLogger.debug('UI_SYNC', 'Bot thinking indicator update', {
-      show,
-      gameMode,
-      isBotTurn,
-      gameStatus,
-      inputEnabled: this.inputEnabled
-    });
 
     const instructionLabel = document.getElementById('instruction-label');
     const moveDisplay = document.getElementById('move-display');
@@ -2094,8 +2018,6 @@ class ChessUI {
   handleGameEnd() {
     const gameStatus = this.game.gameStatus;
     const currentPlayer = this.game.currentPlayer;
-
-    debugLogger.info('UI', 'Game ended', { status: gameStatus, currentPlayer });
 
     // Disable all input
     this.setInputEnabled(false);
@@ -2174,7 +2096,7 @@ class ChessUI {
       }
     } catch (e) {
       // If material balance calculation fails, just skip it
-      console.log('[UI] Material balance calculation skipped:', e.message);
+      
     }
 
     let message = '';
@@ -2225,19 +2147,13 @@ class ChessUI {
     turnIndicator.textContent = message;
     turnIndicator.className = indicatorClass;
     
-    debugLogger.debug('UI_SYNC', 'Turn indicator updated', {
-      message,
-      currentPlayer,
-      gameMode,
-      indicatorClass
-    });
-  }
+    }
 
   // Update captured pieces display
   updateCapturedPiecesDisplay() {
     const capturedContainer = document.getElementById('captured-pieces');
     if (!capturedContainer) {
-      console.log('[CAPTURED] Element not found');
+      
       return;
     }
 
@@ -2391,11 +2307,9 @@ class ChessUI {
 
   // Enhanced bot initialization for both human white/black scenarios
   checkInitialBotTurn() {
-    console.log('[CHECK_INITIAL_BOT_TURN] Called');
+    
 
     if (this.game.gameMode !== 'human-vs-bot') {
-      debugLogger.info('BOT_INIT', 'Not in vs Bot mode, skipping bot turn check');
-      console.log('[CHECK_INITIAL_BOT_TURN] Not in bot mode, exiting');
       return;
     }
 
@@ -2404,30 +2318,21 @@ class ChessUI {
     const isBotTurn = this.game.isBotTurn();
     const moveCount = this.game.moveHistory ? this.game.moveHistory.length : 0;
 
-    debugLogger.info('BOT_INIT', 'Checking initial bot turn', {
-      humanColor,
-      currentPlayer,
-      isBotTurn,
-      gameStatus: this.game.gameStatus,
-      moveHistory: moveCount
-    });
-
     // If moves have already been made, don't try to make initial bot move
     if (moveCount > 0) {
-      console.log('[CHECK_INITIAL_BOT_TURN] Game already has moves, skipping initial bot turn');
+      
       return;
     }
 
     // Ensure game is not ended
     if (this.game.gameStatus === 'checkmate' || this.game.gameStatus === 'stalemate') {
-      debugLogger.warn('BOT_INIT', 'Game ended, skipping bot turn');
       return;
     }
 
     // CRITICAL: Ensure game status is 'playing' before attempting bot move
     // This prevents the "bot move failed" error
     if (this.game.gameStatus !== 'playing') {
-      console.log('[CHECK_INITIAL_BOT_TURN] Game not in playing state yet, retrying...');
+      
       setTimeout(() => {
         this.checkInitialBotTurn();
       }, 500);
@@ -2436,9 +2341,7 @@ class ChessUI {
 
     // Check if bot should make the first move
     if (isBotTurn) {
-      console.log('[CHECK_INITIAL_BOT_TURN] Bot should move first!');
-      debugLogger.info('BOT_INIT', 'Bot should make first move - initializing bot turn');
-
+      
       // Show bot thinking immediately
       this.showBotThinking(true);
       this.setInputEnabled(false);
@@ -2453,10 +2356,10 @@ class ChessUI {
         const stillNoMoves = !this.game.moveHistory || this.game.moveHistory.length === 0;
 
         if (this.game.gameStatus === 'playing' && stillBotTurn && stillNoMoves) {
-          console.log('[CHECK_INITIAL_BOT_TURN] Executing bot turn');
+          
           this.handleBotTurn();
         } else {
-          console.log('[CHECK_INITIAL_BOT_TURN] Conditions changed - bot already moved or not bot turn');
+          
           // Reset UI if bot already moved
           if (!stillNoMoves) {
             this.showBotThinking(false);
@@ -2466,8 +2369,6 @@ class ChessUI {
         }
       }, 1000); // Reduced delay since we have better checks
     } else {
-      debugLogger.info('BOT_INIT', 'Human goes first - enabling input and waiting for human move');
-
       // Ensure human can make moves
       this.setInputEnabled(true);
       this.showBotThinking(false);
@@ -2479,11 +2380,7 @@ class ChessUI {
 
   // Handle new game start
   onNewGameStart() {
-    console.log('[NEW_GAME_START] Called with:', {
-      gameMode: this.game.gameMode,
-      humanColor: this.game.humanColor,
-      currentPlayer: this.game.currentPlayer,
-      isBotTurn: this.game.isBotTurn(),
+    ,
       moveCount: this.game.moveHistory ? this.game.moveHistory.length : 0
     });
     this.updateDisplay();
@@ -2511,12 +2408,6 @@ class ChessUI {
         const piece = this.game.board[logicalRow][logicalCol];
 
         // Always show the appropriate message while in undo state
-        console.log('[UNDO_CLICK] Flags:', {
-          isInUndoRedoState: this.game.isInUndoRedoState,
-          lastUndoWasBotMove: this.game.lastUndoWasBotMove,
-          clickedPiece: piece ? `${piece.color} ${piece.type}` : 'empty'
-        });
-
         if (this.game.lastUndoWasBotMove) {
           this.showNotification(`Bot turn - scroll wheel to redo or make your move`, 'warning');
         } else {
@@ -2567,18 +2458,9 @@ class ChessUI {
         if (attemptedMove) {
           // Move is valid, attempt to make it
           const wasInCheck = this.game.gameStatus === 'check';
-          console.log('[CHECK_DEBUG] Before move:', {
-            wasInCheck,
-            preStatus: this.game.gameStatus,
-            currentPlayer: this.game.currentPlayer
-          });
-          
           const moveResult = await this.game.makeMove(fromRow, fromCol, logicalRow, logicalCol);
           if (moveResult && moveResult.success) {
-            console.log('[CHECK_DEBUG] After move:', {
-              wasInCheck,
-              newStatus: this.game.gameStatus,
-              isBotTurn: this.game.isBotTurn(),
+            ,
               currentPlayer: this.game.currentPlayer,
               humanColor: this.game.humanColor
             });
@@ -2605,9 +2487,7 @@ class ChessUI {
               // Just update display if needed later
             } else if (this.game.gameMode === 'human-vs-bot' && !this.game.isUndoRedoAction) {
               // In vs Bot mode, board remains static - no flipping
-              debugLogger.info('TURN_EXEC', 'Human move completed, checking for bot turn', {
-                currentPlayer: this.game.currentPlayer,
-                humanColor: this.game.getHumanColor(),
+              ,
                 isBotTurn: this.game.isBotTurn(),
                 gameStatus: this.game.gameStatus
               });
@@ -2617,19 +2497,7 @@ class ChessUI {
               const statusOk = this.game.gameStatus === 'playing' || this.game.gameStatus === 'check';
               const isBotTurn = this.game.isBotTurn();
               
-              console.log('[CHECK_TRIGGER] Bot turn check:', {
-                statusOk,
-                isBotTurn,
-                gameStatus: this.game.gameStatus,
-                currentPlayer: this.game.currentPlayer,
-                humanColor: this.game.humanColor,
-                willTriggerBot: statusOk && isBotTurn
-              });
-              
               if (statusOk && isBotTurn) {
-                debugLogger.info('TURN_EXEC', 'Triggering bot turn after human move');
-                console.log('[CHECK_TRIGGER] Bot will be triggered!');
-                
                 // Show bot thinking message immediately after human move
                 this.showBotThinking(true);
                 this.setInputEnabled(false);
@@ -2642,9 +2510,6 @@ class ChessUI {
                   this.handleBotTurn();
                 }, 150);
               } else {
-                debugLogger.info('TURN_EXEC', 'Game ended or not bot turn after human move', {
-                  gameStatus: this.game.gameStatus,
-                  isBotTurn: this.game.isBotTurn()
                 });
                 
                 // Ensure input is enabled if game ended
@@ -2700,14 +2565,8 @@ class ChessUI {
 
   updateDisplay() {
     // Debug logging for undo issue
-    console.log('[DISPLAY] Updating display, board state:', {
-      boardExists: !!this.game.board,
-      currentPlayer: this.game.currentPlayer,
-      moveIndex: this.game.moveHistory ? this.game.moveHistory.length : 'N/A'
-    });
-
     // Specific debug for E7 and E5 positions
-    console.log('[DISPLAY] Key positions - E7 [1][4]:', this.game.board[1][4], 'E5 [3][4]:', this.game.board[3][4]);
+    
 
     // Apply orientation data attributes - robust single source of truth
     const gameContainer = document.getElementById('game-container');
@@ -2727,13 +2586,6 @@ class ChessUI {
 
     // Remove old class-based logic entirely - data attributes handle everything now
     // The CSS will use the data attributes to determine transforms
-
-    console.log(`[ORIENTATION] Applied data attributes:`, {
-      mode: orientationMode,
-      flipped: this.game.boardFlipped,
-      gameMode: this.game.gameMode,
-      player: this.game.currentPlayer
-    });
 
     // Update board pieces
     const squares = this.boardElement.children;
@@ -2760,7 +2612,7 @@ class ChessUI {
 
         // Debug logging for key positions
         if ((logical.row === 1 && logical.col === 4) || (logical.row === 3 && logical.col === 4)) {
-          console.log(`[DISPLAY] Placing ${piece.color} ${piece.type} at row=${logical.row} col=${logical.col}`);
+          
         }
       }
       
@@ -2973,7 +2825,7 @@ class ChessUI {
     // Check if bot should make initial move after returning from options
     // This handles the case where user changed color and clicked "Back to game"
     if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {
-      console.log('[HIDE_OPTIONS] Checking if bot should make initial move after color change');
+      
       // Use a small delay to let UI settle
       setTimeout(() => {
         this.checkInitialBotTurn();
@@ -2982,17 +2834,17 @@ class ChessUI {
   }
 
   updateOptionsButtons() {
-    console.log('[MENU UPDATE] Starting updateOptionsButtons');
-    console.log('[MENU UPDATE] Current game.gameMode:', this.game.gameMode);
-    console.log('[MENU UPDATE] Current game.humanColor:', this.game.humanColor);
-    console.log('[MENU UPDATE] Current game.botDifficulty:', this.game.botDifficulty);
+    
+    
+    
+    
 
     // Debug: Show current mode in the menu title
     const optionsTitle = document.getElementById('options-title');
     if (optionsTitle) {
       const modeText = this.game.gameMode === 'human-vs-human' ? 'Human vs Human' : 'Human vs Bot';
       optionsTitle.textContent = `Chess R1 - ${modeText}`;
-      console.log('[MENU UPDATE] Updated title to:', optionsTitle.textContent);
+      
     }
 
     // Update back button state - disable if color/difficulty changed mid-game or no moves made
@@ -3003,9 +2855,6 @@ class ChessUI {
       const hasStateHistory = this.game.stateHistory && this.game.stateHistory.length > 1;
       const hasMoves = hasMoveHistory || hasStateHistory;
 
-      console.log('[MENU UPDATE] Move check - moveHistory:', this.game.moveHistory?.length || 0,
-                  'stateHistory:', this.game.stateHistory?.length || 0,
-                  'hasMoves:', hasMoves);
       const modeChanged = this.game.gameMode !== this.game.originalGameMode;
       const colorChanged = this.game.colorChangedMidGame;
       const difficultyChanged = this.game.difficultyChangedMidGame;
@@ -3035,9 +2884,7 @@ class ChessUI {
         backBtn.textContent = 'Back to game';
         backBtn.classList.remove('disabled');
       }
-      console.log('[MENU UPDATE] Back button - modeChanged:', modeChanged, 'colorChanged:', colorChanged, 'difficultyChanged:', difficultyChanged,
-                  'hasMoves:', hasMoves, 'settingsChangedWithinMode:', settingsChangedWithinMode);
-    }
+      }
     // Update game mode radio buttons
     const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
     gameModeRadios.forEach(radio => {
@@ -3070,19 +2917,19 @@ class ChessUI {
 
     // Show/hide color group based on game mode
     const colorGroup = document.getElementById('color-group');
-    console.log('[MENU UPDATE] colorGroup element:', colorGroup);
+    
     if (colorGroup) {
       if (this.game.gameMode === 'human-vs-bot') {
-        console.log('[MENU UPDATE] Setting colorGroup display to block');
+        
         colorGroup.style.display = 'block';
         // Force browser to recalculate
         colorGroup.offsetHeight;
       } else {
-        console.log('[MENU UPDATE] Setting colorGroup display to none');
+        
         colorGroup.style.display = 'none';
       }
-      console.log('[MENU UPDATE] colorGroup.style.display after update:', colorGroup.style.display);
-      console.log('[MENU UPDATE] colorGroup computed display:', window.getComputedStyle(colorGroup).display);
+      
+      
     }
 
     // Show/hide difficulty group based on game mode
@@ -3094,7 +2941,7 @@ class ChessUI {
       } else {
         difficultyGroup.style.display = 'none';
       }
-      console.log('[MENU UPDATE] difficultyGroup display:', difficultyGroup.style.display);
+      
     }
 
     // Show/hide orientation mode options based on game mode
@@ -3106,7 +2953,7 @@ class ChessUI {
       } else {
         orientationModeGroup.style.display = 'none';
       }
-      console.log('[MENU UPDATE] orientationGroup display:', orientationModeGroup.style.display);
+      
     }
 
     // Show undo options for both game modes
@@ -3115,7 +2962,7 @@ class ChessUI {
       // Always show undo options since it works well for both modes
       undoGroup.style.display = 'block';
       undoGroup.offsetHeight; // Force reflow
-      console.log('[MENU UPDATE] undoGroup display:', undoGroup.style.display);
+      
     }
 
     // Update orientation mode radio selection
@@ -3131,13 +2978,11 @@ class ChessUI {
     gameModeRadios.forEach(radio => {
       radio.addEventListener('change', async () => {
         if (radio.checked && radio.value !== this.game.gameMode) {
-          debugLogger.info('UI', `Game mode changing from ${this.game.gameMode} to ${radio.value}`);
-
           try {
             // Save current game state before switching (save to current mode's key)
             const oldMode = this.game.gameMode;
             await this.game.autoSave();
-            console.log(`[MODE SWITCH] Saved ${oldMode} game before switching`);
+            
 
             // Switch to new game mode
             this.game.setGameMode(radio.value);
@@ -3157,77 +3002,59 @@ class ChessUI {
 
             // Try to load saved state for the new game mode
             const newModeKey = this.game.getStorageKey();
-            console.log('[MODE SWITCH] Loading saved state for key:', newModeKey);
+            
 
             // Check localStorage directly to debug
             const localStorageState = localStorage.getItem(newModeKey);
             if (localStorageState) {
               try {
                 const parsed = JSON.parse(localStorageState);
-                console.log('[MODE SWITCH] Found in localStorage:', {
-                  moveHistory: parsed.moveHistory?.length || 0,
-                  stateHistory: parsed.stateHistory?.length || 0
-                });
-              } catch (e) {
-                console.log('[MODE SWITCH] localStorage parse error:', e);
+                } catch (e) {
+                
               }
             } else {
-              console.log('[MODE SWITCH] Not found in localStorage');
+              
             }
 
             const savedState = await loadFromStorage(newModeKey);
-            console.log('[MODE SWITCH] loadFromStorage returned:',
-              savedState ? {
-                exists: true,
-                moveHistory: savedState.moveHistory?.length || 0,
-                stateHistory: savedState.stateHistory?.length || 0,
-                hasBoard: !!savedState.board,
-                gameMode: savedState.gameMode
-              } : 'null');
-
             let validState = false;
             try {
               validState = savedState && this.isValidSavedState(savedState);
             } catch (e) {
-              console.error('[MODE SWITCH] Error validating state:', e);
+              
               validState = false;
             }
-            console.log('[MODE SWITCH] State validation result:', validState);
+            
 
             if (validState) {
-            debugLogger.info('UI', `Loading saved state for ${radio.value} mode`);
-            console.log('[MODE SWITCH] Before loadGameState, gameMode:', this.game.gameMode);
             // Load saved state but preserve the newly selected game mode
             this.game.loadGameState(savedState, { preserveGameMode: true });
-            console.log('[MODE SWITCH] After loadGameState, gameMode:', this.game.gameMode);
-            console.log('[MODE SWITCH] Loaded state - moveHistory:', this.game.moveHistory?.length || 0,
-                        'stateHistory:', this.game.stateHistory?.length || 0);
+            
             this.updateDisplay();
             this.showMessage(`Switched to ${radio.value === 'human-vs-human' ? 'Human vs Human' : 'Human vs Bot'} - Game restored!`);
           } else {
-            debugLogger.info('UI', `No saved state for ${radio.value} mode - starting new game`);
             this.game.newGame();
             this.onNewGameStart();
             this.showMessage(`Switched to ${radio.value === 'human-vs-human' ? 'Human vs Human' : 'Human vs Bot'} - New game started!`);
           }
 
           } catch (error) {
-            console.error('[MODE SWITCH] Error during mode switch:', error);
+            
             // Even if there's an error, ensure we're in a valid state
             this.game.newGame();
             this.onNewGameStart();
           } finally {
             // ALWAYS update the menu buttons regardless of errors
-            console.log('[MODE SWITCH] About to call updateOptionsButtons, gameMode:', this.game.gameMode);
+            
 
             // Update immediately first
             this.updateOptionsButtons();
-            console.log('[MODE SWITCH] After immediate updateOptionsButtons');
+            
 
             // Then also update with a small delay to ensure DOM is fully settled
             setTimeout(() => {
               this.updateOptionsButtons(); // Double update to ensure changes stick
-              console.log('[MODE SWITCH] After delayed updateOptionsButtons');
+              
 
               // Force check the visibility after update
               const colorGroup = document.getElementById('color-group');
@@ -3235,11 +3062,11 @@ class ChessUI {
               const orientationGroup = document.getElementById('orientation-mode-group');
               const undoGroup = document.getElementById('undo-group');
 
-              console.log('[MODE SWITCH] Final visibility check:');
-              console.log('  - Color group visible:', colorGroup?.style.display);
-              console.log('  - Difficulty group visible:', difficultyGroup?.style.display);
-              console.log('  - Orientation group visible:', orientationGroup?.style.display);
-              console.log('  - Undo group visible:', undoGroup?.style.display);
+              
+              
+              
+              
+              
             }, 10);
           }
         }
@@ -3251,7 +3078,6 @@ class ChessUI {
     colorRadios.forEach(radio => {
       radio.addEventListener('change', () => {
         if (radio.checked) {
-          debugLogger.info('UI', `Player color changed to: ${radio.value}`);
           this.game.setHumanColor(radio.value);
           this.game.autoSave();
           // Update button states after color change
@@ -3266,7 +3092,6 @@ class ChessUI {
       radio.addEventListener('change', () => {
         if (radio.checked) {
           const soundEnabled = radio.value === 'on';
-          debugLogger.info('UI', `Sound effects changed to: ${soundEnabled}`);
           this.game.soundEnabled = soundEnabled;
           this.game.autoSave();
         }
@@ -3279,7 +3104,6 @@ class ChessUI {
       radio.addEventListener('change', () => {
         if (radio.checked) {
           const allowUndo = radio.value === 'on';
-          debugLogger.info('UI', `Allow undo changed to: ${allowUndo}`);
           this.game.allowUndo = allowUndo;
           this.game.autoSave();
         }
@@ -3292,7 +3116,6 @@ class ChessUI {
       radio.addEventListener('change', () => {
         if (radio.checked) {
           const difficulty = parseInt(radio.value);
-          debugLogger.info('UI', `Bot difficulty changed to: ${difficulty}`);
           this.game.setBotDifficulty(difficulty);
           this.game.autoSave();
           // Update button states after difficulty change
@@ -3308,14 +3131,12 @@ class ChessUI {
 
     if (newGameBtn) {
       newGameBtn.addEventListener('click', () => {
-        debugLogger.info('UI', 'New game button clicked');
         this.confirmNewGame();
       });
     }
 
     if (backBtn) {
       backBtn.addEventListener('click', () => {
-        debugLogger.info('UI', 'Back button clicked');
         this.hideOptionsMenu();
       });
     }
@@ -3325,7 +3146,6 @@ class ChessUI {
     orientationModeRadios.forEach(radio => {
       radio.addEventListener('change', () => {
         if (radio.checked) {
-          debugLogger.info('UI', `Orientation mode changed to: ${radio.value}`);
           this.game.orientationMode = radio.value;
 
           // DO NOT apply orientation immediately - wait until menu closes
@@ -3346,7 +3166,6 @@ class ChessUI {
     if (overlay) {
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) {
-          debugLogger.info('UI', 'Options overlay clicked outside');
           this.hideOptionsMenu();
         }
       });
@@ -3354,20 +3173,13 @@ class ChessUI {
   }
 
   confirmNewGame() {
-    console.log('[CONFIRM_NEW_GAME] Starting new game with:', {
-      gameMode: this.game.gameMode,
-      humanColor: this.game.humanColor,
-      currentPlayer: 'white (always starts)'
+    '
     });
 
     // Clear saved state and start new game BEFORE hiding menu
     this.clearSavedState();
     this.game.newGame();
 
-    console.log('[CONFIRM_NEW_GAME] After newGame:', {
-      humanColor: this.game.humanColor,
-      currentPlayer: this.game.currentPlayer,
-      isBotTurn: this.game.isBotTurn()
     });
 
     // Update the display to reflect the new game
@@ -3379,7 +3191,7 @@ class ChessUI {
     // Check if bot should make the first move AFTER menu is hidden
     // Use longer delay to ensure UI is fully settled
     if (this.game.gameMode === 'human-vs-bot' && this.game.humanColor === 'black') {
-      console.log('[CONFIRM_NEW_GAME] Bot should move first - scheduling bot turn');
+      
       setTimeout(() => {
         // Double-check conditions before executing bot move
         if (this.game.gameStatus === 'playing' && this.game.isBotTurn()) {
@@ -3392,36 +3204,29 @@ class ChessUI {
   }
 
   async clearSavedState() {
-    debugLogger.info('CLEANUP', 'Clearing saved game state from storage');
     // Only clear the current mode's saved state, not all modes
     const currentKey = this.game.getStorageKey();
     const keysToRemove = [
       currentKey,
       'chess_game_state' // Legacy key
     ];
-    console.log(`[CLEAR] Clearing saved state for current mode: ${currentKey}`);
+    
     
     if (window.creationStorage) {
       try {
         for (const key of keysToRemove) {
           await window.creationStorage.plain.removeItem(key);
         }
-        debugLogger.info('CLEANUP', 'All saved game states cleared successfully from creationStorage');
-        console.log('All saved game states cleared');
-      } catch (e) {
-        debugLogger.error('CLEANUP', 'Error clearing saved state from creationStorage', e);
-        console.error('Error clearing saved state:', e);
-      }
+        } catch (e) {
+        }
     } else {
       // Also clear from localStorage fallback
       try {
         for (const key of keysToRemove) {
           localStorage.removeItem(key);
         }
-        debugLogger.info('CLEANUP', 'All saved game states cleared from localStorage fallback');
-      } catch (e) {
-        debugLogger.error('CLEANUP', 'Error clearing saved state from localStorage', e);
-      }
+        } catch (e) {
+        }
     }
   }
 
@@ -3496,7 +3301,6 @@ class ChessUI {
 
   showCheckAlert(message) {
     // Delegate to unified notification system with warning type
-    debugLogger.info('UI', 'Check alert requested', { message });
     this.showNotification(message, 'warning', 3000);
   }
 
@@ -3512,8 +3316,6 @@ class ChessUI {
             // Prevent double highlighting - only add if not already highlighted
             if (!square.classList.contains('king-warning')) {
               square.classList.add('king-warning');
-              
-              debugLogger.info('UI', `King highlighted for ${color}`, { row, col });
               
               // Remove highlight after 2 seconds
               setTimeout(() => {
@@ -3588,8 +3390,6 @@ class ChessUI {
 
   // Verify UI consistency with game state
   verifyUIConsistency() {
-    debugLogger.debug('UI_VALIDATION', 'Verifying UI consistency with game state');
-    
     const issues = [];
     
     try {
@@ -3655,15 +3455,12 @@ class ChessUI {
       }
       
       if (issues.length > 0) {
-        debugLogger.warn('UI_VALIDATION', 'UI consistency issues detected', { issues });
         return false;
       } else {
-        debugLogger.debug('UI_VALIDATION', 'UI consistency verification passed');
         return true;
       }
       
     } catch (error) {
-      debugLogger.error('UI_VALIDATION', 'Error during UI consistency verification', error);
       return false;
     }
   }
@@ -3709,30 +3506,20 @@ class ChessUI {
 
   async loadGameState() {
     try {
-      debugLogger.info('LOAD', 'Attempting to load saved game state from storage');
-      console.log('Attempting to load saved game state...');
-
       // First check what was the last game mode used
       const lastModeData = await loadFromStorage('last_game_mode');
       const preferredMode = lastModeData?.mode || null;
 
-      console.log('[LOAD] Last game mode:', preferredMode);
+      
 
       // Load states from both game modes
       const humanVsBotKey = 'chess_game_state_human_vs_bot';
       const humanVsHumanKey = 'chess_game_state_human_vs_human';
 
-      console.log('[LOAD] Checking for saved states with keys:', { humanVsBotKey, humanVsHumanKey });
+      
 
       const humanVsBotState = await loadFromStorage(humanVsBotKey);
       const humanVsHumanState = await loadFromStorage(humanVsHumanKey);
-
-      console.log('[LOAD] Found states:', {
-        humanVsBot: !!humanVsBotState,
-        humanVsBotMoves: humanVsBotState?.moveHistory?.length || 0,
-        humanVsHuman: !!humanVsHumanState,
-        humanVsHumanMoves: humanVsHumanState?.moveHistory?.length || 0
-      });
 
       let state = null;
       let selectedMode = null;
@@ -3742,11 +3529,11 @@ class ChessUI {
         if (preferredMode === 'human-vs-human' && humanVsHumanState) {
           state = humanVsHumanState;
           selectedMode = 'human-vs-human';
-          console.log('[LOAD] Using last played mode: human-vs-human');
+          
         } else if (preferredMode === 'human-vs-bot' && humanVsBotState) {
           state = humanVsBotState;
           selectedMode = 'human-vs-bot';
-          console.log('[LOAD] Using last played mode: human-vs-bot');
+          
         }
       }
 
@@ -3757,25 +3544,25 @@ class ChessUI {
           const botTimestamp = this.getLatestTimestamp(humanVsBotState);
           const humanTimestamp = this.getLatestTimestamp(humanVsHumanState);
 
-          console.log('[LOAD] Comparing timestamps:', { botTimestamp, humanTimestamp });
+          
 
           if (humanTimestamp > botTimestamp) {
             state = humanVsHumanState;
             selectedMode = 'human-vs-human';
-            console.log('[LOAD] Selected human-vs-human as more recent');
+            
           } else {
             state = humanVsBotState;
             selectedMode = 'human-vs-bot';
-            console.log('[LOAD] Selected human-vs-bot as more recent');
+            
           }
         } else if (humanVsHumanState) {
           state = humanVsHumanState;
           selectedMode = 'human-vs-human';
-          console.log('[LOAD] Found only human-vs-human state');
+          
         } else if (humanVsBotState) {
           state = humanVsBotState;
           selectedMode = 'human-vs-bot';
-          console.log('[LOAD] Found only human-vs-bot state');
+          
         }
       }
 
@@ -3783,48 +3570,19 @@ class ChessUI {
         // Try legacy key for backward compatibility
         state = await loadFromStorage('chess_game_state');
         if (state) {
-          debugLogger.info('LOAD', 'Found legacy saved state, migrating to new format');
           selectedMode = state.gameMode || 'human-vs-bot';
         }
       }
       
       if (!state) {
-        debugLogger.info('LOAD', 'No saved state found in any storage location');
-        console.log('No saved state found');
         return false;
       }
       
-      debugLogger.debug('LOAD', 'Raw state data retrieved from storage', {
-        hasBoard: !!state.board,
-        hasMoveHistory: !!state.moveHistory,
-        moveCount: state.moveHistory ? state.moveHistory.length : 0,
-        currentPlayer: state.currentPlayer,
-        gameStatus: state.gameStatus
-      });
-      
-      console.log('[LOAD] About to validate state:', {
-        hasState: !!state,
-        moveCount: state?.moveHistory?.length || 0,
-        stateHistoryCount: state?.stateHistory?.length || 0,
-        currentPlayer: state?.currentPlayer,
-        gameMode: selectedMode || state?.gameMode
-      });
-
       if (this.isValidSavedState(state)) {
-        debugLogger.info('LOAD', 'State validation passed - Loading game state', {
-          moveCount: state.moveHistory ? state.moveHistory.length : 0,
-          currentPlayer: state.currentPlayer,
-          gameStatus: state.gameStatus,
-          soundEnabled: state.soundEnabled,
-          allowUndo: state.allowUndo,
-          gameMode: selectedMode || state.gameMode
-        });
-        console.log('[LOAD] Validation PASSED - Loading valid saved state');
-
         // CRITICAL: Set the correct game mode BEFORE loading state
         if (selectedMode) {
           this.game.gameMode = selectedMode;
-          console.log(`[LOAD] Setting game mode to: ${selectedMode}`);
+          
         }
 
         this.game.loadGameState(state);
@@ -3834,19 +3592,13 @@ class ChessUI {
         // Update menu visibility based on loaded game mode
         this.updateMenuVisibility();
 
-        debugLogger.info('LOAD', 'Game state loaded and UI updated successfully');
-        console.log('Game state loaded successfully');
         return true;
       } else {
-        debugLogger.warn('LOAD', 'Saved state validation failed - Clearing invalid data');
-        console.log('Saved state validation failed, clearing invalid data');
         // Clear invalid saved state
         await this.clearSavedState();
         return false;
       }
     } catch (error) {
-      debugLogger.error('LOAD', 'Exception occurred while loading game state', error);
-      console.error('Error loading game state:', error);
       // Clear potentially corrupted data
       await this.clearSavedState();
       return false;
@@ -3854,56 +3606,35 @@ class ChessUI {
   }
 
   isValidSavedState(state) {
-    debugLogger.debug('VALIDATION', 'Starting saved state validation', {
-      hasState: !!state,
-      stateType: typeof state,
-      hasBoard: !!state?.board,
-      hasMoveHistory: !!state?.moveHistory,
-      moveCount: state?.moveHistory?.length || 0,
-      currentPlayer: state?.currentPlayer
-    });
-    
     // Basic structure validation
     if (!state || typeof state !== 'object') {
-      debugLogger.warn('VALIDATION', 'Invalid state: not an object');
-      console.log('Invalid state: not an object');
       return false;
     }
     
     // Validate required properties exist
     if (!state.board || !Array.isArray(state.board)) {
-      debugLogger.warn('VALIDATION', 'Invalid state: missing or invalid board');
-      console.log('Invalid state: missing or invalid board');
       return false;
     }
     
     // Allow missing moveHistory for backward compatibility
     if (state.moveHistory && !Array.isArray(state.moveHistory)) {
-      debugLogger.warn('VALIDATION', 'Invalid state: moveHistory exists but is not array');
-      console.log('Invalid state: moveHistory exists but is not array');
       return false;
     }
     
     // Validate board structure (8x8 array)
     if (state.board.length !== 8) {
-      debugLogger.warn('VALIDATION', `Invalid state: board length is ${state.board.length}, expected 8`);
-      console.log('Invalid state: board is not 8x8');
       return false;
     }
     
     for (let i = 0; i < state.board.length; i++) {
       const row = state.board[i];
       if (!Array.isArray(row) || row.length !== 8) {
-        debugLogger.warn('VALIDATION', `Invalid state: board row ${i} has length ${row?.length}, expected 8`);
-        console.log('Invalid state: board row is not valid');
         return false;
       }
     }
     
     // Validate current player
     if (!state.currentPlayer || (state.currentPlayer !== 'white' && state.currentPlayer !== 'black')) {
-      debugLogger.warn('VALIDATION', `Invalid state: currentPlayer is '${state.currentPlayer}'`);
-      console.log('Invalid state: invalid currentPlayer');
       return false;
     }
     
@@ -3912,66 +3643,46 @@ class ChessUI {
     const moveCount = moveHistory.length;
     const totalMoves = state.totalMoves || moveCount;
     
-    debugLogger.debug('VALIDATION', 'Checking game progression criteria', {
-      moveCount,
-      totalMoves,
-      currentPlayer: state.currentPlayer,
-      gameStatus: state.gameStatus,
-      hasCurrentMoveIndex: state.currentMoveIndex !== undefined
-    });
-    
     // Accept any state that has move history
     if (moveCount > 0) {
-      debugLogger.info('VALIDATION', `Valid state: has ${moveCount} moves in history`);
-      console.log('Valid state: has move history');
       return true;
     }
     
     // Accept states where the current player is black (white made first move)
     if (state.currentPlayer === 'black') {
-      debugLogger.info('VALIDATION', 'Valid state: current player is black (game started)');
-      console.log('Valid state: current player is black');
+      ');
+      
       return true;
     }
     
     // Accept completed games regardless of move count
     if (state.gameStatus && (state.gameStatus === 'checkmate' || state.gameStatus === 'stalemate')) {
-      debugLogger.info('VALIDATION', `Valid state: game ended with '${state.gameStatus}'`);
-      console.log('Valid state: game is completed');
       return true;
     }
     
     // Accept states with explicit move index (indicates game progression)
     if (state.currentMoveIndex !== undefined && state.currentMoveIndex >= 0) {
-      debugLogger.info('VALIDATION', `Valid state: has currentMoveIndex ${state.currentMoveIndex}`);
-      console.log('Valid state: has move index');
       return true;
     }
     
     // Accept states that have been explicitly saved with totalMoves > 0
     if (totalMoves > 0) {
-      debugLogger.info('VALIDATION', `Valid state: totalMoves is ${totalMoves}`);
-      console.log('Valid state: has total moves');
       return true;
     }
     
     // Check if board position differs from initial setup (indicates game has progressed)
     if (this.boardDiffersFromInitial(state.board)) {
-      debugLogger.info('VALIDATION', 'Valid state: board position differs from initial setup');
-      console.log('Valid state: board position changed');
       return true;
     }
     
     // If we reach here, it's likely an untouched initial state
-    debugLogger.info('VALIDATION', 'State appears to be initial game state - treating as invalid for resume');
-    console.log('Invalid state: appears to be initial game state');
     return false;
   }
   
   boardDiffersFromInitial(board) {
     // Check if board differs from standard chess starting position
     if (!board || !Array.isArray(board)) {
-      console.log('[VALIDATION] Board is invalid or not an array');
+      
       return false;
     }
 
@@ -3979,7 +3690,7 @@ class ChessUI {
 
     for (let row = 0; row < 8; row++) {
       if (!board[row] || !Array.isArray(board[row])) {
-        console.log(`[VALIDATION] Board row ${row} is invalid`);
+        
         return false;
       }
       for (let col = 0; col < 8; col++) {
@@ -4005,7 +3716,7 @@ class ChessUI {
 
 // Handle R1 scroll wheel events for undo/redo (reversed direction)
 window.addEventListener('scrollUp', async () => {
-  console.log('[SCROLL UP] Event received - attempting redo move');
+  
 
   if (chessGame && gameUI) {
     if (chessGame.allowUndo) {
@@ -4018,12 +3729,12 @@ window.addEventListener('scrollUp', async () => {
         }
       }
 
-      console.log('[REDO] Pre-redo orientation - Mode:', chessGame.orientationMode, 'BoardFlipped:', chessGame.boardFlipped, 'CurrentPlayer:', chessGame.currentPlayer);
+      
       if (chessGame.redoMove()) {
         chessGame.selectedSquare = null; // Clear any selected piece
         // Removed updateBoardPerspective() - orientation is handled by data attributes now
         gameUI.updateDisplay();
-        console.log('[REDO] Post-updateDisplay - Data attributes applied');
+        
         gameUI.animateUndoRedo('redo', isRedoingBotMove);
         
         // Update UI elements after redo
@@ -4060,8 +3771,8 @@ window.addEventListener('scrollUp', async () => {
 });
 
 window.addEventListener('scrollDown', async () => {
-  console.log('[SCROLL DOWN] Detected - attempting undo');
-  console.log('[SCROLL DOWN] Move history length:', chessGame ? chessGame.moveHistory.length : 'no game');
+  
+  
 
   if (chessGame && gameUI) {
     if (chessGame.allowUndo) {
@@ -4075,13 +3786,13 @@ window.addEventListener('scrollDown', async () => {
       }
 
       const undoResult = chessGame.undoMove();
-      console.log('[SCROLL DOWN] Undo result:', undoResult);
-      console.log('[UNDO] Pre-undo orientation - Mode:', chessGame.orientationMode, 'BoardFlipped:', chessGame.boardFlipped, 'CurrentPlayer:', chessGame.currentPlayer);
+      
+      
       if (undoResult) {
         chessGame.selectedSquare = null; // Clear any selected piece
         // Removed updateBoardPerspective() - orientation is handled by data attributes now
         gameUI.updateDisplay();
-        console.log('[UNDO] Post-updateDisplay - Data attributes applied');
+        
         gameUI.animateUndoRedo('undo', isUndoingBotMove);
         
         // Update UI elements after undo
@@ -4124,12 +3835,12 @@ const DEBOUNCE_DELAY = 300; // 300ms debounce
 window.addEventListener('sideClick', () => {
   const now = Date.now();
   if (now - lastSideClickTime < DEBOUNCE_DELAY) {
-    console.log('Side button click ignored (debounced)');
+    
     return;
   }
   lastSideClickTime = now;
   
-  console.log('Side button clicked - showing options menu');
+  
   
   if (chessGame && gameUI) {
     gameUI.showOptionsMenu();
@@ -4137,11 +3848,11 @@ window.addEventListener('sideClick', () => {
 });
 
 window.addEventListener('longPressStart', () => {
-  console.log('Long press started');
+  
 });
 
 window.addEventListener('longPressEnd', () => {
-  console.log('Long press ended - starting new game');
+  
   // Long press triggers new game
   if (chessGame && gameUI) {
     gameUI.clearSavedState();
@@ -4160,20 +3871,20 @@ window.addEventListener('longPressEnd', () => {
 
 // Handle incoming messages from Flutter/WebSocket
 window.onPluginMessage = function(data) {
-  console.log('Received plugin message:', data);
+  
   
   // Could be used for online chess features in the future
   if (data.data) {
     try {
       const parsed = typeof data.data === 'string' ? JSON.parse(data.data) : data.data;
-      console.log('Parsed data:', parsed);
+      
     } catch (e) {
-      console.log('Data as text:', data.data);
+      
     }
   }
   
   if (data.message) {
-    console.log('Message text:', data.message);
+    
   }
 };
 
@@ -4203,20 +3914,20 @@ let accelerometerRunning = false;
 
 function startAccelerometer() {
   if (typeof window.creationSensors === 'undefined' || !window.creationSensors.accelerometer) {
-    console.log('Accelerometer API not available');
+    
     return;
   }
   
   try {
     window.creationSensors.accelerometer.start((data) => {
       // Could be used for shake-to-reset or tilt effects
-      console.log('Accelerometer data:', data);
+      
     }, { frequency: 30 });
     
     accelerometerRunning = true;
-    console.log('Accelerometer started');
+    
   } catch (e) {
-    console.error('Error starting accelerometer:', e);
+    
   }
 }
 
@@ -4225,9 +3936,9 @@ function stopAccelerometer() {
     try {
       window.creationSensors.accelerometer.stop();
       accelerometerRunning = false;
-      console.log('Accelerometer stopped');
+      
     } catch (e) {
-      console.error('Error stopping accelerometer:', e);
+      
     }
   }
 }
@@ -4258,19 +3969,19 @@ function setCookie(name, value, days = 365) {
 
   // Check cookie size (4KB limit)
   if (cookieString.length > 4096) {
-    console.warn(`[COOKIE WARNING] Cookie "${name}" is ${cookieString.length} bytes (exceeds 4KB limit)`);
+    
     // Fallback to localStorage for large data
     try {
       localStorage.setItem(name, stringValue);
-      console.log(`[COOKIE] Too large for cookie, saved to localStorage: ${name}`);
+      
       return;
     } catch (e) {
-      console.error('Failed to save to localStorage:', e);
+      
     }
   }
 
   document.cookie = cookieString;
-  console.log(`Cookie set: ${name} (${cookieString.length} bytes)`);
+  
 }
 
 function getCookie(name) {
@@ -4288,7 +3999,7 @@ function getCookie(name) {
           return value;
         }
       } catch (e) {
-        console.error('Error decoding cookie:', e);
+        
         return null;
       }
     }
@@ -4298,18 +4009,12 @@ function getCookie(name) {
 
 // Save data to persistent storage with robust error handling
 async function saveToStorage(key, value) {
-  debugLogger.debug('STORAGE', `Attempting to save data with key: ${key}`);
-
   // Validate input
   if (!key || typeof key !== 'string') {
-    debugLogger.error('STORAGE', `Invalid key provided to saveToStorage: ${key}`);
-    console.error('Invalid key provided to saveToStorage:', key);
     return false;
   }
   
   if (value === undefined || value === null) {
-    debugLogger.error('STORAGE', 'Invalid value provided to saveToStorage: null or undefined');
-    console.error('Invalid value provided to saveToStorage:', value);
     return false;
   }
 
@@ -4323,45 +4028,31 @@ async function saveToStorage(key, value) {
       const jsonString = JSON.stringify(value);
       const encoded = btoa(jsonString);
       await window.creationStorage.plain.setItem(key, encoded);
-      debugLogger.info('STORAGE', 'Successfully saved to creationStorage');
-      console.log('Data saved to creationStorage successfully');
       return true;
     } catch (e) {
-      debugLogger.error('STORAGE', 'creationStorage save failed', e);
-      console.error('Error saving to creationStorage:', e);
-    }
+      }
   }
 
   // Try cookies next
   try {
     setCookie(key, value);
-    debugLogger.info('STORAGE', 'Successfully saved to cookies');
-    console.log('Data saved to cookies successfully');
     return true;
   } catch (e) {
-    debugLogger.error('STORAGE', 'Cookie save failed', e);
-    console.error('Error saving to cookies:', e);
-  }
+    }
 
   // Final fallback to localStorage
   try {
     const jsonString = JSON.stringify(value);
     localStorage.setItem(key, jsonString);
-    debugLogger.info('STORAGE', 'Successfully saved to localStorage fallback');
-    console.log('Data saved to localStorage fallback');
     return true;
   } catch (e) {
-    debugLogger.error('STORAGE', 'localStorage save failed', e);
-    console.error('Error saving to localStorage:', e);
-  }
+    }
 
   return false;
 }
 
 // Load data from persistent storage
 async function loadFromStorage(key) {
-  debugLogger.debug('STORAGE', `Attempting to load data with key: ${key}`);
-  
   // Enhanced creationStorage availability check
   const creationStorageAvailable = window.creationStorage && 
                                    window.creationStorage.plain && 
@@ -4373,40 +4064,30 @@ async function loadFromStorage(key) {
       if (stored) {
         const decoded = atob(stored);
         const parsed = JSON.parse(decoded);
-        debugLogger.info('STORAGE', 'Successfully loaded from creationStorage');
         return parsed;
       }
     } catch (e) {
-      debugLogger.error('STORAGE', 'creationStorage load failed', e);
-      console.error('Error loading from creationStorage:', e);
-    }
+      }
   }
 
   // Try cookies next
   try {
     const cookieValue = getCookie(key);
     if (cookieValue) {
-      debugLogger.info('STORAGE', 'Successfully loaded from cookies');
-      console.log('Data loaded from cookies');
       return cookieValue;
     }
   } catch (e) {
-    debugLogger.error('STORAGE', 'Cookie load failed', e);
-    console.error('Error loading from cookies:', e);
-  }
+    }
 
   // Final fallback to localStorage
   try {
     const stored = localStorage.getItem(key);
     if (stored) {
       const parsed = JSON.parse(stored);
-      debugLogger.info('STORAGE', 'Successfully loaded from localStorage fallback');
       return parsed;
     }
   } catch (e) {
-    debugLogger.error('STORAGE', 'localStorage load failed', e);
-    console.error('Error loading from localStorage:', e);
-  }
+    }
 
   return null;
 }
@@ -4416,19 +4097,14 @@ async function loadFromStorage(key) {
 // ===========================================
 
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('[BROWSERTOOLS TEST] Page loaded at', new Date().toISOString());
-  console.log('[BROWSERTOOLS TEST] Testing console capture');
-  debugLogger.info('INIT', 'DOM Content Loaded - Starting chess game initialization');
-  console.log('R1 Chess Game initialized!');
+  
   
   // Add keyboard fallback for development
   if (typeof PluginMessageHandler === 'undefined') {
-    debugLogger.info('INIT', 'Browser mode detected - Setting up keyboard shortcuts');
     window.addEventListener('keydown', (event) => {
       // P key shortcut for Push-To-Talk (options menu)
       if (event.code === 'KeyP') {
         event.preventDefault();
-        debugLogger.info('INPUT', 'P key pressed - Push-To-Talk/Options menu');
         // Trigger the same event as sideClick (PTT button)
         window.dispatchEvent(new CustomEvent('sideClick'));
       }
@@ -4436,18 +4112,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Temporary arrow key shortcuts for undo/redo (will be removed for R1)
       if (event.code === 'ArrowLeft') {
         event.preventDefault();
-        debugLogger.debug('INPUT', 'Left arrow pressed - undo move');
         // Trigger the same event as scroll down (which does undo)
         window.dispatchEvent(new CustomEvent('scrollDown'));
       }
 
       if (event.code === 'ArrowRight') {
         event.preventDefault();
-        console.log('[ARROW] Right arrow pressed - dispatching scrollUp for redo');
-        debugLogger.debug('INPUT', 'Right arrow pressed - redo move');
+        
         // Trigger the same event as scroll up (which does redo)
         window.dispatchEvent(new CustomEvent('scrollUp'));
-        console.log('[ARROW] scrollUp event dispatched');
+        
       }
     });
   }
@@ -4498,43 +4172,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Log when the page is about to be unloaded (game exit)
 window.addEventListener('beforeunload', (event) => {
-  debugLogger.info('EXIT', 'Page beforeunload event - Game is about to exit', {
-    moveCount: chessGame ? chessGame.moveHistory.length : 0,
-    currentPlayer: chessGame ? chessGame.currentPlayer : 'unknown',
-    gameStatus: chessGame ? chessGame.gameStatus : 'unknown'
   });
-});
 
 // Log when the page is being unloaded (game exit)
 window.addEventListener('unload', (event) => {
-  debugLogger.info('EXIT', 'Page unload event - Game is exiting');
-});
+  });
 
 // Log when the page becomes hidden (user switches away)
 window.addEventListener('visibilitychange', () => {
   if (document.hidden) {
-    debugLogger.info('EXIT', 'Page visibility changed to hidden - Game backgrounded', {
-      moveCount: chessGame ? chessGame.moveHistory.length : 0,
-      currentPlayer: chessGame ? chessGame.currentPlayer : 'unknown'
-    });
-  } else {
-    debugLogger.info('INIT', 'Page visibility changed to visible - Game foregrounded', {
-      moveCount: chessGame ? chessGame.moveHistory.length : 0,
-      currentPlayer: chessGame ? chessGame.currentPlayer : 'unknown'
-    });
-  }
+    } else {
+    }
 });
 
 // Chess game ready
-console.log('🎯 R1 Chess Game Ready! VERSION 2025-09-10-FIX ✅');
-console.log('🆕 NEW CODE WITH GLOBAL WINDOW ACCESS ENABLED');
-console.log('Features:');
-console.log('- Full chess rules including en passant');
-console.log('- Touch-based piece movement');
-console.log('- Multiple visual themes');
-console.log('- Game state persistence');
-console.log('- Move sound effects');
-console.log('- Side button: Options menu');
-console.log('- Long press: New game');
-console.log('🔧 Global access: window.chessGame and window.gameUI available');
-console.log('📍 Server running on port 5174');
+
+
+
+
+
+
+
+
+
+
+
+

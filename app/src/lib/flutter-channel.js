@@ -49,7 +49,6 @@ class FlutterChannel {
    * @param {string} message - The message to send
    */
   sendMessage(message) {
-    console.warn('flutterChannel.sendMessage() is deprecated. Use PluginMessageHandler.postMessage() instead');
     
     // Try to use PluginMessageHandler for compatibility
     if (window.PluginMessageHandler) {
@@ -60,7 +59,6 @@ class FlutterChannel {
         window.PluginMessageHandler.postMessage(JSON.stringify(payload));
         return true;
       } catch (error) {
-        console.error('Failed to send message:', error);
         return false;
       }
     }
@@ -72,12 +70,10 @@ class FlutterChannel {
         window.FlutterButtonHandler.postMessage(messageStr);
         return true;
       } catch (error) {
-        console.error('Failed to send message to Flutter:', error);
         return false;
       }
     }
     
-    console.warn('No message handler available');
     return false;
   }
 
@@ -96,13 +92,11 @@ class FlutterChannel {
    */
   sendPluginMessage(messageObj) {
     if (!window.PluginMessageHandler) {
-      console.warn('PluginMessageHandler not available');
       return false;
     }
 
     // Validate message object
     if (typeof messageObj !== 'object' || !messageObj.message) {
-      console.error('PluginMessage must be an object with a "message" field');
       return false;
     }
 
@@ -111,7 +105,6 @@ class FlutterChannel {
       window.PluginMessageHandler.postMessage(JSON.stringify(messageObj));
       return true;
     } catch (error) {
-      console.error('Failed to send plugin message to Flutter:', error);
       return false;
     }
   }
@@ -125,13 +118,11 @@ class FlutterChannel {
    */
   sendTouchEvent(touchData) {
     if (!window.TouchEventHandler) {
-      console.warn('TouchEventHandler not available');
       return false;
     }
 
     // Validate touch data
     if (!touchData || typeof touchData.x !== 'number' || typeof touchData.y !== 'number' || !touchData.type) {
-      console.error('Touch event must have x, y coordinates and type');
       return false;
     }
 
@@ -139,7 +130,6 @@ class FlutterChannel {
       window.TouchEventHandler.postMessage(JSON.stringify(touchData));
       return true;
     } catch (error) {
-      console.error('Failed to send touch event to Flutter:', error);
       return false;
     }
   }
@@ -153,7 +143,6 @@ class FlutterChannel {
       window.closeWebView.postMessage('');
       return true;
     }
-    console.warn('closeWebView not available');
     return false;
   }
 
@@ -199,15 +188,9 @@ const flutterChannel = new FlutterChannel();
 
 // Receiving messages (use window.onPluginMessage):
 // window.onPluginMessage = function(data) {
-//   console.log('Received:', data);
 // };
 
 // Hardware events (use native event listeners):
-// window.addEventListener('scrollUp', () => console.log('Scrolled up'));
-// window.addEventListener('scrollDown', () => console.log('Scrolled down'));
-// window.addEventListener('sideClick', () => console.log('Side button clicked'));
-// window.addEventListener('longPressStart', () => console.log('Long press started'));
-// window.addEventListener('longPressEnd', () => console.log('Long press ended'));
 
 // Storage (use window.creationStorage):
 // await window.creationStorage.plain.setItem('key', btoa(JSON.stringify(data)));
@@ -216,7 +199,6 @@ const flutterChannel = new FlutterChannel();
 
 // Accelerometer (use window.creationSensors):
 // window.creationSensors.accelerometer.start((data) => {
-//   console.log('Accel:', data); // {x, y, z}
 // }, { frequency: 60 });
 
 export default flutterChannel;

@@ -153,7 +153,5 @@ const deviceControls = new DeviceControls();
 
 // Example usage:
 // deviceControls.init();
-// deviceControls.on('sideButton', (event) => console.log('Side button clicked'));
-// deviceControls.on('scrollWheel', (data) => console.log('Scrolled', data.direction));
 
 export default deviceControls;
