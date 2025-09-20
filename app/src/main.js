@@ -107,6 +107,7 @@ class ChessGame {
     this.soundEnabled = true; // Sound effects enabled by default
 
     // Track changes for menu "Back to game" button
+    this.originalGameMode = 'human-vs-bot';
     this.originalHumanColor = 'white';
     this.colorChangedMidGame = false;
     this.originalBotDifficulty = 4;
@@ -533,10 +534,11 @@ class ChessGame {
     // R1 Memory Management: Define history limit for R1 device
     const MAX_HISTORY_LENGTH = 100; // Keep last 100 states to prevent memory issues
 
-    // Store complete engine state AFTER the move
-    const stateAfterMove = JSON.parse(JSON.stringify(this.engine.exportJson()));
+    // DON'T store complete engine state for moves - only move data
+    // This prevents save file bloat (was storing 2KB per move)
+    // Engine state can be reconstructed by replaying moves from initial state
     const stateEntry = {
-      engineState: stateAfterMove,
+      engineState: null, // Only store engineState for initial state (index 0)
       move: {
         from: moveData.from,
         to: moveData.to,
@@ -2860,7 +2862,8 @@ class ChessUI {
     if (overlay) {
       overlay.classList.remove('hidden');
 
-      // Track the original color and difficulty when menu opens
+      // Track the original game mode and settings when menu opens
+      this.game.originalGameMode = this.game.gameMode;
       this.game.originalHumanColor = this.game.humanColor;
       this.game.colorChangedMidGame = false; // Reset the flag when menu opens
 
@@ -2927,36 +2930,36 @@ class ChessUI {
     const backBtn = document.getElementById('back-btn');
     if (backBtn) {
       const hasMoves = this.game.moveHistory && this.game.moveHistory.length > 0;
+      const modeChanged = this.game.gameMode !== this.game.originalGameMode;
       const colorChanged = this.game.colorChangedMidGame;
       const difficultyChanged = this.game.difficultyChangedMidGame;
+
+      // Settings only matter if we're in the same mode
+      const settingsChangedWithinMode = (colorChanged || difficultyChanged) && !modeChanged;
 
       if (!hasMoves) {
         // No moves made yet in this game mode
         backBtn.disabled = true;
         backBtn.textContent = 'Back to game (no moves yet)';
         backBtn.classList.add('disabled');
-      } else if (colorChanged && difficultyChanged) {
-        // Both color and difficulty changed
+      } else if (settingsChangedWithinMode) {
+        // Settings changed within the same mode - requires new game
         backBtn.disabled = true;
-        backBtn.textContent = 'Start new game (settings changed)';
-        backBtn.classList.add('disabled');
-      } else if (colorChanged) {
-        // Only color changed
-        backBtn.disabled = true;
-        backBtn.textContent = 'Start new game (color changed)';
-        backBtn.classList.add('disabled');
-      } else if (difficultyChanged) {
-        // Only difficulty changed
-        backBtn.disabled = true;
-        backBtn.textContent = 'Start new game (difficulty changed)';
+        if (colorChanged && difficultyChanged) {
+          backBtn.textContent = 'Start new game (settings changed)';
+        } else if (colorChanged) {
+          backBtn.textContent = 'Start new game (color changed)';
+        } else {
+          backBtn.textContent = 'Start new game (difficulty changed)';
+        }
         backBtn.classList.add('disabled');
       } else {
-        // No changes, can go back to game
+        // Pure mode switch or no changes - can go back
         backBtn.disabled = false;
         backBtn.textContent = 'Back to game';
         backBtn.classList.remove('disabled');
       }
-      console.log('[MENU UPDATE] Back button - colorChanged:', colorChanged, 'difficultyChanged:', difficultyChanged);
+      console.log('[MENU UPDATE] Back button - modeChanged:', modeChanged, 'colorChanged:', colorChanged, 'difficultyChanged:', difficultyChanged);
     }
     // Update game mode radio buttons
     const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
