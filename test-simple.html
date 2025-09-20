@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Production Build</title>
+</head>
+<body>
+    <h1>Testing Production Build</h1>
+    <div id="results"></div>
+
+    <script src="app/dist/woodenSoundData.js"></script>
+    <script type="module">
+        // Load the main JS file
+        import('app/dist/assets/main-DdWPxAL3.js').then(() => {
+            const results = document.getElementById('results');
+
+            // Test 1: Check if window.jsChessEngine exists
+            if (typeof window.jsChessEngine !== 'undefined') {
+                results.innerHTML += '<p style="color: green;">✅ window.jsChessEngine is defined</p>';
+
+                // Test 2: Try to create a game
+                try {
+                    const game = new window.jsChessEngine.Game();
+                    results.innerHTML += '<p style="color: green;">✅ Successfully created new Game()</p>';
+                } catch (error) {
+                    results.innerHTML += '<p style="color: red;">❌ Failed to create Game(): ' + error + '</p>';
+                }
+            } else {
+                results.innerHTML += '<p style="color: red;">❌ window.jsChessEngine is NOT defined</p>';
+            }
+        }).catch(error => {
+            document.getElementById('results').innerHTML = '<p style="color: red;">❌ Failed to load script: ' + error + '</p>';
+        });
+    </script>
+</body>
+</html>
