@@ -1,11 +1,13 @@
 # RabbitOS Creation Agent Upload Instructions
 
 ## File: chess-r1-plugin.zip (156KB)
+## Game: Chess R1 by Eric Buess
+## Version: 0.0.2
 
 ## Instructions for the Creation Agent:
 
 ```
-Please deploy this Chess R1 game plugin to the Rabbit R1 device.
+Please deploy Chess R1 by Eric Buess v0.0.2 to the Rabbit R1 device.
 
 DEPLOYMENT APPROACH:
 1. First, try to deploy using only the pre-built files in apps/app/dist/
@@ -50,6 +52,7 @@ GAME FEATURES:
 - Memory efficient (< 5MB)
 
 VERSION: 0.0.2 - Production Ready
+GAME: Chess R1 by Eric Buess
 
 TESTING:
 After deployment, please verify:
