@@ -2330,14 +2330,21 @@ class ChessUI {
     const humanColor = this.game.getHumanColor();
     const currentPlayer = this.game.currentPlayer;
     const isBotTurn = this.game.isBotTurn();
+    const moveCount = this.game.moveHistory ? this.game.moveHistory.length : 0;
 
     debugLogger.info('BOT_INIT', 'Checking initial bot turn', {
       humanColor,
       currentPlayer,
       isBotTurn,
       gameStatus: this.game.gameStatus,
-      moveHistory: this.game.moveHistory ? this.game.moveHistory.length : 0
+      moveHistory: moveCount
     });
+
+    // If moves have already been made, don't try to make initial bot move
+    if (moveCount > 0) {
+      console.log('[CHECK_INITIAL_BOT_TURN] Game already has moves, skipping initial bot turn');
+      return;
+    }
 
     // Ensure game is not ended
     if (this.game.gameStatus === 'checkmate' || this.game.gameStatus === 'stalemate') {
@@ -2367,18 +2374,25 @@ class ChessUI {
       // Ensure UI is properly updated before bot move
       this.updateGameStateIndicators();
 
-      // Longer delay for initial bot move to ensure everything is ready
+      // Execute bot move with a delay to ensure everything is ready
       setTimeout(() => {
-        console.log('[CHECK_INITIAL_BOT_TURN] Calling handleBotTurn after delay');
-        // Final check before executing bot move
-        if (this.game.gameStatus === 'playing' && this.game.isBotTurn()) {
+        // Double-check conditions haven't changed
+        const stillBotTurn = this.game.isBotTurn();
+        const stillNoMoves = !this.game.moveHistory || this.game.moveHistory.length === 0;
+
+        if (this.game.gameStatus === 'playing' && stillBotTurn && stillNoMoves) {
+          console.log('[CHECK_INITIAL_BOT_TURN] Executing bot turn');
           this.handleBotTurn();
         } else {
-          console.error('[CHECK_INITIAL_BOT_TURN] Conditions changed, aborting bot move');
-          this.showBotThinking(false);
-          this.setInputEnabled(true);
+          console.log('[CHECK_INITIAL_BOT_TURN] Conditions changed - bot already moved or not bot turn');
+          // Reset UI if bot already moved
+          if (!stillNoMoves) {
+            this.showBotThinking(false);
+            this.setInputEnabled(true);
+            this.updateGameStateIndicators();
+          }
         }
-      }, 1500); // Increased delay for initial moves
+      }, 1000); // Reduced delay since we have better checks
     } else {
       debugLogger.info('BOT_INIT', 'Human goes first - enabling input and waiting for human move');
 
@@ -2885,17 +2899,12 @@ class ChessUI {
 
     // Check if bot should make initial move after returning from options
     // This handles the case where user changed color and clicked "Back to game"
-    if (this.game.gameMode === 'human-vs-bot' && (!this.game.moveHistory || this.game.moveHistory.length === 0)) {
+    if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {
       console.log('[HIDE_OPTIONS] Checking if bot should make initial move after color change');
-      // Use longer delay to ensure game state is fully ready
+      // Use a small delay to let UI settle
       setTimeout(() => {
-        // Double-check game is ready before attempting bot move
-        if (this.game.gameStatus === 'playing') {
-          this.checkInitialBotTurn();
-        } else {
-          console.log('[HIDE_OPTIONS] Game not ready yet, skipping bot turn check');
-        }
-      }, 800); // Increased delay from 100ms to 800ms
+        this.checkInitialBotTurn();
+      }, 100);
     }
   }
 
@@ -3229,8 +3238,9 @@ class ChessUI {
 
   confirmNewGame() {
     console.log('[CONFIRM_NEW_GAME] Starting new game with:', {
+      gameMode: this.game.gameMode,
       humanColor: this.game.humanColor,
-      gameMode: this.game.gameMode
+      currentPlayer: 'white (always starts)'
     });
 
     // Clear saved state and start new game BEFORE hiding menu
@@ -3243,16 +3253,25 @@ class ChessUI {
       isBotTurn: this.game.isBotTurn()
     });
 
-    // Hide menu (this may call updateDisplay via orientation change)
+    // Update the display to reflect the new game
+    this.updateDisplay();
+
+    // Now hide the menu AFTER game is initialized
     this.hideOptionsMenu();
 
-    // Now explicitly handle the new game start and bot turn check
-    // Use a slightly longer delay to ensure UI has fully settled
-    setTimeout(() => {
-      console.log('[CONFIRM_NEW_GAME] Calling onNewGameStart after delay');
-      this.onNewGameStart(); // This handles display update and bot turn check
-      this.showMessage('New game started!');
-    }, 250); // Increased delay to ensure UI is ready
+    // Check if bot should make the first move AFTER menu is hidden
+    // Use longer delay to ensure UI is fully settled
+    if (this.game.gameMode === 'human-vs-bot' && this.game.humanColor === 'black') {
+      console.log('[CONFIRM_NEW_GAME] Bot should move first - scheduling bot turn');
+      setTimeout(() => {
+        // Double-check conditions before executing bot move
+        if (this.game.gameStatus === 'playing' && this.game.isBotTurn()) {
+          this.checkInitialBotTurn();
+        }
+      }, 1500); // Increased delay to ensure game is fully ready
+    }
+
+    this.showMessage('New game started!');
   }
 
   async clearSavedState() {
@@ -3574,7 +3593,13 @@ class ChessUI {
       debugLogger.info('LOAD', 'Attempting to load saved game state from storage');
       console.log('Attempting to load saved game state...');
 
-      // Load states from both game modes to find the most recent
+      // First check what was the last game mode used
+      const lastModeData = await loadFromStorage('last_game_mode');
+      const preferredMode = lastModeData?.mode || null;
+
+      console.log('[LOAD] Last game mode:', preferredMode);
+
+      // Load states from both game modes
       const humanVsBotKey = 'chess_game_state_human_vs_bot';
       const humanVsHumanKey = 'chess_game_state_human_vs_human';
 
@@ -3593,35 +3618,46 @@ class ChessUI {
       let state = null;
       let selectedMode = null;
 
-      // Determine which state to load based on timestamps
-      if (humanVsBotState && humanVsHumanState) {
-        // Both states exist - load the most recently saved one
-        const botTimestamp = this.getLatestTimestamp(humanVsBotState);
-        const humanTimestamp = this.getLatestTimestamp(humanVsHumanState);
-
-        console.log('[LOAD] Comparing timestamps:', { botTimestamp, humanTimestamp });
-
-        if (humanTimestamp > botTimestamp) {
+      // If we have a preferred mode saved, try to use that first
+      if (preferredMode) {
+        if (preferredMode === 'human-vs-human' && humanVsHumanState) {
           state = humanVsHumanState;
           selectedMode = 'human-vs-human';
-          debugLogger.info('LOAD', 'Loading more recent human-vs-human game');
-          console.log('[LOAD] Selected human-vs-human as more recent');
-        } else {
+          console.log('[LOAD] Using last played mode: human-vs-human');
+        } else if (preferredMode === 'human-vs-bot' && humanVsBotState) {
           state = humanVsBotState;
           selectedMode = 'human-vs-bot';
-          debugLogger.info('LOAD', 'Loading more recent human-vs-bot game');
-          console.log('[LOAD] Selected human-vs-bot as more recent');
+          console.log('[LOAD] Using last played mode: human-vs-bot');
         }
-      } else if (humanVsHumanState) {
-        state = humanVsHumanState;
-        selectedMode = 'human-vs-human';
-        debugLogger.info('LOAD', 'Found only human-vs-human saved state');
-        console.log('[LOAD] Found only human-vs-human state');
-      } else if (humanVsBotState) {
-        state = humanVsBotState;
-        selectedMode = 'human-vs-bot';
-        debugLogger.info('LOAD', 'Found only human-vs-bot saved state');
-        console.log('[LOAD] Found only human-vs-bot state');
+      }
+
+      // If we couldn't load the preferred mode, fall back to the most recent
+      if (!state) {
+        if (humanVsBotState && humanVsHumanState) {
+          // Both states exist - load the most recently saved one
+          const botTimestamp = this.getLatestTimestamp(humanVsBotState);
+          const humanTimestamp = this.getLatestTimestamp(humanVsHumanState);
+
+          console.log('[LOAD] Comparing timestamps:', { botTimestamp, humanTimestamp });
+
+          if (humanTimestamp > botTimestamp) {
+            state = humanVsHumanState;
+            selectedMode = 'human-vs-human';
+            console.log('[LOAD] Selected human-vs-human as more recent');
+          } else {
+            state = humanVsBotState;
+            selectedMode = 'human-vs-bot';
+            console.log('[LOAD] Selected human-vs-bot as more recent');
+          }
+        } else if (humanVsHumanState) {
+          state = humanVsHumanState;
+          selectedMode = 'human-vs-human';
+          console.log('[LOAD] Found only human-vs-human state');
+        } else if (humanVsBotState) {
+          state = humanVsBotState;
+          selectedMode = 'human-vs-bot';
+          console.log('[LOAD] Found only human-vs-bot state');
+        }
       }
 
       if (!state) {

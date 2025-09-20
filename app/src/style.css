@@ -117,7 +117,7 @@ html, body {
 }
 
 .balance-indicator.human-advantage {
-    background: linear-gradient(90deg, #FE5F00 0%, #FF8844 50%, #FE5F00 100%);
+    background: linear-gradient(90deg, #999 0%, #bbb 50%, #999 100%);
 }
 
 .balance-indicator.bot-advantage {
@@ -784,19 +784,35 @@ html, body {
 
 /* Back button - orange styling */
 #back-btn {
-    background: #FE5F00 !important;
-    color: #fff !important;
-    border-color: #FE5F00 !important;
+    background: #FE5F00;
+    color: #fff;
+    border-color: #FE5F00;
 }
 
-#back-btn:hover {
-    background: #e55400 !important;
-    border-color: #e55400 !important;
+#back-btn:not(.disabled):hover {
+    background: #e55400;
+    border-color: #e55400;
 }
 
-#back-btn:active {
-    background: #d14800 !important;
-    color: #fff !important;
+#back-btn:not(.disabled):active {
+    background: #d14800;
+    color: #fff;
+}
+
+/* Back button disabled state uses standard gray */
+#back-btn.disabled,
+#back-btn:disabled {
+    background: #333333 !important;
+    color: #666666 !important;
+    border-color: #333333 !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+#back-btn.disabled:hover,
+#back-btn:disabled:hover {
+    background: #333333 !important;
+    border-color: #333333 !important;
 }
 
 /* Enhanced Instruction Label with bot thinking states */
