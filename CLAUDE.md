@@ -1,5 +1,36 @@
 # Chess R1 Project - Claude Instructions
 
+## 🔧 CRITICAL: Patch Recovery Workflow
+
+When recovering lost patches or fixing broken features:
+
+1. **USE INDEX-ANALYZER FIRST** - Always use the index-analyzer subagent to map code areas before applying patches
+2. **APPLY PATCHES EXACTLY** - Patches from extraction logs were tested and working - apply them WITHOUT modification
+3. **TEST WITH PUPPETEER** - Use Puppeteer to verify features actually work, don't claim success without testing
+4. **COMMIT FREQUENTLY** - Commit after each successful patch application
+5. **PUSH REGULARLY** - Push to remote after significant fixes
+
+### Verification Process
+```bash
+# 1. Use index-analyzer to find code locations
+Task(subagent_type: "index-analyzer", prompt: "Find where X patch should be applied")
+
+# 2. Apply patch EXACTLY as extracted
+Edit or MultiEdit with exact old_code/new_code from patches
+
+# 3. Test with Puppeteer
+node test_features.js  # Or create test script
+
+# 4. Commit if working
+git add -A && git commit -m "Apply patch: [description]"
+git push origin dev
+```
+
+### Common Issues & Solutions
+- **stateHistory vs moveHistory**: Many patches fix incorrect variable references
+- **Cookie persistence**: Check both setCookie/getCookie implementations
+- **Button states**: Verify colorChangedMidGame/difficultyChangedMidGame tracking
+
 ## 🎯 SINGLE SOURCE OF TRUTH PRINCIPLE
 
 **CRITICAL ARCHITECTURAL RULE**: js-chess-engine is the ONLY source of truth for:

@@ -748,7 +748,8 @@ class ChessGame {
    */
   setHumanColor(color) {
     // Track if color was changed mid-game by comparing to original color
-    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {
+    // Only track for human-vs-bot mode (doesn't apply to human-vs-human)
+    if (this.gameMode === 'human-vs-bot' && this.moveHistory && this.moveHistory.length > 0) {
       // Check if color is different from what it was when menu opened
       this.colorChangedMidGame = (color !== this.originalHumanColor);
     }
@@ -762,7 +763,7 @@ class ChessGame {
   setBotDifficulty(difficulty) {
     // Track if difficulty was changed mid-game by comparing to original difficulty
     // Only track for human-vs-bot mode and when moves have been made
-    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {
+    if (this.gameMode === 'human-vs-bot' && this.moveHistory && this.moveHistory.length > 0) {
       // Check if difficulty is different from what it was when menu opened
       this.difficultyChangedMidGame = (difficulty !== this.originalBotDifficulty);
     }
@@ -775,7 +776,7 @@ class ChessGame {
   setBotDifficulty(difficulty) {
     // Track if difficulty was changed mid-game by comparing to original difficulty
     // Only track for human-vs-bot mode and when moves have been made
-    if (this.gameMode === 'human-vs-bot' && this.stateHistory && this.stateHistory.length > 1) {
+    if (this.gameMode === 'human-vs-bot' && this.moveHistory && this.moveHistory.length > 0) {
       // Check if difficulty is different from what it was when menu opened
       this.difficultyChangedMidGame = (difficulty !== this.originalBotDifficulty);
     }
@@ -2922,13 +2923,19 @@ class ChessUI {
       console.log('[MENU UPDATE] Updated title to:', optionsTitle.textContent);
     }
 
-    // Update back button state - disable if color/difficulty changed mid-game
+    // Update back button state - disable if color/difficulty changed mid-game or no moves made
     const backBtn = document.getElementById('back-btn');
     if (backBtn) {
+      const hasMoves = this.game.moveHistory && this.game.moveHistory.length > 0;
       const colorChanged = this.game.colorChangedMidGame;
       const difficultyChanged = this.game.difficultyChangedMidGame;
 
-      if (colorChanged && difficultyChanged) {
+      if (!hasMoves) {
+        // No moves made yet in this game mode
+        backBtn.disabled = true;
+        backBtn.textContent = 'Back to game (no moves yet)';
+        backBtn.classList.add('disabled');
+      } else if (colorChanged && difficultyChanged) {
         // Both color and difficulty changed
         backBtn.disabled = true;
         backBtn.textContent = 'Start new game (settings changed)';
