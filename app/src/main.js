@@ -4159,6 +4159,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.dispatchEvent(new CustomEvent('sideClick'));
       }
 
+      // I key shortcut for status indicator (same as long press)
+      if (event.code === 'KeyI') {
+        event.preventDefault();
+        // Trigger the same event as longPressEnd (shows status)
+        window.dispatchEvent(new CustomEvent('longPressEnd'));
+      }
+
       // Temporary arrow key shortcuts for undo/redo (will be removed for R1)
       if (event.code === 'ArrowLeft') {
         event.preventDefault();
