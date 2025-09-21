@@ -107,10 +107,18 @@ class ChessGame {
 
     // Track changes for menu "Back to game" button
     this.originalGameMode = 'human-vs-bot';
-    this.originalHumanColor = 'white';
-    this.colorChangedMidGame = false;
-    this.originalBotDifficulty = 1;
-    this.difficultyChangedMidGame = false;
+    // Track original settings per mode to properly manage Back to Game button
+    this.modeSettings = {
+      'human-vs-bot': {
+        originalHumanColor: 'white',
+        colorChangedMidGame: false,
+        originalBotDifficulty: 1,
+        difficultyChangedMidGame: false
+      },
+      'human-vs-human': {
+        // Human vs Human doesn't track these changes
+      }
+    };
 
     // Cache frequently accessed state
     this.board = this.engineStateToBoard();
@@ -680,11 +688,13 @@ class ChessGame {
     this.currentMoveIndex = -1;
     this.initialEngineState = JSON.parse(JSON.stringify(this.engine.exportJson())); // Deep clone
 
-    // Reset all tracking flags for new game
-    this.colorChangedMidGame = false;
-    this.difficultyChangedMidGame = false;
-    this.originalHumanColor = this.humanColor;
-    this.originalBotDifficulty = this.botDifficulty;
+    // Reset tracking flags for current mode
+    if (this.gameMode === 'human-vs-bot' && this.modeSettings['human-vs-bot']) {
+      this.modeSettings['human-vs-bot'].colorChangedMidGame = false;
+      this.modeSettings['human-vs-bot'].difficultyChangedMidGame = false;
+      this.modeSettings['human-vs-bot'].originalHumanColor = this.humanColor;
+      this.modeSettings['human-vs-bot'].originalBotDifficulty = this.botDifficulty;
+    }
     this.originalGameMode = this.gameMode;
 
     // Reset state history for undo/redo system
@@ -731,9 +741,10 @@ class ChessGame {
     // Track if color was changed mid-game by comparing to original color
     // Only track for human-vs-bot mode (doesn't apply to human-vs-human)
     // In bot mode, changing color always requires new game, regardless of moves
-    if (this.gameMode === 'human-vs-bot') {
+    if (this.gameMode === 'human-vs-bot' && this.modeSettings['human-vs-bot']) {
       // Check if color is different from what it was when menu opened
-      this.colorChangedMidGame = (color !== this.originalHumanColor);
+      this.modeSettings['human-vs-bot'].colorChangedMidGame =
+        (color !== this.modeSettings['human-vs-bot'].originalHumanColor);
     }
     this.humanColor = color;
     this.boardFlipped = this.determineOrientation();
@@ -746,9 +757,10 @@ class ChessGame {
     // Track if difficulty was changed mid-game by comparing to original difficulty
     // Only track for human-vs-bot mode
     // In bot mode, changing difficulty always requires new game, regardless of moves
-    if (this.gameMode === 'human-vs-bot') {
+    if (this.gameMode === 'human-vs-bot' && this.modeSettings['human-vs-bot']) {
       // Check if difficulty is different from what it was when menu opened
-      this.difficultyChangedMidGame = (difficulty !== this.originalBotDifficulty);
+      this.modeSettings['human-vs-bot'].difficultyChangedMidGame =
+        (difficulty !== this.modeSettings['human-vs-bot'].originalBotDifficulty);
     }
     this.botDifficulty = difficulty;
   }
@@ -2872,14 +2884,15 @@ class ChessUI {
         this.game.originalGameMode = this.game.gameMode;
       }
 
-      // Don't reset change flags - they persist until mode switch or new game
-      // Only update original values if not already tracking changes
-      if (!this.game.colorChangedMidGame) {
-        this.game.originalHumanColor = this.game.humanColor;
-      }
-
-      if (!this.game.difficultyChangedMidGame) {
-        this.game.originalBotDifficulty = this.game.botDifficulty;
+      // Update original values for current mode if not already tracking changes
+      if (this.game.gameMode === 'human-vs-bot' && this.game.modeSettings['human-vs-bot']) {
+        const settings = this.game.modeSettings['human-vs-bot'];
+        if (!settings.colorChangedMidGame) {
+          settings.originalHumanColor = this.game.humanColor;
+        }
+        if (!settings.difficultyChangedMidGame) {
+          settings.originalBotDifficulty = this.game.botDifficulty;
+        }
       }
 
       // Always scroll to top when opening options menu
@@ -2924,21 +2937,17 @@ class ChessUI {
   }
 
   updateOptionsButtons() {
-    
-    
-    
-    
-
     // Debug: Show current mode in the menu title
     const optionsTitle = document.getElementById('options-title');
     if (optionsTitle) {
       const modeText = this.game.gameMode === 'human-vs-human' ? 'Human vs Human' : 'Human vs Bot';
       optionsTitle.textContent = `Chess R1 - ${modeText}`;
-      
     }
 
     // Update back button state - disable if color/difficulty changed mid-game or no moves made
     const backBtn = document.getElementById('back-btn');
+    const newGameBtn = document.getElementById('new-game-btn');
+
     if (backBtn) {
       // Check both moveHistory and stateHistory for moves (stateHistory > 1 means has moves)
       const hasMoveHistory = this.game.moveHistory && this.game.moveHistory.length > 0;
@@ -2946,17 +2955,33 @@ class ChessUI {
       const hasMoves = hasMoveHistory || hasStateHistory;
 
       const modeChanged = this.game.gameMode !== this.game.originalGameMode;
-      const colorChanged = this.game.colorChangedMidGame;
-      const difficultyChanged = this.game.difficultyChangedMidGame;
+
+      // Get settings changes for current mode
+      let colorChanged = false;
+      let difficultyChanged = false;
+      if (this.game.gameMode === 'human-vs-bot' && this.game.modeSettings['human-vs-bot']) {
+        colorChanged = this.game.modeSettings['human-vs-bot'].colorChangedMidGame;
+        difficultyChanged = this.game.modeSettings['human-vs-bot'].difficultyChangedMidGame;
+      }
 
       // Settings only matter if we're in the same mode
       const settingsChangedWithinMode = (colorChanged || difficultyChanged) && !modeChanged;
+
+      // Remove all highlight classes first
+      backBtn.classList.remove('active-button');
+      if (newGameBtn) {
+        newGameBtn.classList.remove('active-button');
+      }
 
       if (!hasMoves) {
         // No moves made yet in this game mode
         backBtn.disabled = true;
         backBtn.textContent = 'Back to game (no moves yet)';
         backBtn.classList.add('disabled');
+        // Highlight New Game button since Back is disabled
+        if (newGameBtn) {
+          newGameBtn.classList.add('active-button');
+        }
       } else if (settingsChangedWithinMode) {
         // Settings changed within the same mode - requires new game
         backBtn.disabled = true;
@@ -2968,13 +2993,19 @@ class ChessUI {
           backBtn.textContent = 'Start new game (difficulty changed)';
         }
         backBtn.classList.add('disabled');
+        // Highlight New Game button since Back is disabled
+        if (newGameBtn) {
+          newGameBtn.classList.add('active-button');
+        }
       } else {
         // Pure mode switch or no changes - can go back
         backBtn.disabled = false;
         backBtn.textContent = 'Back to game';
         backBtn.classList.remove('disabled');
+        // Highlight Back to Game button since it's enabled
+        backBtn.classList.add('active-button');
       }
-      }
+    }
     // Update game mode radio buttons
     const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
     gameModeRadios.forEach(radio => {
@@ -3090,12 +3121,7 @@ class ChessUI {
                 this.game.originalGameMode = radio.value;
             }
 
-            // Reset bot-specific flags when switching to human-vs-human mode
-            // These flags are only relevant in human-vs-bot mode
-            if (radio.value === 'human-vs-human') {
-                this.game.colorChangedMidGame = false;
-                this.game.difficultyChangedMidGame = false;
-            }
+            // No need to reset flags here - they're tracked per mode
 
             // Try to load saved state for the new game mode
             const newModeKey = this.game.getStorageKey();
