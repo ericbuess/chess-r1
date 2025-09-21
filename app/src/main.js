@@ -3617,21 +3617,21 @@ class ChessUI {
       let state = null;
       let selectedMode = null;
 
-      // If we have a preferred mode saved, try to use that first
+      // If we have a preferred mode saved, use that mode regardless of state availability
       if (preferredMode) {
-        if (preferredMode === 'human-vs-human' && humanVsHumanState) {
-          state = humanVsHumanState;
-          selectedMode = 'human-vs-human';
-          
-        } else if (preferredMode === 'human-vs-bot' && humanVsBotState) {
-          state = humanVsBotState;
-          selectedMode = 'human-vs-bot';
-          
+        selectedMode = preferredMode; // Always respect the user's last mode choice
+
+        if (preferredMode === 'human-vs-human') {
+          state = humanVsHumanState; // May be null, that's ok
+
+        } else if (preferredMode === 'human-vs-bot') {
+          state = humanVsBotState; // May be null, that's ok
+
         }
       }
 
-      // If we couldn't load the preferred mode, fall back to the most recent
-      if (!state) {
+      // Only fall back to timestamp comparison if we don't have a preferred mode
+      if (!selectedMode && !state) {
         if (humanVsBotState && humanVsHumanState) {
           // Both states exist - load the most recently saved one
           const botTimestamp = this.getLatestTimestamp(humanVsBotState);
@@ -3667,10 +3667,19 @@ class ChessUI {
         }
       }
       
+      // If we have a selected mode but no state, start a new game in that mode
+      if (!state && selectedMode) {
+        this.game.setGameMode(selectedMode);
+        this.game.newGame();
+        this.onNewGameStart();
+        this.updateMenuVisibility();
+        return true;
+      }
+
       if (!state) {
         return false;
       }
-      
+
       if (this.isValidSavedState(state)) {
         // CRITICAL: Set the correct game mode BEFORE loading state
         if (selectedMode) {
