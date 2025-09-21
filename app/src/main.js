@@ -2800,14 +2800,20 @@ class ChessUI {
       // Flags will be cleared when a successful move is made
     }
 
-    // Prevent selection immediately after bot cancellation
+    // Prevent auto-selection immediately after bot cancellation
+    // But only if there was a previously selected square that might auto-move
     if (this.justCancelledBot) {
-      // Ignore first click after cancelling bot to prevent auto-moves
       this.justCancelledBot = false;
-      this.game.selectedSquare = null;
-      this.game.possibleMoves = [];
-      this.updateDisplay();
-      return;
+      // Only block if there's a risk of auto-move (i.e., selectedSquare exists)
+      if (this.game.selectedSquare) {
+        console.log('[handleSquareSelection] BLOCKED - clearing stale selection after bot cancel');
+        this.game.selectedSquare = null;
+        this.game.possibleMoves = [];
+        this.updateDisplay();
+        return;
+      }
+      // If no selected square, allow the click to proceed normally
+      console.log('[handleSquareSelection] Bot was cancelled but no stale selection, allowing click');
     }
 
     // In human-vs-bot mode, prevent human from moving during bot's turn
