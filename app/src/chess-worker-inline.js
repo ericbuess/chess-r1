@@ -10,6 +10,9 @@ export function createChessWorker() {
     // Load the chess engine library
     importScripts('${scriptUrl}');
 
+    // The library exports to self["js-chess-engine"] in worker context
+    const jsChessEngine = self["js-chess-engine"];
+
     // Listen for messages
     self.addEventListener('message', function(e) {
       const { type, engineState, difficulty } = e.data;
