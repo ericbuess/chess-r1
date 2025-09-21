@@ -2786,8 +2786,12 @@ class ChessUI {
   }
 
   async handleSquareSelection(row, col) {
+    console.log(`[handleSquareSelection] Click at row=${row}, col=${col}`);
+    console.log(`[handleSquareSelection] State: isFlipping=${this.isFlipping}, inputEnabled=${this.inputEnabled}`);
+
     // Prevent interactions during board flip or when input is disabled
     if (this.isFlipping || this.inputEnabled === false) {
+      console.log('[handleSquareSelection] BLOCKED - isFlipping or input disabled');
       return;
     }
 
