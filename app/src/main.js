@@ -1936,38 +1936,39 @@ class ChessUI {
     ChessUI._globalBotProcessing = true;
     console.log('Set global bot processing flag'); // Debug
 
-    // CRITICAL: Never trigger bot during redo
-    if (this.game.isPerformingRedo) {
-      ChessUI._globalBotProcessing = false; // Reset on early return
-      return;
-    }
+    try {
+      // CRITICAL: Never trigger bot during redo
+      if (this.game.isPerformingRedo) {
+        return;
+      }
 
-    const gameMode = this.game.gameMode;
+      const gameMode = this.game.gameMode;
+      const isBotTurn = this.game.isBotTurn();
+      const gameStatus = this.game.gameStatus;
+
+      // Validate bot turn conditions
+      if (gameMode !== 'human-vs-bot' || !isBotTurn) {
+        return;
+      }
+
+      // Check if game is over
+      if (gameStatus !== 'playing' && gameStatus !== 'check') {
+        this.showBotThinking(false);
+        this.setInputEnabled(false); // Keep disabled for game end
+        return;
+      }
+
+      // Continue with bot turn after validations
+      await this.continueBotTurn();
+    } finally {
+      // Only reset flag after everything is done
+      console.log('Resetting global bot processing flag in handleBotTurn finally');
+      ChessUI._globalBotProcessing = false;
+    }
+  }
+
+  async continueBotTurn() {
     const isBotTurn = this.game.isBotTurn();
-    const gameStatus = this.game.gameStatus;
-    const currentPlayer = this.game.currentPlayer;
-    const humanColor = this.game.getHumanColor();
-
-    // Bot activation check
-
-    // Validate bot turn conditions
-    if (gameMode !== 'human-vs-bot') {
-      ChessUI._globalBotProcessing = false; // Reset on early return
-      return;
-    }
-
-    if (!isBotTurn) {
-      ChessUI._globalBotProcessing = false; // Reset on early return
-      return;
-    }
-
-    // Check if game is over
-    if (gameStatus !== 'playing' && gameStatus !== 'check') {
-      this.showBotThinking(false);
-      this.setInputEnabled(false); // Keep disabled for game end
-      ChessUI._globalBotProcessing = false; // Reset on early return
-      return;
-    }
 
     // Determine if this is an initial bot move (first move of game)
     const isInitialBotMove = (!this.game.moveHistory || this.game.moveHistory.length === 0) && isBotTurn;
@@ -2110,9 +2111,6 @@ class ChessUI {
         // Hide thinking indicator and re-enable input only after successful move
         this.showBotThinking(false);
 
-        // Reset global bot processing flag on successful move
-        ChessUI._globalBotProcessing = false;
-
         // Check if game ended after bot move
         if (this.game.gameStatus === 'checkmate' || this.game.gameStatus === 'stalemate') {
           this.setInputEnabled(false); // Keep disabled for game end
@@ -2125,7 +2123,6 @@ class ChessUI {
       } else {
         // Hide thinking indicator and show error
         this.showBotThinking(false);
-        ChessUI._globalBotProcessing = false; // Reset global flag on failure
         this.showNotification(`Bot move failed - your turn`, 'error');
         this.setInputEnabled(true);
 
@@ -2142,9 +2139,6 @@ class ChessUI {
       setTimeout(() => {
         this.hideInstructionLabel();
       }, 3000);
-    } finally {
-      // Always reset the global bot processing flag
-      ChessUI._globalBotProcessing = false;
     }
   }
 
