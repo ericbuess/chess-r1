@@ -1990,8 +1990,11 @@ class ChessUI {
       // Directly control the label instead of using showNotification to avoid conflicts
       const label = document.getElementById('instruction-label');
       const botName = this.game.getBotDifficultyText();
+      console.log('Initial bot thinking setup for:', botName); // Debug log
       if (label) {
-        label.textContent = `${botName} is ${thinkingMessages[messageIndex]}...`;
+        const initialMessage = `${botName} is ${thinkingMessages[messageIndex]}...`;
+        console.log('Setting initial message:', initialMessage); // Debug log
+        label.textContent = initialMessage;
         label.classList.remove('hidden');
         // Apply info notification styling
         label.style.backgroundColor = '#FE5F00';
@@ -2000,6 +2003,7 @@ class ChessUI {
         notificationShown = true;
 
         // Start rotating messages immediately after showing
+        console.log('Starting rotation interval...'); // Debug log
         this.thinkingInterval = setInterval(() => {
           rotationCount++;
           messageIndex = (messageIndex + 1) % thinkingMessages.length;
@@ -2009,16 +2013,19 @@ class ChessUI {
             // Add ellipsis animation based on rotation count
             const dots = '.'.repeat((rotationCount % 3) + 1);
             const newMessage = `${botName} is ${thinkingMessages[messageIndex]}${dots}`;
-            console.log('Rotating message to:', newMessage); // Debug log
+            console.log('Rotation', rotationCount, '- Updating to:', newMessage); // Debug log
             currentLabel.textContent = newMessage;
             // Ensure styles persist
             currentLabel.style.backgroundColor = '#FE5F00';
             currentLabel.style.color = 'white';
             currentLabel.style.fontWeight = 'bold';
           } else {
-            console.log('Label not found or hidden'); // Debug log
+            console.log('Rotation', rotationCount, '- Label not found or hidden'); // Debug log
           }
         }, 500); // Rotate every 0.5 seconds for testing
+        console.log('Interval ID:', this.thinkingInterval); // Debug log
+      } else {
+        console.log('Initial label not found!'); // Debug log
       }
     }, 500); // 0.5 seconds for faster Mac testing
 
@@ -3407,6 +3414,12 @@ class ChessUI {
    * @param {number} duration - Optional duration in ms (defaults based on type)
    */
   showNotification(message, type = 'default', duration = null) {
+    // Don't interfere with rotating bot thinking messages
+    if (this.thinkingInterval) {
+      console.log('Skipping notification during bot thinking:', message);
+      return;
+    }
+
     const label = document.getElementById('instruction-label');
     if (!label) return;
 
