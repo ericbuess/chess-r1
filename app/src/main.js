@@ -679,8 +679,13 @@ class ChessGame {
     this.moveHistory = [];
     this.currentMoveIndex = -1;
     this.initialEngineState = JSON.parse(JSON.stringify(this.engine.exportJson())); // Deep clone
-    this.colorChangedMidGame = false; // Reset color change flag
-    this.originalHumanColor = this.humanColor; // Track original color for this game
+
+    // Reset all tracking flags for new game
+    this.colorChangedMidGame = false;
+    this.difficultyChangedMidGame = false;
+    this.originalHumanColor = this.humanColor;
+    this.originalBotDifficulty = this.botDifficulty;
+    this.originalGameMode = this.gameMode;
 
     // Reset state history for undo/redo system
     this.stateHistory = [];
@@ -2862,14 +2867,20 @@ class ChessUI {
     if (overlay) {
       overlay.classList.remove('hidden');
 
-      // Track the original game mode and settings when menu opens
-      this.game.originalGameMode = this.game.gameMode;
-      this.game.originalHumanColor = this.game.humanColor;
-      this.game.colorChangedMidGame = false; // Reset the flag when menu opens
+      // Track the original game mode when menu opens (only if not already tracking)
+      if (this.game.originalGameMode === undefined) {
+        this.game.originalGameMode = this.game.gameMode;
+      }
 
-      // Track the original difficulty when menu opens
-      this.game.originalBotDifficulty = this.game.botDifficulty;
-      this.game.difficultyChangedMidGame = false; // Reset the flag when menu opens
+      // Don't reset change flags - they persist until mode switch or new game
+      // Only update original values if not already tracking changes
+      if (!this.game.colorChangedMidGame) {
+        this.game.originalHumanColor = this.game.humanColor;
+      }
+
+      if (!this.game.difficultyChangedMidGame) {
+        this.game.originalBotDifficulty = this.game.botDifficulty;
+      }
 
       // Always scroll to top when opening options menu
       const optionsMenu = document.getElementById('options-menu');
@@ -3072,14 +3083,15 @@ class ChessUI {
               timestamp: Date.now()
             });
 
-            // Reset color and difficulty change tracking when switching modes
-            // (these changes don't matter across mode switches)
-            this.game.colorChangedMidGame = false;
-            this.game.originalHumanColor = this.game.humanColor;
-            this.game.difficultyChangedMidGame = false;
-            this.game.originalBotDifficulty = this.game.botDifficulty;
-            // Update originalGameMode to the new mode
-            this.game.originalGameMode = radio.value;
+            // When switching modes, preserve the change tracking if returning to original mode
+            // Only reset if this is a different mode from where we started
+            if (this.game.originalGameMode !== radio.value) {
+                // Switching to a different mode - update the original mode
+                this.game.originalGameMode = radio.value;
+
+                // If switching back to human-vs-bot, preserve any changes made before
+                // Don't reset the flags - they should persist
+            }
 
             // Try to load saved state for the new game mode
             const newModeKey = this.game.getStorageKey();
