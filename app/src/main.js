@@ -4430,6 +4430,14 @@ window.addEventListener('scrollDown', async () => {
           chessGame.selectedSquare = null;
           chessGame.possibleMoves = [];
 
+          // CRITICAL: Truncate redo history when cancelling bot thinking
+          // This prevents redoing the move that triggered bot thinking
+          // The bot never made its move, so we can't redo past this point
+          if (chessGame.currentStateIndex < chessGame.stateHistory.length - 1) {
+            console.log('[Undo] Truncating redo history after bot cancellation');
+            chessGame.stateHistory = chessGame.stateHistory.slice(0, chessGame.currentStateIndex + 1);
+          }
+
           // IMPORTANT: Clear the botWasCancelled flag after successful undo
           // This allows the next move to work properly
           setTimeout(() => {
