@@ -3083,14 +3083,18 @@ class ChessUI {
               timestamp: Date.now()
             });
 
-            // When switching modes, preserve the change tracking if returning to original mode
+            // When switching modes, handle change tracking appropriately
             // Only reset if this is a different mode from where we started
             if (this.game.originalGameMode !== radio.value) {
                 // Switching to a different mode - update the original mode
                 this.game.originalGameMode = radio.value;
+            }
 
-                // If switching back to human-vs-bot, preserve any changes made before
-                // Don't reset the flags - they should persist
+            // Reset bot-specific flags when switching to human-vs-human mode
+            // These flags are only relevant in human-vs-bot mode
+            if (radio.value === 'human-vs-human') {
+                this.game.colorChangedMidGame = false;
+                this.game.difficultyChangedMidGame = false;
             }
 
             // Try to load saved state for the new game mode
