@@ -3945,10 +3945,19 @@ window.addEventListener('longPressEnd', () => {
 
     // Add bot info if in bot mode
     if (chessGame && chessGame.gameMode === 'human-vs-bot') {
-      const botDifficulty = chessGame.getBotDifficultyText();
-      const humanColor = chessGame.getHumanColor();
-      const botColor = humanColor === 'white' ? 'Black' : 'White';
-      statusMessage += `\nPlaying against ${botDifficulty} (${botColor})`;
+      const botName = chessGame.getBotDifficultyText();
+      const difficulty = chessGame.botDifficulty;
+
+      // Map difficulty levels to descriptions
+      const difficultyDescriptions = {
+        1: 'normal',
+        2: 'hard',
+        3: 'harder',
+        4: 'hardest'
+      };
+
+      const difficultyText = difficultyDescriptions[difficulty] || 'normal';
+      statusMessage += `\nPlaying against ${botName} (bot - ${difficultyText})`;
     }
 
     gameUI.showNotification(statusMessage, 'info', 3000);
