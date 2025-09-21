@@ -2,10 +2,13 @@
 // This avoids module loading issues
 
 export function createChessWorker() {
+  // Get the absolute URL for the chess engine library
+  const scriptUrl = new URL('/node_modules/js-chess-engine/dist/js-chess-engine.js', window.location.origin).href;
+
   // The worker code as a string
   const workerCode = `
     // Load the chess engine library
-    importScripts('/node_modules/js-chess-engine/dist/js-chess-engine.js');
+    importScripts('${scriptUrl}');
 
     // Listen for messages
     self.addEventListener('message', function(e) {
