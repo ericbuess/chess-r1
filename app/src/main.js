@@ -1999,20 +1999,19 @@ class ChessUI {
     // Start rotating messages immediately after first message shows
     // This runs independently of the initial notification timer
     const messageRotationTimer = setTimeout(() => {
+      // Store interval directly to ensure it's accessible for cleanup
       this.thinkingInterval = setInterval(() => {
-        if (notificationShown) {
-          rotationCount++;
-          messageIndex = (messageIndex + 1) % thinkingMessages.length;
-          const label = document.getElementById('instruction-label');
-          const botName = this.game.getBotDifficultyText();
-          if (label && !label.classList.contains('hidden')) {
-            // Add ellipsis animation based on rotation count
-            const dots = '.'.repeat((rotationCount % 3) + 1);
-            label.textContent = `${botName} is ${thinkingMessages[messageIndex]}${dots}`;
-          }
+        rotationCount++;
+        messageIndex = (messageIndex + 1) % thinkingMessages.length;
+        const label = document.getElementById('instruction-label');
+        const botName = this.game.getBotDifficultyText();
+        if (label && !label.classList.contains('hidden')) {
+          // Add ellipsis animation based on rotation count
+          const dots = '.'.repeat((rotationCount % 3) + 1);
+          label.textContent = `${botName} is ${thinkingMessages[messageIndex]}${dots}`;
         }
-      }, 1500); // Rotate every 1.5 seconds for more dynamic feel
-    }, 2000); // Start rotation 2 seconds after bot starts thinking
+      }, 500); // Rotate every 0.5 seconds for testing
+    }, 1000); // Start rotation 1 second after bot starts thinking
 
     try {
       // Add slight delay for initial moves to allow UI to settle
