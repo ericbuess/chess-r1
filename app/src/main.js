@@ -1926,60 +1926,55 @@ class ChessUI {
   // Handle bot turn in human-vs-bot mode
   // Enhanced bot move activation system for initial and subsequent turns
   async handleBotTurn() {
-    // Use a static flag to prevent multiple concurrent bot turns across all calls
-    if (ChessUI._globalBotProcessing) {
-      console.log('Bot already processing GLOBALLY, skipping duplicate handleBotTurn call');
+    // CRITICAL: Never trigger bot during redo
+    if (this.game.isPerformingRedo) {
       return;
     }
 
-    // Set the global flag immediately and synchronously
-    ChessUI._globalBotProcessing = true;
-    console.log('Set global bot processing flag'); // Debug
+    const gameMode = this.game.gameMode;
+    const isBotTurn = this.game.isBotTurn();
+    const gameStatus = this.game.gameStatus;
 
-    try {
-      // CRITICAL: Never trigger bot during redo
-      if (this.game.isPerformingRedo) {
-        return;
-      }
-
-      const gameMode = this.game.gameMode;
-      const isBotTurn = this.game.isBotTurn();
-      const gameStatus = this.game.gameStatus;
-
-      // Validate bot turn conditions
-      if (gameMode !== 'human-vs-bot' || !isBotTurn) {
-        return;
-      }
-
-      // Check if game is over
-      if (gameStatus !== 'playing' && gameStatus !== 'check') {
-        this.showBotThinking(false);
-        this.setInputEnabled(false); // Keep disabled for game end
-        return;
-      }
-
-      // Continue with bot turn after validations
-      await this.continueBotTurn();
-    } finally {
-      // Only reset flag after everything is done
-      console.log('Resetting global bot processing flag in handleBotTurn finally');
-      ChessUI._globalBotProcessing = false;
+    // Validate bot turn conditions
+    if (gameMode !== 'human-vs-bot' || !isBotTurn) {
+      return;
     }
+
+    // Check if game is over
+    if (gameStatus !== 'playing' && gameStatus !== 'check') {
+      this.showBotThinking(false);
+      this.setInputEnabled(false); // Keep disabled for game end
+      return;
+    }
+
+    // Continue with bot turn after validations
+    await this.continueBotTurn();
   }
 
   async continueBotTurn() {
-    const isBotTurn = this.game.isBotTurn();
+    // Check global flag at the start of actual bot processing
+    if (ChessUI._globalBotProcessing) {
+      console.log('Bot already processing, skipping duplicate continueBotTurn call');
+      return;
+    }
 
-    // Determine if this is an initial bot move (first move of game)
-    const isInitialBotMove = (!this.game.moveHistory || this.game.moveHistory.length === 0) && isBotTurn;
-    const moveType = isInitialBotMove ? 'INITIAL' : 'SUBSEQUENT';
+    // Set the global flag for actual bot processing
+    ChessUI._globalBotProcessing = true;
+    console.log('Set global bot processing flag in continueBotTurn');
 
-    // Always ensure user input is disabled and thinking indicator is shown
-    this.setInputEnabled(false);
-    this.showBotThinking(true);
+    try {
+      const isBotTurn = this.game.isBotTurn();
 
-    // Update UI state to reflect bot's turn
-    this.updateGameStateIndicators();
+      // Determine if this is an initial bot move (first move of game)
+      const isInitialBotMove = (!this.game.moveHistory || this.game.moveHistory.length === 0) && isBotTurn;
+      const moveType = isInitialBotMove ? 'INITIAL' : 'SUBSEQUENT';
+
+      // Always ensure user input is disabled and thinking indicator is shown
+      this.setInputEnabled(false);
+      this.showBotThinking(true);
+
+      // Update UI state to reflect bot's turn
+      this.updateGameStateIndicators();
 
     // Bot thinking messages that rotate
     const thinkingMessages = [
@@ -2139,6 +2134,11 @@ class ChessUI {
       setTimeout(() => {
         this.hideInstructionLabel();
       }, 3000);
+    }
+    } finally {
+      // Reset flag only after actual bot processing is complete
+      console.log('Resetting global bot processing flag in continueBotTurn finally');
+      ChessUI._globalBotProcessing = false;
     }
   }
 
