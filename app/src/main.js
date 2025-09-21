@@ -2795,14 +2795,12 @@ class ChessUI {
       return;
     }
 
-    // ULTIMATE FIX: If bot was cancelled, ALWAYS clear selectedSquare first
-    // But DON'T clear the flags here - wait until a successful move is made
-    if (this.botCancelled || this.game.botWasCancelled) {
-      this.game.selectedSquare = null;
-      this.game.possibleMoves = [];
-      // Continue processing this click as a fresh selection
-      // Flags will be cleared when a successful move is made
-    }
+    // REMOVED: This was clearing selectedSquare on EVERY click after bot cancellation!
+    // The clearing should only happen once, not on every click
+    // if (this.botCancelled || this.game.botWasCancelled) {
+    //   this.game.selectedSquare = null;
+    //   this.game.possibleMoves = [];
+    // }
 
     // Prevent auto-selection immediately after bot cancellation
     // But only if there was a previously selected square that might auto-move
@@ -2876,6 +2874,7 @@ class ChessUI {
     const logicalCol = logical.col;
     
     // Piece selection logic
+    console.log('[handleSquareSelection] selectedSquare before logic:', this.game.selectedSquare);
 
     if (this.game.selectedSquare) {
       const fromRow = this.game.selectedSquare.row;
