@@ -1955,20 +1955,16 @@ class ChessUI {
     // Update UI state to reflect bot's turn
     this.updateGameStateIndicators();
 
-    // Show notification immediately for testing (normally after 5000ms on R1)
-    // Always show notification regardless of bot difficulty for testing
+    // Show notification after 4 seconds delay to avoid spam on fast moves
     let notificationShown = false;
-
-    // Show notification immediately
-    this.showNotification(
-      `${this.game.getBotDifficultyText()} is thinking...`,
-      'info',
-      3000 // Show for 3 seconds max during testing
-    );
-    notificationShown = true;
-
-    // Force a DOM update to ensure notification can render before bot calculation
-    await new Promise(resolve => setTimeout(resolve, 10));
+    const notificationTimer = setTimeout(() => {
+      this.showNotification(
+        `${this.game.getBotDifficultyText()} is thinking...`,
+        'info',
+        10000 // Show for 10 seconds max
+      );
+      notificationShown = true;
+    }, 4000); // 4 second delay
 
     try {
       // Add slight delay for initial moves to allow UI to settle
@@ -1978,6 +1974,9 @@ class ChessUI {
 
       // Execute bot move with enhanced error handling
       const botResult = await this.game.executeBotMove();
+
+      // Clear notification timer if bot finishes before 4 seconds
+      clearTimeout(notificationTimer);
 
       // Hide notification if it was shown
       if (notificationShown) {
@@ -3934,9 +3933,27 @@ window.addEventListener('sideClick', () => {
   }
 });
 
-// Long press for new game removed - not a desired feature
-// window.addEventListener('longPressStart', () => {});
-// window.addEventListener('longPressEnd', () => {});
+// Long press shows status information
+window.addEventListener('longPressStart', () => {
+  // Prevent default long press behavior
+});
+
+window.addEventListener('longPressEnd', () => {
+  // Show app status information
+  if (gameUI) {
+    let statusMessage = 'Chess R1 by Eric Buess v0.0.2';
+
+    // Add bot info if in bot mode
+    if (chessGame && chessGame.gameMode === 'human-vs-bot') {
+      const botDifficulty = chessGame.getBotDifficultyText();
+      const humanColor = chessGame.getHumanColor();
+      const botColor = humanColor === 'white' ? 'Black' : 'White';
+      statusMessage += `\nPlaying against ${botDifficulty} (${botColor})`;
+    }
+
+    gameUI.showNotification(statusMessage, 'info', 3000);
+  }
+});
 
 // ===========================================
 // Plugin Message Handling
