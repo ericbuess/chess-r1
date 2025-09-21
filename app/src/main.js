@@ -1712,6 +1712,8 @@ class ChessUI {
     this.lastAlertTime = 0; // Prevent double alerts
     this.alertCooldown = 1000; // Minimum time between alerts (ms)
     this.audioInitialized = false; // Track audio initialization for Chrome/Android
+    this.isBotProcessing = false; // Flag to prevent multiple concurrent bot turns
+    this.thinkingInterval = null; // Store interval for message rotation
 
     // Initialize audio on first user interaction (Chrome/Android requirement)
     const initAudioOnInteraction = () => {
@@ -2011,6 +2013,11 @@ class ChessUI {
 
         // Start rotating messages immediately after showing
         console.log('Starting rotation interval...'); // Debug log
+        // Clear any existing interval before creating new one
+        if (this.thinkingInterval) {
+          console.log('Clearing old interval:', this.thinkingInterval);
+          clearInterval(this.thinkingInterval);
+        }
         this.thinkingInterval = setInterval(() => {
           rotationCount++;
           messageIndex = (messageIndex + 1) % thinkingMessages.length;
