@@ -725,7 +725,8 @@ class ChessGame {
   setHumanColor(color) {
     // Track if color was changed mid-game by comparing to original color
     // Only track for human-vs-bot mode (doesn't apply to human-vs-human)
-    if (this.gameMode === 'human-vs-bot' && this.moveHistory && this.moveHistory.length > 0) {
+    // In bot mode, changing color always requires new game, regardless of moves
+    if (this.gameMode === 'human-vs-bot') {
       // Check if color is different from what it was when menu opened
       this.colorChangedMidGame = (color !== this.originalHumanColor);
     }
@@ -738,21 +739,9 @@ class ChessGame {
    */
   setBotDifficulty(difficulty) {
     // Track if difficulty was changed mid-game by comparing to original difficulty
-    // Only track for human-vs-bot mode and when moves have been made
-    if (this.gameMode === 'human-vs-bot' && this.moveHistory && this.moveHistory.length > 0) {
-      // Check if difficulty is different from what it was when menu opened
-      this.difficultyChangedMidGame = (difficulty !== this.originalBotDifficulty);
-    }
-    this.botDifficulty = difficulty;
-  }
-
-  /**
-   * Set bot difficulty
-   */
-  setBotDifficulty(difficulty) {
-    // Track if difficulty was changed mid-game by comparing to original difficulty
-    // Only track for human-vs-bot mode and when moves have been made
-    if (this.gameMode === 'human-vs-bot' && this.moveHistory && this.moveHistory.length > 0) {
+    // Only track for human-vs-bot mode
+    // In bot mode, changing difficulty always requires new game, regardless of moves
+    if (this.gameMode === 'human-vs-bot') {
       // Check if difficulty is different from what it was when menu opened
       this.difficultyChangedMidGame = (difficulty !== this.originalBotDifficulty);
     }
@@ -3089,6 +3078,8 @@ class ChessUI {
             this.game.originalHumanColor = this.game.humanColor;
             this.game.difficultyChangedMidGame = false;
             this.game.originalBotDifficulty = this.game.botDifficulty;
+            // Update originalGameMode to the new mode
+            this.game.originalGameMode = radio.value;
 
             // Try to load saved state for the new game mode
             const newModeKey = this.game.getStorageKey();
