@@ -375,15 +375,58 @@ class ChessGame {
       // Store the engine state before bot move in case we need to restore it
       const engineStateBeforeBot = this.engine.exportJson();
 
-      // Now execute the blocking chess calculation
-      // NOTE: This will block the main thread on higher difficulties
-      // Web Worker approach had issues with module loading
+      // For high difficulties (3+), try to use a simpler approach
+      // that's more responsive but still challenging
       console.log('[generateBotMove] Calling engine.aiMove() with difficulty:', this.botDifficulty);
-      const aiMove = this.engine.aiMove(this.botDifficulty);
-      console.log('[generateBotMove] aiMove returned:', aiMove);
+
+      let aiMove;
+      let finalEngineState;
+
+      // Use Web Worker for Asa (difficulty 4) to make it interruptible
+      if (this.botDifficulty === 4) {
+        console.log('[generateBotMove] Using Web Worker for Asa (difficulty 4)');
+
+        // Import the worker functions
+        const { createCancellableBotMove } = await import('./chess-worker-inline.js');
+
+        try {
+          // Create a cancellable worker promise
+          this.currentBotWorker = createCancellableBotMove(engineStateBeforeBot, 4);
+
+          // Wait for the worker to complete
+          const result = await this.currentBotWorker;
+
+          // Check if cancelled during worker calculation
+          if (this.botWasCancelled) {
+            console.log('[generateBotMove] ❌ CANCELLED during worker calculation');
+            return null;
+          }
+
+          aiMove = result.move;
+          finalEngineState = result.finalState;
+
+          // Update the engine with the new state from the worker
+          this.engine = new window.jsChessEngine.Game(finalEngineState);
+          console.log('[generateBotMove] Worker returned move:', aiMove);
+
+        } catch (error) {
+          if (error.message === 'Bot calculation cancelled' ||
+              error.message === 'Bot calculation timed out' ||
+              this.botWasCancelled) {
+            console.log('[generateBotMove] Worker calculation cancelled or timed out:', error.message);
+            return null;
+          }
+          throw error;
+        } finally {
+          this.currentBotWorker = null;
+        }
+      } else {
+        // For other difficulties, use the synchronous method
+        aiMove = this.engine.aiMove(this.botDifficulty);
+        console.log('[generateBotMove] aiMove returned:', aiMove);
+      }
 
       // Check if bot was cancelled during calculation
-      // (This can only happen after aiMove completes due to blocking nature)
       if (this.botWasCancelled) {
         console.log('[generateBotMove] ❌ CANCELLED after calculation - restoring engine state');
         // Restore the engine state from before the bot move
@@ -2255,6 +2298,14 @@ class ChessUI {
 
   // Cancel bot thinking when user interrupts (e.g., undo)
   cancelBotThinking() {
+    // Cancel any running worker for Asa difficulty
+    if (this.currentBotWorker && typeof this.currentBotWorker.cancel === 'function') {
+      console.log('[cancelBotThinking] Cancelling Web Worker calculation');
+      // Cancel the worker - this will terminate it and reject the promise
+      this.currentBotWorker.cancel();
+      this.currentBotWorker = null;
+    }
+
     // Clear bot turn timer (prevents delayed bot execution)
     if (this.botTurnTimer) {
       clearTimeout(this.botTurnTimer);
