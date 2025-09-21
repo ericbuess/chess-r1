@@ -382,16 +382,16 @@ class ChessGame {
       let aiMove;
       let finalEngineState;
 
-      // Use Web Worker for Asa (difficulty 4) to make it interruptible
-      if (this.botDifficulty === 4) {
-        console.log('[generateBotMove] Using Web Worker for Asa (difficulty 4)');
+      // Use Web Worker for Asa (difficulty 3) to make it interruptible
+      if (this.botDifficulty === 3) {
+        console.log('[generateBotMove] Using Web Worker for Asa (difficulty 3)');
 
         // Import the worker functions
         const { createCancellableBotMove } = await import('./chess-worker-inline.js');
 
         try {
           // Create a cancellable worker promise
-          this.currentBotWorker = createCancellableBotMove(engineStateBeforeBot, 4);
+          this.currentBotWorker = createCancellableBotMove(engineStateBeforeBot, 3);
 
           // Wait for the worker to complete
           const result = await this.currentBotWorker;
@@ -1236,11 +1236,10 @@ class ChessGame {
    */
   getBotDifficultyText() {
     const difficulties = {
-      0: 'Eric',
-      1: 'Ella',
-      2: 'Evy',
-      3: 'Emmy',
-      4: 'Asa'
+      0: 'Ella',
+      1: 'Evy',
+      2: 'Emmy',
+      3: 'Asa'
     };
     return difficulties[this.botDifficulty] || 'Ella';
   }
