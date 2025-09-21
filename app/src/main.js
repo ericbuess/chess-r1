@@ -361,12 +361,13 @@ class ChessGame {
       // IMPORTANT: aiMove() directly executes the move in the engine!
       // It doesn't just return a move suggestion - it plays it
       // Difficulty: 0 = random, 1 = easy, 2 = medium, 3 = hard, 4 = expert
-      // Wrap in Promise with setTimeout to allow UI updates before blocking calculation
-      const aiMove = await new Promise(resolve => {
-        setTimeout(() => {
-          resolve(this.engine.aiMove(this.botDifficulty));
-        }, 0);
-      });
+
+      // Give UI time to update and show thinking notification before blocking calculation
+      // Wait slightly longer than the 500ms notification timer to ensure it displays
+      await new Promise(resolve => setTimeout(resolve, 600));
+
+      // Now execute the blocking chess calculation
+      const aiMove = this.engine.aiMove(this.botDifficulty);
       
       
       // The move has already been made in the engine
@@ -468,11 +469,11 @@ class ChessGame {
     // Extract whether check was triggered
     const enteredCheck = botMove.enteredCheck || false;
     
-    // Calculate delay for natural feel
+    // Calculate delay for natural feel (reduced since we added pre-calculation delay)
     const thinkingTime = Date.now() - startTime;
-    const targetDelay = 800 + Math.random() * 400; // 800-1200ms
+    const targetDelay = 200 + Math.random() * 200; // 200-400ms (was 800-1200ms)
     const remainingDelay = Math.max(0, targetDelay - thinkingTime);
-    
+
     // Wait for remaining delay
     await new Promise(resolve => setTimeout(resolve, remainingDelay));
     
