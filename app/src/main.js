@@ -1104,7 +1104,7 @@ class ChessGame {
    */
   getBotDifficultyText() {
     const difficulties = {
-      0: 'Random',
+      0: 'Eric',
       1: 'Ella',
       2: 'Evy',
       3: 'Emmy',
@@ -3950,6 +3950,7 @@ window.addEventListener('longPressEnd', () => {
 
       // Map difficulty levels to descriptions
       const difficultyDescriptions = {
+        0: 'easy',
         1: 'normal',
         2: 'hard',
         3: 'harder',
