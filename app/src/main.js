@@ -132,6 +132,7 @@ class ChessGame {
     this.currentStateIndex = 0;
     this.isInUndoRedoState = false; // Track if we're in an undo/redo state where bot shouldn't auto-move
     this.lastUndoWasBotMove = false; // Track if the last undo was a bot move for notification
+    this.botWasCancelled = false; // Track if bot was cancelled via undo
 
     // Initialize moveHistory (for backward compatibility)
     this.moveHistory = [];
@@ -348,28 +349,55 @@ class ChessGame {
     return this.currentPlayer !== this.humanColor;
   }
   
+
   /**
    * Generate bot move
    */
   async generateBotMove() {
-    try {
-      
+    console.log('[generateBotMove] === ENTRY ===');
+    console.log('[generateBotMove] botWasCancelled:', this.botWasCancelled);
+    console.log('[generateBotMove] botDifficulty:', this.botDifficulty);
 
+    try {
       // Get the piece positions before the move for history tracking
       const boardBefore = this.board;
-      
+
       // IMPORTANT: aiMove() directly executes the move in the engine!
       // It doesn't just return a move suggestion - it plays it
       // Difficulty: 0 = random, 1 = easy, 2 = medium, 3 = hard, 4 = expert
 
-      // Give UI time to update and show thinking notification before blocking calculation
-      // Wait slightly longer than the 500ms notification timer to ensure it displays
-      await new Promise(resolve => setTimeout(resolve, 600));
+      // Check if bot was cancelled (use game.botWasCancelled for ChessGame instance)
+      if (this.botWasCancelled) {
+        console.log('[generateBotMove] ❌ CANCELLED before calculation - botWasCancelled flag is true');
+        return null;
+      }
+
+      // Store the engine state before bot move in case we need to restore it
+      const engineStateBeforeBot = this.engine.exportJson();
 
       // Now execute the blocking chess calculation
+      // NOTE: This will block the main thread on higher difficulties
+      // Web Worker approach had issues with module loading
+      console.log('[generateBotMove] Calling engine.aiMove() with difficulty:', this.botDifficulty);
       const aiMove = this.engine.aiMove(this.botDifficulty);
-      
-      
+      console.log('[generateBotMove] aiMove returned:', aiMove);
+
+      // Check if bot was cancelled during calculation
+      // (This can only happen after aiMove completes due to blocking nature)
+      if (this.botWasCancelled) {
+        console.log('[generateBotMove] ❌ CANCELLED after calculation - restoring engine state');
+        // Restore the engine state from before the bot move
+        this.engine = new window.jsChessEngine.Game(engineStateBeforeBot);
+        this.updateCachedState();
+        this.updateGameStatus();
+        return null;
+      }
+
+      // Extract moves from aiMove object (it returns an object like {"E2": "E4"})
+      const moves = Object.entries(aiMove || {});
+      console.log('[generateBotMove] Extracted moves:', moves);
+
+      // Only update cached state if NOT cancelled
       // The move has already been made in the engine
       // Update our cached state to reflect the new position
       this.updateCachedState();
@@ -382,8 +410,7 @@ class ChessGame {
       }
       
       // Convert to our format for UI and history
-      const moves = Object.entries(aiMove);
-      if (moves.length > 0) {
+      if (moves && moves.length > 0) {
         const [from, to] = moves[0];
         const fromCoords = this.squareToCoords(from);
         const toCoords = this.squareToCoords(to);
@@ -426,15 +453,20 @@ class ChessGame {
         // Auto-save after successful bot move
         await this.autoSave();
 
+        console.log('[generateBotMove] ✅ SUCCESS - returning move');
         return {
           from: fromCoords,
           to: toCoords,
           piece: movedPiece,
           enteredCheck
         };
+      } else {
+        console.log('[generateBotMove] ❌ No valid moves in aiMove result');
+        return null;
       }
     } catch (error) {
-      
+      console.error('[generateBotMove] ❌ ERROR:', error.message);
+      console.error('[generateBotMove] Stack:', error.stack);
     }
     
     return null;
@@ -444,25 +476,66 @@ class ChessGame {
    * Execute bot move
    */
   async executeBotMove() {
-    
+    console.log('\n[executeBotMove] ===== ENTRY =====');
+    console.log('[executeBotMove] botWasCancelled:', this.botWasCancelled);
+    console.log('[executeBotMove] _globalBotProcessing:', ChessUI._globalBotProcessing);
+    console.log('[executeBotMove] Stack trace:', new Error().stack.split('\n').slice(1, 4).join('\n'));
+
+    // DEBUG: Show on page for visibility
+    const debugMsg = `DEBUG: botWasCancelled=${this.botWasCancelled}`;
+    if (window.gameUI) {
+      window.gameUI.showNotification(debugMsg, 'info');
+    }
+
     // Debug each condition separately
     const isHumanVsBot = this.gameMode === 'human-vs-bot';
     const isBotTurn = this.isBotTurn();
     const isValidStatus = this.gameStatus === 'playing' || this.gameStatus === 'check';
-    
+    const engineTurn = this.engine.exportJson().turn;
+
+    console.log('[executeBotMove] Conditions Check:', {
+      isHumanVsBot,
+      isBotTurn,
+      isValidStatus,
+      gameMode: this.gameMode,
+      currentPlayer: this.currentPlayer,
+      humanColor: this.humanColor,
+      gameStatus: this.gameStatus,
+      engineTurn: engineTurn
+    });
+
     if (!isHumanVsBot || !isBotTurn || !isValidStatus) {
-      
+      console.log('[executeBotMove] ❌ CONDITIONS FAILED');
+      const failReason = {
+        humanVsBot_fail: !isHumanVsBot ? 'Not human vs bot mode' : 'OK',
+        botTurn_fail: !isBotTurn ? `Not bot turn (${this.currentPlayer} === ${this.humanColor})` : 'OK',
+        validStatus_fail: !isValidStatus ? `Invalid status (${this.gameStatus})` : 'OK'
+      };
+      console.log('[executeBotMove] Failed because:', failReason);
+
+      // DEBUG: Show failure reason on page
+      if (window.gameUI && !isBotTurn) {
+        window.gameUI.showNotification(`DEBUG: Bot skipped - not bot's turn`, 'warning');
+      }
+
       return { success: false, enteredCheck: false };
     }
-    
+
+    // Clear cancellation flag only after we confirm bot should move
+    console.log('[executeBotMove] ✅ Conditions passed, clearing botWasCancelled flag');
+    this.botWasCancelled = false;
+
     const startTime = Date.now();
     
     // Generate AND execute bot move (aiMove() does both!)
+    console.log('[executeBotMove] Calling generateBotMove()...');
     const botMove = await this.generateBotMove();
-    
-    
+
+    console.log('[executeBotMove] Bot move result:', botMove ? 'Move generated' : 'NULL - Move failed/cancelled');
+
     if (!botMove) {
-      
+      console.log('[executeBotMove] ❌ NO BOT MOVE - returning failure');
+      console.log('[executeBotMove] botWasCancelled after generateBotMove:', this.botWasCancelled);
       return { success: false, enteredCheck: false };
     }
     
@@ -846,6 +919,9 @@ class ChessGame {
   getGameState() {
     const engineState = this.engine.exportJson();
 
+    // CRITICAL FIX: Never save selectedSquare if we're in an interrupted state
+    const shouldSaveSelection = !this.isInUndoRedoState && !this.botWasCancelled;
+
     return {
       board: this.board,
       currentPlayer: this.currentPlayer,
@@ -857,8 +933,8 @@ class ChessGame {
       // Remove OLD undo system fields
       // currentMoveIndex: this.currentMoveIndex,
       // initialEngineState: this.initialEngineState,
-      selectedSquare: this.selectedSquare,
-      possibleMoves: this.possibleMoves,
+      selectedSquare: shouldSaveSelection ? this.selectedSquare : null,
+      possibleMoves: shouldSaveSelection ? this.possibleMoves : [],
       gameMode: this.gameMode,
       humanColor: this.humanColor,
       botDifficulty: this.botDifficulty,
@@ -916,8 +992,14 @@ class ChessGame {
     }
     
     // Restore UI state
-    this.selectedSquare = state.selectedSquare || null;
-    this.possibleMoves = state.possibleMoves || [];
+    // CRITICAL FIX: Don't restore selectedSquare if bot was cancelled
+    if (this.botWasCancelled) {
+      this.selectedSquare = null;
+      this.possibleMoves = [];
+    } else {
+      this.selectedSquare = state.selectedSquare || null;
+      this.possibleMoves = state.possibleMoves || [];
+    }
     // Only restore gameMode if not explicitly preserving the current one
     if (!options.preserveGameMode) {
       
@@ -1366,11 +1448,8 @@ class ChessGame {
   undoMove() {
     // NEW SIMPLIFIED UNDO - Direct state restoration
     if (!this.canUndo()) {
-      
       return false;
     }
-
-    
 
     // Check if the move we're undoing was a capture (for sound replay)
     const undoingState = this.stateHistory[this.currentStateIndex];
@@ -1717,6 +1796,8 @@ class ChessUI {
     this.audioInitialized = false; // Track audio initialization for Chrome/Android
     this.isBotProcessing = false; // Flag to prevent multiple concurrent bot turns
     this.thinkingInterval = null; // Store interval for message rotation
+    this.botTurnTimer = null; // Global timer to prevent multiple queued bot turn calls
+    this.thinkingMessageTimer = null; // Store timeout for initial thinking message display
 
     // Initialize audio on first user interaction (Chrome/Android requirement)
     const initAudioOnInteraction = () => {
@@ -1926,8 +2007,27 @@ class ChessUI {
   // Handle bot turn in human-vs-bot mode
   // Enhanced bot move activation system for initial and subsequent turns
   async handleBotTurn() {
+    // Clear any pending bot turn timer since we're handling it now
+    if (this.botTurnTimer) {
+      clearTimeout(this.botTurnTimer);
+      this.botTurnTimer = null;
+    }
+
+    // If flag wasn't already set (direct call), set it now
+    if (!ChessUI._globalBotProcessing) {
+      ChessUI._globalBotProcessing = true;
+    }
+
+    // CRITICAL: Clear bot cancellation flag when starting a new bot turn
+    // This ensures previous cancellations don't affect new bot moves
+    if (this.game && this.game.botWasCancelled) {
+      console.log('[handleBotTurn] Clearing stale botWasCancelled flag');
+      this.game.botWasCancelled = false;
+    }
+
     // CRITICAL: Never trigger bot during redo
     if (this.game.isPerformingRedo) {
+      ChessUI._globalBotProcessing = false; // Reset flag
       return;
     }
 
@@ -1937,6 +2037,7 @@ class ChessUI {
 
     // Validate bot turn conditions
     if (gameMode !== 'human-vs-bot' || !isBotTurn) {
+      ChessUI._globalBotProcessing = false; // Reset flag
       return;
     }
 
@@ -1944,23 +2045,26 @@ class ChessUI {
     if (gameStatus !== 'playing' && gameStatus !== 'check') {
       this.showBotThinking(false);
       this.setInputEnabled(false); // Keep disabled for game end
+      ChessUI._globalBotProcessing = false; // Reset flag
       return;
     }
 
-    // Continue with bot turn after validations
-    await this.continueBotTurn();
+    try {
+      // Continue with bot turn after validations
+      await this.continueBotTurn();
+    } catch (error) {
+      console.error('Error in continueBotTurn:', error);
+      // Reset flag if continueBotTurn throws an error
+      ChessUI._globalBotProcessing = false;
+    }
   }
 
   async continueBotTurn() {
-    // Check global flag at the start of actual bot processing
-    if (ChessUI._globalBotProcessing) {
-      console.log('Bot already processing, skipping duplicate continueBotTurn call');
-      return;
-    }
+    // Flag is already set in handleBotTurn, no need to check or set it here
 
-    // Set the global flag for actual bot processing
-    ChessUI._globalBotProcessing = true;
-    console.log('Set global bot processing flag in continueBotTurn');
+    // Track timing for minimum display
+    const thinkingStartTime = Date.now();
+    let notificationShown = false;
 
     try {
       const isBotTurn = this.game.isBotTurn();
@@ -1976,123 +2080,105 @@ class ChessUI {
       // Update UI state to reflect bot's turn
       this.updateGameStateIndicators();
 
-    // Bot thinking messages that rotate
-    const thinkingMessages = [
-      'analyzing the board',
-      'considering options',
-      'evaluating threats',
-      'contemplating moves',
-      'weighing possibilities',
-      'calculating variations',
-      'examining positions',
-      'planning strategy',
-      'searching for tactics',
-      'assessing material',
-      'checking for pins',
-      'looking for forks',
-      'studying patterns',
-      'pondering deeply',
-      'processing combinations'
-    ];
+      // Bot thinking messages that rotate
+      const thinkingMessages = [
+        'analyzing the board',
+        'considering options',
+        'evaluating threats',
+        'contemplating moves',
+        'weighing possibilities',
+        'calculating variations',
+        'examining positions',
+        'planning strategy',
+        'searching for tactics',
+        'assessing material',
+        'checking for pins',
+        'looking for forks',
+        'studying patterns',
+        'pondering deeply',
+        'processing combinations'
+      ];
 
-    // Show notification after 0.5 seconds delay for faster feedback on Mac
-    let notificationShown = false;
-    let messageIndex = Math.floor(Math.random() * thinkingMessages.length);
-    let rotationCount = 0;
+      // Show thinking message after 4 seconds delay and rotate every 4 seconds
+      let messageIndex = Math.floor(Math.random() * thinkingMessages.length);
+      let rotationCount = 0;
 
-    console.log('Setting up notification timer...'); // Debug
-
-    // Clear any existing notification setup first
-    if (this.thinkingInterval) {
-      console.log('WARNING: Existing interval found, clearing it:', this.thinkingInterval);
-      clearInterval(this.thinkingInterval);
-      this.thinkingInterval = null;
-    }
-
-    const notificationTimer = setTimeout(() => {
-      // Directly control the label instead of using showNotification to avoid conflicts
-      const label = document.getElementById('instruction-label');
-      const botName = this.game.getBotDifficultyText();
-      console.log('Initial bot thinking setup for:', botName); // Debug log
-      if (label) {
-        const initialMessage = `${botName} is ${thinkingMessages[messageIndex]}...`;
-        console.log('Setting initial message:', initialMessage); // Debug log
-        label.textContent = initialMessage;
-        label.classList.remove('hidden');
-        // Apply info notification styling
-        label.style.backgroundColor = '#FE5F00';
-        label.style.color = 'white';
-        label.style.fontWeight = 'bold';
-        notificationShown = true;
-
-        // Start rotating messages immediately after showing
-        console.log('Starting rotation interval...'); // Debug log
-        // Clear any existing interval before creating new one
-        if (this.thinkingInterval) {
-          console.log('Clearing old interval:', this.thinkingInterval);
-          clearInterval(this.thinkingInterval);
-        }
-        this.thinkingInterval = setInterval(() => {
-          rotationCount++;
-          messageIndex = (messageIndex + 1) % thinkingMessages.length;
-          // Get fresh reference to label element each time
-          const currentLabel = document.getElementById('instruction-label');
-          if (currentLabel && !currentLabel.classList.contains('hidden')) {
-            // Add ellipsis animation based on rotation count
-            const dots = '.'.repeat((rotationCount % 3) + 1);
-            const newMessage = `${botName} is ${thinkingMessages[messageIndex]}${dots}`;
-            console.log('Rotation', rotationCount, '- Updating to:', newMessage); // Debug log
-            currentLabel.textContent = newMessage;
-            // Ensure styles persist
-            currentLabel.style.backgroundColor = '#FE5F00';
-            currentLabel.style.color = 'white';
-            currentLabel.style.fontWeight = 'bold';
-          } else {
-            console.log('Rotation', rotationCount, '- Label not found or hidden'); // Debug log
-          }
-        }, 500); // Rotate every 0.5 seconds for testing
-        console.log('Interval ID:', this.thinkingInterval); // Debug log
-      } else {
-        console.log('Initial label not found!'); // Debug log
-      }
-    }, 500); // 0.5 seconds for faster Mac testing
-
-    // No need for separate rotation timer anymore
-    const messageRotationTimer = null;
-
-    try {
-      // Add slight delay for initial moves to allow UI to settle
-      if (isInitialBotMove) {
-        await new Promise(resolve => setTimeout(resolve, 500));
-      }
-
-      // Execute bot move with enhanced error handling
-      const botResult = await this.game.executeBotMove();
-
-      // Clear notification timer and interval if bot finishes
-      clearTimeout(notificationTimer);
+      // Clear any existing notification setup first
       if (this.thinkingInterval) {
         clearInterval(this.thinkingInterval);
         this.thinkingInterval = null;
       }
 
-      // Hide notification if it was shown
-      if (notificationShown) {
-        const label = document.getElementById('instruction-label');
-        if (label) {
-          label.classList.add('hidden');
-          // Reset styles
-          label.style.backgroundColor = '';
-          label.style.color = '';
-          label.style.fontWeight = '';
-          label.textContent = '';
-        }
+      // Clear any existing thinking message timer
+      if (this.thinkingMessageTimer) {
+        clearTimeout(this.thinkingMessageTimer);
+        this.thinkingMessageTimer = null;
       }
-      
+
+      // Show initial message after 4 seconds delay
+      this.thinkingMessageTimer = setTimeout(() => {
+        const label = document.getElementById('instruction-label');
+        const botName = this.game.getBotDifficultyText();
+
+        if (label) {
+          const initialMessage = `${botName} is ${thinkingMessages[messageIndex]}...`;
+          label.textContent = initialMessage;
+          label.classList.remove('hidden');
+          label.style.backgroundColor = '#FE5F00';
+          label.style.color = 'white';
+          label.style.fontWeight = 'bold';
+          notificationShown = true;
+
+          // Start rotating messages every 4 seconds
+          this.thinkingInterval = setInterval(() => {
+            rotationCount++;
+            messageIndex = (messageIndex + 1) % thinkingMessages.length;
+            const currentLabel = document.getElementById('instruction-label');
+            if (currentLabel && !currentLabel.classList.contains('hidden')) {
+              const dots = '.'.repeat((rotationCount % 3) + 1);
+              const newMessage = `${botName} is ${thinkingMessages[messageIndex]}${dots}`;
+              currentLabel.textContent = newMessage;
+              currentLabel.style.backgroundColor = '#FE5F00';
+              currentLabel.style.color = 'white';
+              currentLabel.style.fontWeight = 'bold';
+            }
+          }, 4000); // Rotate every 4 seconds
+        }
+      }, 4000); // 4 seconds delay before showing
+
+      // Removed delay - bot should move immediately
+
+      // Execute bot move with enhanced error handling
+      const botResult = await this.game.executeBotMove();
+
+      // Remove artificial delay - bot should move as fast as it calculates
+      // The thinking message is nice but shouldn't slow down gameplay
+
+      // Clear thinking message timer and interval
+      if (this.thinkingMessageTimer) {
+        clearTimeout(this.thinkingMessageTimer);
+        this.thinkingMessageTimer = null;
+      }
+      if (this.thinkingInterval) {
+        clearInterval(this.thinkingInterval);
+        this.thinkingInterval = null;
+      }
+
+      // Always hide the thinking label (whether it was shown or not)
+      const label = document.getElementById('instruction-label');
+      if (label) {
+        label.classList.add('hidden');
+        // Reset styles
+        label.style.backgroundColor = '';
+        label.style.color = '';
+        label.style.fontWeight = '';
+        label.textContent = '';
+      }
+
       if (botResult && botResult.success) {
         // Update display after bot move
         this.updateDisplay();
-        
+
         // Check if bot put human in check
         if (botResult.enteredCheck) {
           // Bot put human in check - highlight human's king
@@ -2126,26 +2212,129 @@ class ChessUI {
         }, 3000);
       }
     } catch (error) {
+      // Ensure minimum display time even on error (enough to at least show the message)
+      const minThinkingTime = 5000; // 5 seconds minimum on error (4s delay + 1s showing)
+      const elapsed = Date.now() - thinkingStartTime;
+      if (elapsed < minThinkingTime) {
+        await new Promise(resolve => setTimeout(resolve, minThinkingTime - elapsed));
+      }
+
+      // Clear thinking message timer and interval
+      if (this.thinkingMessageTimer) {
+        clearTimeout(this.thinkingMessageTimer);
+        this.thinkingMessageTimer = null;
+      }
+      if (this.thinkingInterval) {
+        clearInterval(this.thinkingInterval);
+        this.thinkingInterval = null;
+      }
+
+      // Always hide the thinking label (whether it was shown or not)
+      const label = document.getElementById('instruction-label');
+      if (label) {
+        label.classList.add('hidden');
+        label.style.backgroundColor = '';
+        label.style.color = '';
+        label.style.fontWeight = '';
+        label.textContent = '';
+      }
+
       // Hide thinking indicator and re-enable input on error
       this.showBotThinking(false);
       this.setInputEnabled(true);
       this.showNotification(`Bot error - your turn`, 'error');
-      
+
       setTimeout(() => {
         this.hideInstructionLabel();
       }, 3000);
-    }
     } finally {
-      // Reset flag only after actual bot processing is complete
-      console.log('Resetting global bot processing flag in continueBotTurn finally');
+      // Reset flag only after ALL operations are complete
       ChessUI._globalBotProcessing = false;
     }
+  }
+
+  // Cancel bot thinking when user interrupts (e.g., undo)
+  cancelBotThinking() {
+    // Clear bot turn timer (prevents delayed bot execution)
+    if (this.botTurnTimer) {
+      clearTimeout(this.botTurnTimer);
+      this.botTurnTimer = null;
+    }
+
+    // Clear thinking message timer
+    if (this.thinkingMessageTimer) {
+      clearTimeout(this.thinkingMessageTimer);
+      this.thinkingMessageTimer = null;
+    }
+
+    // Clear thinking interval (stops message rotation)
+    if (this.thinkingInterval) {
+      clearInterval(this.thinkingInterval);
+      this.thinkingInterval = null;
+    }
+
+    // Reset global bot processing flag
+    ChessUI._globalBotProcessing = false;
+
+    // Hide thinking UI immediately
+    this.showBotThinking(false);
+
+    // Hide instruction label
+    const label = document.getElementById('instruction-label');
+    if (label) {
+      label.classList.add('hidden');
+      label.style.backgroundColor = '';
+      label.style.color = '';
+      label.style.fontWeight = '';
+      label.textContent = '';
+    }
+
+    // Clear any selected piece to prevent auto-moves
+    if (this.game) {
+      this.game.selectedSquare = null;
+      this.game.possibleMoves = [];
+    }
+    // Highlights will be cleared by updateDisplay() after undo
+
+    // Re-enable user input
+    this.setInputEnabled(true);
+
+    // Mark that we've cancelled the bot (so we can bypass turn validation)
+    this.botCancelled = true;
+
+    // Also mark it in the game state so it persists
+    if (this.game) {
+      console.log('[cancelBotThinking] Setting game.botWasCancelled = true');
+      this.game.botWasCancelled = true;
+    }
+
+    // Set flag to prevent immediate selection on next click
+    this.justCancelledBot = true;
+
+    // Clear this flag after a short delay
+    setTimeout(() => {
+      this.justCancelledBot = false;
+    }, 500);
+
+    // NUCLEAR OPTION: Keep clearing selectedSquare repeatedly
+    // This catches any async state restoration
+    const clearingInterval = setInterval(() => {
+      if (this.game && this.game.selectedSquare) {
+        this.game.selectedSquare = null;
+        this.game.possibleMoves = [];
+      }
+    }, 50);
+
+    // Stop clearing after 1 second
+    setTimeout(() => {
+      clearInterval(clearingInterval);
+    }, 1000);
   }
 
   // Enable/disable user input
   setInputEnabled(enabled) {
     this.inputEnabled = enabled;
-    
+
     // Visual feedback for disabled state
     if (enabled) {
       this.boardElement.style.opacity = '1';
@@ -2547,13 +2736,19 @@ class ChessUI {
       this.updateGameStateIndicators();
 
       // Execute bot move with a delay to ensure everything is ready
-      setTimeout(() => {
+      // Clear any existing bot turn timer
+      if (this.botTurnTimer) {
+        clearTimeout(this.botTurnTimer);
+        this.botTurnTimer = null;
+      }
+
+      this.botTurnTimer = setTimeout(() => {
         // Double-check conditions haven't changed
         const stillBotTurn = this.game.isBotTurn();
         const stillNoMoves = !this.game.moveHistory || this.game.moveHistory.length === 0;
 
         if (this.game.gameStatus === 'playing' && stillBotTurn && stillNoMoves) {
-          
+
           this.handleBotTurn();
         } else {
           
@@ -2587,10 +2782,32 @@ class ChessUI {
 
   async handleSquareSelection(row, col) {
     // Prevent interactions during board flip or when input is disabled
-    if (this.isFlipping || this.inputEnabled === false) return;
-    
+    if (this.isFlipping || this.inputEnabled === false) {
+      return;
+    }
+
+    // ULTIMATE FIX: If bot was cancelled, ALWAYS clear selectedSquare first
+    // But DON'T clear the flags here - wait until a successful move is made
+    if (this.botCancelled || this.game.botWasCancelled) {
+      this.game.selectedSquare = null;
+      this.game.possibleMoves = [];
+      // Continue processing this click as a fresh selection
+      // Flags will be cleared when a successful move is made
+    }
+
+    // Prevent selection immediately after bot cancellation
+    if (this.justCancelledBot) {
+      // Ignore first click after cancelling bot to prevent auto-moves
+      this.justCancelledBot = false;
+      this.game.selectedSquare = null;
+      this.game.possibleMoves = [];
+      this.updateDisplay();
+      return;
+    }
+
     // In human-vs-bot mode, prevent human from moving during bot's turn
-    if (this.game.gameMode === 'human-vs-bot' && this.game.isBotTurn()) {
+    // BUT allow moves if bot was cancelled via undo
+    if (this.game.gameMode === 'human-vs-bot' && this.game.isBotTurn() && !this.botCancelled) {
       // If we're in undo/redo state, allow the user to make a move for bot
       if (this.game.isInUndoRedoState) {
         // Convert display coordinates to logical coordinates first
@@ -2636,11 +2853,14 @@ class ChessUI {
     const logicalCol = logical.col;
     
     // Piece selection logic
-    
+
     if (this.game.selectedSquare) {
       const fromRow = this.game.selectedSquare.row;
       const fromCol = this.game.selectedSquare.col;
-      
+
+      // Get piece at selected square
+      const selectedPiece = this.game.board[fromRow][fromCol];
+
       if (fromRow === logicalRow && fromCol === logicalCol) {
         // Deselect if clicking same square
         this.game.selectedSquare = null;
@@ -2648,7 +2868,7 @@ class ChessUI {
         // Check if the attempted move is valid before trying to make it
         const possibleMoves = this.game.getPossibleMoves(fromRow, fromCol);
         const attemptedMove = possibleMoves.find(m => m.row === logicalRow && m.col === logicalCol);
-        
+
         if (attemptedMove) {
           // Move is valid, attempt to make it
           const wasInCheck = this.game.gameStatus === 'check';
@@ -2658,6 +2878,12 @@ class ChessUI {
             // Clear undo/redo flags now that a move was successfully made
             this.game.isInUndoRedoState = false;
             this.game.lastUndoWasBotMove = false;
+
+            // CRITICAL: Clear bot cancelled flags since we've made a successful move
+            // This ensures the bot will run on the next turn
+            this.botCancelled = false;
+            console.log('[handleSquareSelection] Clearing game.botWasCancelled after human move');
+            this.game.botWasCancelled = false;
 
             this.game.selectedSquare = null;
 
@@ -2690,11 +2916,24 @@ class ChessUI {
                 
                 // Update UI to reflect bot's turn
                 this.updateGameStateIndicators();
-                
-                // Trigger bot move with small delay to allow UI update
-                setTimeout(() => {
-                  this.handleBotTurn();
-                }, 150);
+
+                // Clear any existing bot turn timer
+                if (this.botTurnTimer) {
+                  clearTimeout(this.botTurnTimer);
+                  this.botTurnTimer = null;
+                }
+
+                // Set flag immediately when scheduling to prevent duplicate scheduling
+                if (!ChessUI._globalBotProcessing) {
+                  ChessUI._globalBotProcessing = true;
+                  // Trigger bot move with small delay to allow UI update
+                  this.botTurnTimer = setTimeout(() => {
+                    // Flag is already set, just call handleBotTurn
+                    this.handleBotTurn();
+                  }, 150);
+                } else {
+                  console.log('Bot already processing, skipping bot turn scheduling');
+                }
               } else {
                 
                 // Ensure input is enabled if game ended
@@ -2719,6 +2958,7 @@ class ChessUI {
           
           if (targetPiece && targetPiece.color === this.game.currentPlayer) {
             // This is piece selection, not a move attempt
+            // Select the piece
             this.game.selectedSquare = { row: logicalRow, col: logicalCol };
             this.updateDisplay(); // Update display before returning
             return; // Exit early - no need for move validation
@@ -2740,7 +2980,13 @@ class ChessUI {
     } else {
       // Select piece if it belongs to current player
       const piece = this.game.board[logicalRow][logicalCol];
-      if (piece && piece.color === this.game.currentPlayer) {
+
+      // FIX: When bot is cancelled, allow selecting human pieces regardless of whose turn it is
+      const canSelectPiece = (this.botCancelled || this.game.botWasCancelled)
+        ? (piece && piece.color === this.game.humanColor)  // After bot cancel, select human pieces
+        : (piece && piece.color === this.game.currentPlayer); // Normal: select current player's pieces
+
+      if (canSelectPiece) {
         this.game.selectedSquare = { row: logicalRow, col: logicalCol };
       }
     }
@@ -4024,24 +4270,72 @@ window.addEventListener('scrollDown', async () => {
   }
 
   if (chessGame && gameUI) {
+    // Track if we cancelled bot thinking
+    const wasBotThinking = ChessUI._globalBotProcessing;
+
+    // Check if bot is currently thinking and cancel it FIRST
+    let botWasCancelled = false;
+    if (wasBotThinking) {
+      gameUI.cancelBotThinking();
+      botWasCancelled = true;
+
+      // IMPORTANT: When cancelling bot thinking during undo:
+      // - The bot's aiMove() may have already executed in the engine
+      // - generateBotMove() will restore the engine state if needed
+      // - We still need to undo the human's last move
+    }
+
     if (chessGame.allowUndo) {
-      // Check if we're undoing a bot move
-      let isUndoingBotMove = false;
-      if (chessGame.gameMode === 'human-vs-bot' && chessGame.currentStateIndex > 0) {
+      // When bot was cancelled, we may need to undo twice:
+      // 1. Once for the bot move (if it was recorded)
+      // 2. Once for the human move
+
+      if (botWasCancelled) {
+        // Check if the current state is a bot move
         const currentState = chessGame.stateHistory[chessGame.currentStateIndex];
+        const isCurrentStateBotMove = currentState && currentState.move &&
+                                     currentState.move.piece &&
+                                     currentState.move.piece.color !== chessGame.humanColor;
+
+        if (isCurrentStateBotMove) {
+          // First undo the bot move
+          chessGame.undoMove();
+        }
+      }
+
+      // Now undo the human move (or the only move if no bot cancellation)
+      const undoResult = chessGame.undoMove();
+
+      // Determine if we're undoing a bot move for animation purposes
+      let isUndoingBotMove = false;
+      if (!botWasCancelled && chessGame.gameMode === 'human-vs-bot' && chessGame.currentStateIndex >= 0) {
+        const currentState = chessGame.stateHistory[chessGame.currentStateIndex + 1]; // Check the move we just undid
         if (currentState && currentState.move && currentState.move.piece) {
           isUndoingBotMove = currentState.move.piece.color !== chessGame.humanColor;
         }
       }
 
-      const undoResult = chessGame.undoMove();
-      
-      
       if (undoResult) {
-        chessGame.selectedSquare = null; // Clear any selected piece
+        // CRITICAL: Clear selection immediately after undo, before ANY other operations
+        chessGame.selectedSquare = null;
+        chessGame.possibleMoves = [];
+
         // Removed updateBoardPerspective() - orientation is handled by data attributes now
         gameUI.updateDisplay();
-        
+
+        // Show cancellation message if we interrupted bot thinking
+        if (wasBotThinking) {
+          gameUI.showNotification('Bot thinking cancelled - move undone', 'info', 1500);
+          // Extra clearing when bot was cancelled to prevent auto-moves
+          chessGame.selectedSquare = null;
+          chessGame.possibleMoves = [];
+          // Also clear after a brief delay to catch any async updates
+          setTimeout(() => {
+            chessGame.selectedSquare = null;
+            chessGame.possibleMoves = [];
+          }, 100);
+        }
+
         gameUI.animateUndoRedo('undo', isUndoingBotMove);
         
         // Update UI elements after undo
@@ -4049,22 +4343,22 @@ window.addEventListener('scrollDown', async () => {
         gameUI.updateCapturedPiecesDisplay();
         gameUI.updateMoveHistoryDisplay();
 
+        // CRITICAL FIX: Force selectedSquare to null RIGHT BEFORE saving
+        // This ensures we don't save a stale selectedSquare state
+        chessGame.selectedSquare = null;
+        chessGame.possibleMoves = [];
+
         // Save state after undo
         await chessGame.autoSave();
 
         // Just update UI state - NO bot triggering on undo/redo!
         if (chessGame.gameMode === 'human-vs-bot') {
-          // Only update UI state based on whose turn it is
-          if (chessGame.isBotTurn()) {
-            // It's bot's turn after undo, but DON'T trigger a move
-            // User needs to decide if they want bot to move
-            gameUI.showBotThinking(false);
-            gameUI.setInputEnabled(true);
-          } else {
-            // Human's turn - enable input
-            gameUI.showBotThinking(false);
-            gameUI.setInputEnabled(true);
-          }
+          // Always clear bot thinking and enable input after undo
+          gameUI.showBotThinking(false);
+          gameUI.setInputEnabled(true);
+
+          // If we cancelled bot thinking, just ensure UI is in correct state
+          // The undo already reverted the last move, no need for double undo
         } else if (chessGame.gameMode === 'human-vs-human') {
           // In human vs human, ensure input is enabled
           gameUI.setInputEnabled(true);
