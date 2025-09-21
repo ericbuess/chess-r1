@@ -2890,7 +2890,10 @@ class ChessUI {
       } else {
         // Check if the attempted move is valid before trying to make it
         const possibleMoves = this.game.getPossibleMoves(fromRow, fromCol);
+        console.log('[handleSquareSelection] Checking move from', fromRow, fromCol, 'to', logicalRow, logicalCol);
+        console.log('[handleSquareSelection] Possible moves:', possibleMoves.map(m => `(${m.row},${m.col})`).join(', '));
         const attemptedMove = possibleMoves.find(m => m.row === logicalRow && m.col === logicalCol);
+        console.log('[handleSquareSelection] Is valid move?', !!attemptedMove);
 
         if (attemptedMove) {
           // Move is valid, attempt to make it
