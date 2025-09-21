@@ -1923,9 +1923,16 @@ class ChessUI {
   async handleBotTurn() {
     // CRITICAL: Never trigger bot during redo
     if (this.game.isPerformingRedo) {
-      
+
       return;
     }
+
+    // Prevent multiple concurrent bot turns
+    if (this.isBotProcessing) {
+      console.log('Bot already processing, skipping duplicate handleBotTurn call');
+      return;
+    }
+    this.isBotProcessing = true;
 
     const gameMode = this.game.gameMode;
     const isBotTurn = this.game.isBotTurn();
@@ -2077,7 +2084,10 @@ class ChessUI {
 
         // Hide thinking indicator and re-enable input only after successful move
         this.showBotThinking(false);
-        
+
+        // Reset bot processing flag on successful move
+        this.isBotProcessing = false;
+
         // Check if game ended after bot move
         if (this.game.gameStatus === 'checkmate' || this.game.gameStatus === 'stalemate') {
           this.setInputEnabled(false); // Keep disabled for game end
@@ -2086,13 +2096,14 @@ class ChessUI {
           // Game continues - enable input for human's turn
           this.setInputEnabled(true);
         }
-        
+
       } else {
         // Hide thinking indicator and show error
         this.showBotThinking(false);
+        this.isBotProcessing = false; // Reset flag on failure
         this.showNotification(`Bot move failed - your turn`, 'error');
         this.setInputEnabled(true);
-        
+
         setTimeout(() => {
           this.hideInstructionLabel();
         }, 3000);
@@ -2106,6 +2117,9 @@ class ChessUI {
       setTimeout(() => {
         this.hideInstructionLabel();
       }, 3000);
+    } finally {
+      // Always reset the bot processing flag
+      this.isBotProcessing = false;
     }
   }
 
