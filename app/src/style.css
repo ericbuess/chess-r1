@@ -459,14 +459,14 @@ html, body {
     }
 }
 
-/* Chess piece styling - Enhanced for wooden look */
+/* Chess piece styling - Enhanced for R1 visibility */
 .chess-piece {
-    font-size: min(8vw, 7vh);
+    font-size: min(9vw, 8vh); /* Slightly larger for better visibility */
     /* Shadows now defined per color in .white and .black classes */
     transition: transform 0.03s ease;
     pointer-events: none;
-    -webkit-filter: drop-shadow(0.5px 0.5px 1px rgba(0, 0, 0, 0.2));
-    filter: drop-shadow(0.5px 0.5px 1px rgba(0, 0, 0, 0.2));
+    -webkit-filter: drop-shadow(0.3px 0.3px 0.5px rgba(0, 0, 0, 0.3)); /* Sharper shadow */
+    filter: drop-shadow(0.3px 0.3px 0.5px rgba(0, 0, 0, 0.3));
     position: relative;
     z-index: 2;
     /* iOS Safari fixes */
@@ -486,37 +486,37 @@ html, body {
 
 /* White pieces - white fill with black outline (same solid symbols as black) */
 .chess-piece.white {
-    color: #f5f5f5;  /* Slightly off-white to preserve internal details */
+    color: #ffffff;  /* Pure white for better contrast on small screen */
     text-shadow:
-        -0.5px -0.5px 0 #000000,
-        0.5px -0.5px 0 #000000,
-        -0.5px 0.5px 0 #000000,
-        0.5px 0.5px 0 #000000;
+        -0.3px -0.3px 0 #000000,
+        0.3px -0.3px 0 #000000,
+        -0.3px 0.3px 0 #000000,
+        0.3px 0.3px 0 #000000;
     background: none;
     font-weight: 900;
 }
 
 /* Make white pawns smaller on all browsers */
 .chess-piece.white[data-piece="pawn"] {
-    font-size: min(6vw, 5vh);
+    font-size: min(7vw, 6vh); /* Slightly larger for better visibility */
 }
 
 /* iOS Safari specific fix for white pieces */
 @supports (-webkit-touch-callout: none) {
     .chess-piece.white {
-        color: #f5f5f5;
+        color: #ffffff;
         text-shadow:
-            -1px -1px 0 #000000,
-            1px -1px 0 #000000,
-            -1px 1px 0 #000000,
-            1px 1px 0 #000000;
-        -webkit-text-stroke: 0.5px #000000;
+            -0.5px -0.5px 0 #000000,
+            0.5px -0.5px 0 #000000,
+            -0.5px 0.5px 0 #000000,
+            0.5px 0.5px 0 #000000;
+        -webkit-text-stroke: 0.3px #000000; /* Thinner stroke for cleaner shapes */
         font-weight: 900;
     }
 
     /* Make pawns smaller and centered */
     .chess-piece.white[data-piece="pawn"] {
-        font-size: min(6vw, 5vh);
+        font-size: min(7vw, 6vh); /* Slightly larger for visibility */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -529,17 +529,17 @@ html, body {
 .chess-piece.black {
     color: #000000;
     text-shadow:
-        -0.5px -0.5px 0 #ffffff,
-        0.5px -0.5px 0 #ffffff,
-        -0.5px 0.5px 0 #ffffff,
-        0.5px 0.5px 0 #ffffff;
+        -0.3px -0.3px 0 #f0f0f0,
+        0.3px -0.3px 0 #f0f0f0,
+        -0.3px 0.3px 0 #f0f0f0,
+        0.3px 0.3px 0 #f0f0f0;
     background: none;
     font-weight: 900;
 }
 
 /* Make black pawns smaller on all browsers */
 .chess-piece.black[data-piece="pawn"] {
-    font-size: min(6vw, 5vh);
+    font-size: min(7vw, 6vh); /* Slightly larger for visibility */
 }
 
 /* iOS Safari specific fix for black pieces */
@@ -547,17 +547,17 @@ html, body {
     .chess-piece.black {
         color: #000000;
         text-shadow:
-            -0.5px -0.5px 0 #ffffff,
-            0.5px -0.5px 0 #ffffff,
-            -0.5px 0.5px 0 #ffffff,
-            0.5px 0.5px 0 #ffffff;
-        -webkit-text-stroke: 0.3px #ffffff;
+            -0.3px -0.3px 0 #f0f0f0,
+            0.3px -0.3px 0 #f0f0f0,
+            -0.3px 0.3px 0 #f0f0f0,
+            0.3px 0.3px 0 #f0f0f0;
+        -webkit-text-stroke: 0.2px #f0f0f0; /* Thinner stroke for cleaner shapes */
         font-weight: 900;
     }
 
     /* Make pawns smaller and centered */
     .chess-piece.black[data-piece="pawn"] {
-        font-size: min(6vw, 5vh);
+        font-size: min(7vw, 6vh); /* Slightly larger for visibility */
         display: flex;
         align-items: center;
         justify-content: center;

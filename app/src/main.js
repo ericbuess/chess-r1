@@ -1961,16 +1961,40 @@ class ChessUI {
     // Update UI state to reflect bot's turn
     this.updateGameStateIndicators();
 
-    // Show notification after 4 seconds delay to avoid spam on fast moves
+    // Bot thinking messages that rotate
+    const thinkingMessages = [
+      'analyzing',
+      'considering options',
+      'thinking',
+      'contemplating',
+      'weighing moves',
+      'calculating',
+      'evaluating positions',
+      'planning strategy'
+    ];
+
+    // Show notification after 0.5 seconds delay for faster feedback on Mac
     let notificationShown = false;
+    let messageIndex = Math.floor(Math.random() * thinkingMessages.length);
+
     const notificationTimer = setTimeout(() => {
+      const botName = this.game.getBotDifficultyText();
       this.showNotification(
-        `${this.game.getBotDifficultyText()} is thinking...`,
+        `${botName} is ${thinkingMessages[messageIndex]}...`,
         'info',
-        10000 // Show for 10 seconds max
+        30000 // Show for 30 seconds max
       );
       notificationShown = true;
-    }, 4000); // 4 second delay
+
+      // Rotate messages every 2 seconds
+      this.thinkingInterval = setInterval(() => {
+        messageIndex = (messageIndex + 1) % thinkingMessages.length;
+        const label = document.getElementById('instruction-label');
+        if (label && !label.classList.contains('hidden')) {
+          label.textContent = `${botName} is ${thinkingMessages[messageIndex]}...`;
+        }
+      }, 2000);
+    }, 500); // 0.5 seconds for faster Mac testing
 
     try {
       // Add slight delay for initial moves to allow UI to settle
@@ -1981,8 +2005,12 @@ class ChessUI {
       // Execute bot move with enhanced error handling
       const botResult = await this.game.executeBotMove();
 
-      // Clear notification timer if bot finishes before 4 seconds
+      // Clear notification timer and interval if bot finishes
       clearTimeout(notificationTimer);
+      if (this.thinkingInterval) {
+        clearInterval(this.thinkingInterval);
+        this.thinkingInterval = null;
+      }
 
       // Hide notification if it was shown
       if (notificationShown) {
@@ -3844,9 +3872,20 @@ class ChessUI {
 // Physical Input Handling
 // ===========================================
 
-// Handle R1 scroll wheel events for undo/redo (reversed direction)
+// Handle R1 scroll wheel events for undo/redo (reversed direction) or menu navigation
 window.addEventListener('scrollUp', async () => {
-  
+
+
+  // Check if options menu is visible
+  const overlay = document.getElementById('options-overlay');
+  if (overlay && !overlay.classList.contains('hidden')) {
+    // Menu is open - handle menu scrolling
+    const optionsMenu = document.getElementById('options-menu');
+    if (optionsMenu) {
+      optionsMenu.scrollTop = Math.max(0, optionsMenu.scrollTop - 50); // Scroll up
+    }
+    return;
+  }
 
   if (chessGame && gameUI) {
     if (chessGame.allowUndo) {
@@ -3859,7 +3898,7 @@ window.addEventListener('scrollUp', async () => {
         }
       }
 
-      
+
       if (chessGame.redoMove()) {
         chessGame.selectedSquare = null; // Clear any selected piece
         // Removed updateBoardPerspective() - orientation is handled by data attributes now
@@ -3901,8 +3940,21 @@ window.addEventListener('scrollUp', async () => {
 });
 
 window.addEventListener('scrollDown', async () => {
-  
-  
+
+
+  // Check if options menu is visible
+  const overlay = document.getElementById('options-overlay');
+  if (overlay && !overlay.classList.contains('hidden')) {
+    // Menu is open - handle menu scrolling
+    const optionsMenu = document.getElementById('options-menu');
+    if (optionsMenu) {
+      optionsMenu.scrollTop = Math.min(
+        optionsMenu.scrollHeight - optionsMenu.clientHeight,
+        optionsMenu.scrollTop + 50
+      ); // Scroll down
+    }
+    return;
+  }
 
   if (chessGame && gameUI) {
     if (chessGame.allowUndo) {
@@ -4249,6 +4301,26 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Initialize chess game
   chessGame = new ChessGame();
   gameUI = new ChessUI(chessGame);
+
+  // Setup header tap zones for status indicator and menu
+  const gameHeader = document.getElementById('game-header');
+  if (gameHeader) {
+    gameHeader.addEventListener('click', (event) => {
+      const rect = gameHeader.getBoundingClientRect();
+      const clickY = event.clientY - rect.top;
+      const headerHeight = rect.height;
+
+      // Top 40% of header = status indicator (like 'i' key)
+      // Bottom 60% = open menu (like 'p' key)
+      if (clickY < headerHeight * 0.4) {
+        // Show status indicator - trigger longPressEnd event
+        window.dispatchEvent(new CustomEvent('longPressEnd'));
+      } else {
+        // Open menu - trigger sideClick event
+        window.dispatchEvent(new CustomEvent('sideClick'));
+      }
+    });
+  }
 
   // Initialize menu visibility based on default game mode
   const colorGroup = document.getElementById('color-group');
