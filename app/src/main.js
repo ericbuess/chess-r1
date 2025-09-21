@@ -2003,9 +2003,21 @@ class ChessUI {
         this.thinkingInterval = setInterval(() => {
           rotationCount++;
           messageIndex = (messageIndex + 1) % thinkingMessages.length;
-          // Add ellipsis animation based on rotation count
-          const dots = '.'.repeat((rotationCount % 3) + 1);
-          label.textContent = `${botName} is ${thinkingMessages[messageIndex]}${dots}`;
+          // Get fresh reference to label element each time
+          const currentLabel = document.getElementById('instruction-label');
+          if (currentLabel && !currentLabel.classList.contains('hidden')) {
+            // Add ellipsis animation based on rotation count
+            const dots = '.'.repeat((rotationCount % 3) + 1);
+            const newMessage = `${botName} is ${thinkingMessages[messageIndex]}${dots}`;
+            console.log('Rotating message to:', newMessage); // Debug log
+            currentLabel.textContent = newMessage;
+            // Ensure styles persist
+            currentLabel.style.backgroundColor = '#FE5F00';
+            currentLabel.style.color = 'white';
+            currentLabel.style.fontWeight = 'bold';
+          } else {
+            console.log('Label not found or hidden'); // Debug log
+          }
         }, 500); // Rotate every 0.5 seconds for testing
       }
     }, 500); // 0.5 seconds for faster Mac testing
