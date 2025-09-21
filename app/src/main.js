@@ -3128,6 +3128,8 @@ class ChessUI {
           } else {
             this.game.newGame();
             this.onNewGameStart();
+            // Save minimal state for the new mode even with no moves
+            await this.game.autoSave();
             this.showMessage(`Switched to ${radio.value === 'human-vs-human' ? 'Human vs Human' : 'Human vs Bot'} - New game started!`);
           }
 
@@ -3980,6 +3982,18 @@ window.addEventListener('longPressEnd', () => {
 
       const difficultyText = difficultyDescriptions[difficulty] || 'normal';
       statusMessage += `\nPlaying against ${botName} (bot - ${difficultyText})`;
+    }
+
+    // Add orientation mode info for human vs human games
+    if (chessGame && chessGame.gameMode === 'human-vs-human' && chessGame.orientationMode !== 'none') {
+      const orientationDescriptions = {
+        'handoff': 'Handoff mode (pass device)',
+        'table': 'Table mode (sitting across)'
+      };
+      const orientationText = orientationDescriptions[chessGame.orientationMode];
+      if (orientationText) {
+        statusMessage += `\n${orientationText}`;
+      }
     }
 
     gameUI.showNotification(statusMessage, 'info', 3000);
