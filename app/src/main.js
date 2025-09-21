@@ -3921,15 +3921,33 @@ const DEBOUNCE_DELAY = 300; // 300ms debounce
 window.addEventListener('sideClick', () => {
   const now = Date.now();
   if (now - lastSideClickTime < DEBOUNCE_DELAY) {
-    
+
     return;
   }
   lastSideClickTime = now;
-  
-  
-  
+
+
+
   if (chessGame && gameUI) {
-    gameUI.showOptionsMenu();
+    // Check if options menu is already visible
+    const overlay = document.getElementById('options-overlay');
+    if (overlay && !overlay.classList.contains('hidden')) {
+      // Menu is open - check which button should be activated
+      const backBtn = document.getElementById('back-btn');
+      const newGameBtn = document.getElementById('new-game-btn');
+
+      // Check if back button is enabled
+      if (backBtn && !backBtn.disabled) {
+        // Back to Game is available - close menu
+        gameUI.hideOptionsMenu();
+      } else if (newGameBtn && !newGameBtn.disabled) {
+        // Back to Game is disabled - start new game
+        gameUI.confirmNewGame();
+      }
+    } else {
+      // Menu is closed - open it
+      gameUI.showOptionsMenu();
+    }
   }
 });
 
