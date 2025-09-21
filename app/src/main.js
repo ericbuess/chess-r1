@@ -1952,12 +1952,14 @@ class ChessUI {
 
     // Show notification IMMEDIATELY for harder bots (difficulty 3+ takes longer)
     // This prevents UI thread blocking from hiding the notification
+    let notificationShown = false;
     if (this.game.botDifficulty >= 3) {
       this.showNotification(
         `${this.game.getBotDifficultyText()} is analyzing deeply...`,
         'info',
         10000 // Show for 10 seconds max (bot should finish before this)
       );
+      notificationShown = true;
     }
 
     try {
@@ -1968,11 +1970,6 @@ class ChessUI {
 
       // Execute bot move with enhanced error handling
       const botResult = await this.game.executeBotMove();
-
-      // Clear the thinking notification timer if bot finishes quickly
-      if (thinkingNotificationTimer) {
-        clearTimeout(thinkingNotificationTimer);
-      }
 
       // If notification was shown, hide it immediately
       if (notificationShown) {
@@ -2011,7 +2008,7 @@ class ChessUI {
         } else {
           // Game continues - enable input for human's turn
           this.setInputEnabled(true);
-          }
+        }
         
       } else {
         // Hide thinking indicator and show error
