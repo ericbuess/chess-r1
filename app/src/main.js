@@ -3004,13 +3004,29 @@ class ChessUI {
       // Select piece if it belongs to current player
       const piece = this.game.board[logicalRow][logicalCol];
 
+      console.log('[handleSquareSelection] Piece selection check:', {
+        logicalRow,
+        logicalCol,
+        piece: piece ? `${piece.color} ${piece.type}` : 'null',
+        pieceColor: piece?.color,
+        humanColor: this.game.humanColor,
+        currentPlayer: this.game.currentPlayer,
+        botCancelled: this.botCancelled,
+        gameBotWasCancelled: this.game.botWasCancelled
+      });
+
       // FIX: When bot is cancelled, allow selecting human pieces regardless of whose turn it is
       const canSelectPiece = (this.botCancelled || this.game.botWasCancelled)
         ? (piece && piece.color === this.game.humanColor)  // After bot cancel, select human pieces
         : (piece && piece.color === this.game.currentPlayer); // Normal: select current player's pieces
 
+      console.log('[handleSquareSelection] canSelectPiece:', canSelectPiece);
+
       if (canSelectPiece) {
+        console.log('[handleSquareSelection] SELECTING PIECE at', logicalRow, logicalCol);
         this.game.selectedSquare = { row: logicalRow, col: logicalCol };
+      } else {
+        console.log('[handleSquareSelection] CANNOT SELECT - wrong color or no piece');
       }
     }
     
