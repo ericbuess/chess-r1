@@ -2305,6 +2305,11 @@ class ChessUI {
     // Also mark it in the game state so it persists
     if (this.game) {
       console.log('[cancelBotThinking] Setting game.botWasCancelled = true');
+      console.log('[cancelBotThinking] Current game state:');
+      console.log('  - currentPlayer:', this.game.currentPlayer);
+      console.log('  - humanColor:', this.game.humanColor);
+      console.log('  - gameStatus:', this.game.gameStatus);
+      console.log('  - stateHistory length:', this.game.stateHistory?.length);
       this.game.botWasCancelled = true;
     }
 
@@ -2807,7 +2812,15 @@ class ChessUI {
 
     // In human-vs-bot mode, prevent human from moving during bot's turn
     // BUT allow moves if bot was cancelled via undo
-    if (this.game.gameMode === 'human-vs-bot' && this.game.isBotTurn() && !this.botCancelled) {
+    console.log('[handleSquareSelection] Bot turn check:', {
+      gameMode: this.game.gameMode,
+      isBotTurn: this.game.isBotTurn(),
+      botCancelled: this.botCancelled,
+      botWasCancelled: this.game.botWasCancelled,
+      currentPlayer: this.game.currentPlayer,
+      humanColor: this.game.humanColor
+    });
+    if (this.game.gameMode === 'human-vs-bot' && this.game.isBotTurn() && !this.botCancelled && !this.game.botWasCancelled) {
       // If we're in undo/redo state, allow the user to make a move for bot
       if (this.game.isInUndoRedoState) {
         // Convert display coordinates to logical coordinates first
@@ -4304,7 +4317,9 @@ window.addEventListener('scrollDown', async () => {
       }
 
       // Now undo the human move (or the only move if no bot cancellation)
+      console.log('[scrollDown] Before undo - currentPlayer:', chessGame.currentPlayer, 'humanColor:', chessGame.humanColor);
       const undoResult = chessGame.undoMove();
+      console.log('[scrollDown] After undo - currentPlayer:', chessGame.currentPlayer, 'humanColor:', chessGame.humanColor);
 
       // Determine if we're undoing a bot move for animation purposes
       let isUndoingBotMove = false;
