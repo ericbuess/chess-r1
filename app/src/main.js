@@ -1923,6 +1923,8 @@ class ChessUI {
   // Handle bot turn in human-vs-bot mode
   // Enhanced bot move activation system for initial and subsequent turns
   async handleBotTurn() {
+    console.log('handleBotTurn called, isBotProcessing =', this.isBotProcessing); // Debug
+
     // CRITICAL: Never trigger bot during redo
     if (this.game.isPerformingRedo) {
 
@@ -1934,6 +1936,8 @@ class ChessUI {
       console.log('Bot already processing, skipping duplicate handleBotTurn call');
       return;
     }
+
+    console.log('Setting isBotProcessing to true'); // Debug
     this.isBotProcessing = true;
 
     const gameMode = this.game.gameMode;
@@ -1994,6 +1998,15 @@ class ChessUI {
     let notificationShown = false;
     let messageIndex = Math.floor(Math.random() * thinkingMessages.length);
     let rotationCount = 0;
+
+    console.log('Setting up notification timer...'); // Debug
+
+    // Clear any existing notification setup first
+    if (this.thinkingInterval) {
+      console.log('WARNING: Existing interval found, clearing it:', this.thinkingInterval);
+      clearInterval(this.thinkingInterval);
+      this.thinkingInterval = null;
+    }
 
     const notificationTimer = setTimeout(() => {
       // Directly control the label instead of using showNotification to avoid conflicts
