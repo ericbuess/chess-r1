@@ -1987,31 +1987,31 @@ class ChessUI {
     let rotationCount = 0;
 
     const notificationTimer = setTimeout(() => {
+      // Directly control the label instead of using showNotification to avoid conflicts
+      const label = document.getElementById('instruction-label');
       const botName = this.game.getBotDifficultyText();
-      this.showNotification(
-        `${botName} is ${thinkingMessages[messageIndex]}...`,
-        'info',
-        30000 // Show for 30 seconds max
-      );
-      notificationShown = true;
-    }, 500); // 0.5 seconds for faster Mac testing
+      if (label) {
+        label.textContent = `${botName} is ${thinkingMessages[messageIndex]}...`;
+        label.classList.remove('hidden');
+        // Apply info notification styling
+        label.style.backgroundColor = '#FE5F00';
+        label.style.color = 'white';
+        label.style.fontWeight = 'bold';
+        notificationShown = true;
 
-    // Start rotating messages immediately after first message shows
-    // This runs independently of the initial notification timer
-    const messageRotationTimer = setTimeout(() => {
-      // Store interval directly to ensure it's accessible for cleanup
-      this.thinkingInterval = setInterval(() => {
-        rotationCount++;
-        messageIndex = (messageIndex + 1) % thinkingMessages.length;
-        const label = document.getElementById('instruction-label');
-        const botName = this.game.getBotDifficultyText();
-        if (label && !label.classList.contains('hidden')) {
+        // Start rotating messages immediately after showing
+        this.thinkingInterval = setInterval(() => {
+          rotationCount++;
+          messageIndex = (messageIndex + 1) % thinkingMessages.length;
           // Add ellipsis animation based on rotation count
           const dots = '.'.repeat((rotationCount % 3) + 1);
           label.textContent = `${botName} is ${thinkingMessages[messageIndex]}${dots}`;
-        }
-      }, 500); // Rotate every 0.5 seconds for testing
-    }, 1000); // Start rotation 1 second after bot starts thinking
+        }, 500); // Rotate every 0.5 seconds for testing
+      }
+    }, 500); // 0.5 seconds for faster Mac testing
+
+    // No need for separate rotation timer anymore
+    const messageRotationTimer = null;
 
     try {
       // Add slight delay for initial moves to allow UI to settle
@@ -2024,7 +2024,6 @@ class ChessUI {
 
       // Clear notification timer and interval if bot finishes
       clearTimeout(notificationTimer);
-      clearTimeout(messageRotationTimer);
       if (this.thinkingInterval) {
         clearInterval(this.thinkingInterval);
         this.thinkingInterval = null;
@@ -2033,21 +2032,13 @@ class ChessUI {
       // Hide notification if it was shown
       if (notificationShown) {
         const label = document.getElementById('instruction-label');
-        if (label && !label.classList.contains('hidden')) {
+        if (label) {
           label.classList.add('hidden');
-        }
-      }
-
-      // If notification was shown, hide it immediately
-      if (notificationShown) {
-        const label = document.getElementById('instruction-label');
-        if (label && !label.classList.contains('hidden')) {
-          label.classList.add('hidden');
-          // Clear any notification timeout to prevent conflicts
-          if (this.notificationTimeout) {
-            clearTimeout(this.notificationTimeout);
-            this.notificationTimeout = null;
-          }
+          // Reset styles
+          label.style.backgroundColor = '';
+          label.style.color = '';
+          label.style.fontWeight = '';
+          label.textContent = '';
         }
       }
       
