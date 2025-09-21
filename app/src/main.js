@@ -353,7 +353,12 @@ class ChessGame {
       // IMPORTANT: aiMove() directly executes the move in the engine!
       // It doesn't just return a move suggestion - it plays it
       // Difficulty: 0 = random, 1 = easy, 2 = medium, 3 = hard, 4 = expert
-      const aiMove = this.engine.aiMove(this.botDifficulty);
+      // Wrap in Promise with setTimeout to allow UI updates before blocking calculation
+      const aiMove = await new Promise(resolve => {
+        setTimeout(() => {
+          resolve(this.engine.aiMove(this.botDifficulty));
+        }, 0);
+      });
       
       
       // The move has already been made in the engine
@@ -1950,17 +1955,20 @@ class ChessUI {
     // Update UI state to reflect bot's turn
     this.updateGameStateIndicators();
 
-    // Show notification IMMEDIATELY for harder bots (difficulty 3+ takes longer)
-    // This prevents UI thread blocking from hiding the notification
+    // Show notification immediately for testing (normally after 5000ms on R1)
+    // Always show notification regardless of bot difficulty for testing
     let notificationShown = false;
-    if (this.game.botDifficulty >= 3) {
-      this.showNotification(
-        `${this.game.getBotDifficultyText()} is analyzing deeply...`,
-        'info',
-        10000 // Show for 10 seconds max (bot should finish before this)
-      );
-      notificationShown = true;
-    }
+
+    // Show notification immediately
+    this.showNotification(
+      `${this.game.getBotDifficultyText()} is thinking...`,
+      'info',
+      3000 // Show for 3 seconds max during testing
+    );
+    notificationShown = true;
+
+    // Force a DOM update to ensure notification can render before bot calculation
+    await new Promise(resolve => setTimeout(resolve, 10));
 
     try {
       // Add slight delay for initial moves to allow UI to settle
@@ -1970,6 +1978,14 @@ class ChessUI {
 
       // Execute bot move with enhanced error handling
       const botResult = await this.game.executeBotMove();
+
+      // Hide notification if it was shown
+      if (notificationShown) {
+        const label = document.getElementById('instruction-label');
+        if (label && !label.classList.contains('hidden')) {
+          label.classList.add('hidden');
+        }
+      }
 
       // If notification was shown, hide it immediately
       if (notificationShown) {
@@ -3918,23 +3934,9 @@ window.addEventListener('sideClick', () => {
   }
 });
 
-window.addEventListener('longPressStart', () => {
-  
-});
-
-window.addEventListener('longPressEnd', () => {
-  
-  // Long press triggers new game
-  if (chessGame && gameUI) {
-    gameUI.clearSavedState();
-    chessGame.newGame();
-    gameUI.updateDisplay();
-    // Don't save initial game state - let it save after first move
-    gameUI.showMessage('New game started!');
-    
-    sendGameEvent('new_game_started');
-  }
-});
+// Long press for new game removed - not a desired feature
+// window.addEventListener('longPressStart', () => {});
+// window.addEventListener('longPressEnd', () => {});
 
 // ===========================================
 // Plugin Message Handling
