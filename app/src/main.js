@@ -4423,6 +4423,14 @@ window.addEventListener('scrollDown', async () => {
           // Extra clearing when bot was cancelled to prevent auto-moves
           chessGame.selectedSquare = null;
           chessGame.possibleMoves = [];
+
+          // IMPORTANT: Clear the botWasCancelled flag after successful undo
+          // This allows the next move to work properly
+          setTimeout(() => {
+            chessGame.botWasCancelled = false;
+            gameUI.botCancelled = false;
+          }, 100);
+
           // Also clear after a brief delay to catch any async updates
           setTimeout(() => {
             chessGame.selectedSquare = null;
