@@ -17,6 +17,8 @@ html, body {
     overflow: hidden;
     -webkit-user-select: none;
     user-select: none;
+    touch-action: manipulation; /* Prevent double-tap zoom and other delays */
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlights globally */
 }
 
 #app {
@@ -376,11 +378,19 @@ html, body {
     justify-content: center;
     cursor: pointer;
     font-size: 6vw;
-    transition: all 0.05s ease;
+    transition: transform 0.02s ease;
+    touch-action: manipulation; /* Prevent browser tap delays */
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
 }
 
 .chess-square:active {
     transform: scale(0.95);
+}
+
+/* Optimized touch feedback for better responsiveness */
+.chess-square.touch-active {
+    transform: scale(0.92);
+    opacity: 0.85;
 }
 
 .chess-square.selected::before {

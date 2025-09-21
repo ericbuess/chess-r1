@@ -11,7 +11,7 @@ import * as ChessEngine from 'js-chess-engine';
 // Import sound data directly to avoid 403 path issues on Rabbit device
 import { woodenSoundData } from './woodenSoundData.js';
 window.jsChessEngine = ChessEngine;
-console.log('Chess engine modules:', Object.keys(ChessEngine)); // Forces usage
+// console.log('Chess engine modules:', Object.keys(ChessEngine)); // Forces usage - commented for performance
 
 // ChessConverter class to translate between our format and js-chess-engine format
 class ChessConverter {
@@ -1186,7 +1186,7 @@ class ChessGame {
 
         audioInitialized = true;
       } catch (e) {
-        console.log('Audio initialization failed:', e);
+        // console.log('Audio initialization failed:', e); // Commented for performance
       }
     };
 
@@ -1749,11 +1749,11 @@ class ChessUI {
         const isLight = (row + col) % 2 === 0;
         square.classList.add(isLight ? 'light-square' : 'dark-square');
         
-        // Enhanced touch support for R1 device
+        // Enhanced touch support for R1 device with optimized performance
         square.addEventListener('click', async (e) => await this.handleSquareClick(e));
-        square.addEventListener('touchstart', (e) => this.handleTouchStart(e));
-        square.addEventListener('touchend', async (e) => await this.handleTouchEnd(e));
-        square.addEventListener('touchcancel', (e) => this.handleTouchCancel(e));
+        square.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: false });
+        square.addEventListener('touchend', async (e) => await this.handleTouchEnd(e), { passive: false });
+        square.addEventListener('touchcancel', (e) => this.handleTouchCancel(e), { passive: false });
         
         this.boardElement.appendChild(square);
       }
@@ -1772,21 +1772,23 @@ class ChessUI {
     event.preventDefault();
     this.touchStartTime = Date.now();
     this.touchTarget = event.target;
-    
-    // Add visual feedback for touch
-    event.target.style.opacity = '0.7';
+
+    // Add immediate visual feedback using class instead of inline style
+    if (event.target.classList.contains('chess-square')) {
+      event.target.classList.add('touch-active');
+    }
   }
 
   async handleTouchEnd(event) {
     event.preventDefault();
-    
-    // Remove visual feedback
-    if (this.touchTarget) {
-      this.touchTarget.style.opacity = '';
+
+    // Remove visual feedback immediately
+    if (this.touchTarget && this.touchTarget.classList.contains('chess-square')) {
+      this.touchTarget.classList.remove('touch-active');
     }
-    
-    // Only process if touch was quick (not a long press)
-    if (this.touchStartTime && Date.now() - this.touchStartTime < 500) {
+
+    // Process touch immediately for better responsiveness (reduced from 500ms to 300ms)
+    if (this.touchStartTime && Date.now() - this.touchStartTime < 300) {
       // Get the square from the touch target
       let square = event.target;
       while (square && !square.dataset.row) {
@@ -1806,10 +1808,10 @@ class ChessUI {
 
   handleTouchCancel(event) {
     event.preventDefault();
-    
-    // Remove visual feedback
-    if (this.touchTarget) {
-      this.touchTarget.style.opacity = '';
+
+    // Remove visual feedback immediately
+    if (this.touchTarget && this.touchTarget.classList.contains('chess-square')) {
+      this.touchTarget.classList.remove('touch-active');
     }
     
     this.touchStartTime = null;
@@ -1948,21 +1950,14 @@ class ChessUI {
     // Update UI state to reflect bot's turn
     this.updateGameStateIndicators();
 
-    // Show delayed notification for harder bots (difficulty 3+ takes longer)
-    let thinkingNotificationTimer = null;
-    let notificationShown = false;
-
+    // Show notification IMMEDIATELY for harder bots (difficulty 3+ takes longer)
+    // This prevents UI thread blocking from hiding the notification
     if (this.game.botDifficulty >= 3) {
-      thinkingNotificationTimer = setTimeout(() => {
-        // Store flag that notification was shown
-        notificationShown = true;
-        console.log(`Showing bot thinking notification for ${this.game.getBotDifficultyText()}`);
-        this.showNotification(
-          `${this.game.getBotDifficultyText()} is analyzing deeply...`,
-          'info',
-          10000 // Show for 10 seconds max (bot should finish before this)
-        );
-      }, 5000); // Show after 5 seconds
+      this.showNotification(
+        `${this.game.getBotDifficultyText()} is analyzing deeply...`,
+        'info',
+        10000 // Show for 10 seconds max (bot should finish before this)
+      );
     }
 
     try {
@@ -4038,68 +4033,32 @@ function calculateChecksum(str) {
   return Math.abs(hash).toString(16);
 }
 
-// Cookie functions for persistent storage
-function setCookie(name, value, days = 365) {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
-  const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
-  const encodedValue = encodeURIComponent(stringValue);
-  const cookieString = `${name}=${encodedValue}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
-
-  // Check cookie size (4KB limit)
-  if (cookieString.length > 4096) {
-    
-    // Fallback to localStorage for large data
-    try {
-      localStorage.setItem(name, stringValue);
-      
-      return;
-    } catch (e) {
-      
-    }
+// Storage helper for debugging (matches working R1 version)
+function storageLog(operation, method, success, error = null) {
+  const timestamp = new Date().toISOString();
+  if (success) {
+    console.log(`[${timestamp}] Storage ${operation} via ${method}: SUCCESS`);
+  } else {
+    console.error(`[${timestamp}] Storage ${operation} via ${method}: FAILED`, error || '');
   }
-
-  document.cookie = cookieString;
-  
 }
 
-function getCookie(name) {
-  const nameEQ = name + "=";
-  const cookies = document.cookie.split(';');
-  for (let i = 0; i < cookies.length; i++) {
-    let c = cookies[i].trim();
-    if (c.indexOf(nameEQ) === 0) {
-      try {
-        const value = decodeURIComponent(c.substring(nameEQ.length));
-        // Try to parse as JSON, if it fails return as string
-        try {
-          return JSON.parse(value);
-        } catch {
-          return value;
-        }
-      } catch (e) {
-        
-        return null;
-      }
-    }
-  }
-  return null;
-}
-
-// Save data to persistent storage with robust error handling
+// Save data to persistent storage (matches working R1 version - no cookies)
 async function saveToStorage(key, value) {
   // Validate input
   if (!key || typeof key !== 'string') {
+    storageLog('SAVE', 'validation', false, 'Invalid key');
     return false;
   }
-  
+
   if (value === undefined || value === null) {
+    storageLog('SAVE', 'validation', false, 'Invalid value');
     return false;
   }
 
   // Enhanced creationStorage availability check
-  const creationStorageAvailable = window.creationStorage && 
-                                   window.creationStorage.plain && 
+  const creationStorageAvailable = window.creationStorage &&
+                                   window.creationStorage.plain &&
                                    typeof window.creationStorage.plain.setItem === 'function';
 
   if (creationStorageAvailable) {
@@ -4107,34 +4066,33 @@ async function saveToStorage(key, value) {
       const jsonString = JSON.stringify(value);
       const encoded = btoa(jsonString);
       await window.creationStorage.plain.setItem(key, encoded);
+      storageLog('SAVE', 'creationStorage', true);
       return true;
     } catch (e) {
-      }
+      storageLog('SAVE', 'creationStorage', false, e);
+      // Fall through to localStorage
+    }
   }
 
-  // Try cookies next
-  try {
-    setCookie(key, value);
-    return true;
-  } catch (e) {
-    }
-
-  // Final fallback to localStorage
+  // Direct fallback to localStorage (no cookies - matches working version)
   try {
     const jsonString = JSON.stringify(value);
     localStorage.setItem(key, jsonString);
+    storageLog('SAVE', 'localStorage', true);
     return true;
   } catch (e) {
-    }
+    storageLog('SAVE', 'localStorage', false, e);
+    console.error('All storage methods failed for key:', key);
+  }
 
   return false;
 }
 
-// Load data from persistent storage
+// Load data from persistent storage (matches working R1 version - no cookies)
 async function loadFromStorage(key) {
   // Enhanced creationStorage availability check
-  const creationStorageAvailable = window.creationStorage && 
-                                   window.creationStorage.plain && 
+  const creationStorageAvailable = window.creationStorage &&
+                                   window.creationStorage.plain &&
                                    typeof window.creationStorage.plain.getItem === 'function';
 
   if (creationStorageAvailable) {
@@ -4143,31 +4101,28 @@ async function loadFromStorage(key) {
       if (stored) {
         const decoded = atob(stored);
         const parsed = JSON.parse(decoded);
+        storageLog('LOAD', 'creationStorage', true);
         return parsed;
       }
     } catch (e) {
-      }
+      storageLog('LOAD', 'creationStorage', false, e);
+      // Fall through to localStorage
+    }
   }
 
-  // Try cookies next
-  try {
-    const cookieValue = getCookie(key);
-    if (cookieValue) {
-      return cookieValue;
-    }
-  } catch (e) {
-    }
-
-  // Final fallback to localStorage
+  // Direct fallback to localStorage (no cookies - matches working version)
   try {
     const stored = localStorage.getItem(key);
     if (stored) {
       const parsed = JSON.parse(stored);
+      storageLog('LOAD', 'localStorage', true);
       return parsed;
     }
   } catch (e) {
-    }
+    storageLog('LOAD', 'localStorage', false, e);
+  }
 
+  console.log('No saved data found for key:', key);
   return null;
 }
 
