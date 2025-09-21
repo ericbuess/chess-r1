@@ -120,7 +120,7 @@ The R1 provides special hardware controls:
 | Touch Screen | `click`, `touch*` | Primary interaction |
 | Scroll Wheel | `scrollUp`, `scrollDown` | Navigation/actions |
 | PTT Button | `sideClick` | Menu/options |
-| PTT Long Press | `longPressStart/End` | Special actions |
+| PTT Long Press | `longPressStart/End` | Game/bot info |
 
 ### Environment Detection
 ```javascript

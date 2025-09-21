@@ -152,7 +152,7 @@ console.log('Chess engine modules:', Object.keys(ChessEngine));
 - **R1 Hardware Integration**:
   - Scroll wheel → Undo/Redo
   - PTT button → Options menu
-  - Long press PTT → New game
+  - Long press PTT → Show status indicator
 - **Touch Controls** for piece movement
 - **Auto-save** between sessions
 - **Sound Effects** for moves
@@ -167,7 +167,7 @@ The app ALREADY contains these mappings - DO NOT duplicate:
 | Scroll up | `scrollUp` | Redo move |
 | Scroll down | `scrollDown` | Undo move |
 | PTT button | `sideClick` | Options menu |
-| PTT long press | `longPressStart/End` | New game |
+| PTT long press | `longPressStart/End` | Show status (version & bot info) |
 
 ## 🔧 Technical Details
 
