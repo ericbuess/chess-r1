@@ -2245,9 +2245,15 @@ class ChessUI {
         }
 
       } else {
-        // Hide thinking indicator and show error
+        // Hide thinking indicator
         this.showBotThinking(false);
-        this.showNotification(`Bot move failed - your turn`, 'error');
+
+        // Only show error if it wasn't a cancellation
+        // When bot is cancelled via undo, we already show a cancellation message
+        if (!this.game.botWasCancelled) {
+          this.showNotification(`Bot move failed - your turn`, 'error');
+        }
+
         this.setInputEnabled(true);
 
         setTimeout(() => {
