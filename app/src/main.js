@@ -4058,26 +4058,14 @@ function calculateChecksum(str) {
   return Math.abs(hash).toString(16);
 }
 
-// Storage helper for debugging (matches working R1 version)
-function storageLog(operation, method, success, error = null) {
-  const timestamp = new Date().toISOString();
-  if (success) {
-    console.log(`[${timestamp}] Storage ${operation} via ${method}: SUCCESS`);
-  } else {
-    console.error(`[${timestamp}] Storage ${operation} via ${method}: FAILED`, error || '');
-  }
-}
-
 // Save data to persistent storage (matches working R1 version - no cookies)
 async function saveToStorage(key, value) {
   // Validate input
   if (!key || typeof key !== 'string') {
-    storageLog('SAVE', 'validation', false, 'Invalid key');
     return false;
   }
 
   if (value === undefined || value === null) {
-    storageLog('SAVE', 'validation', false, 'Invalid value');
     return false;
   }
 
@@ -4091,10 +4079,8 @@ async function saveToStorage(key, value) {
       const jsonString = JSON.stringify(value);
       const encoded = btoa(jsonString);
       await window.creationStorage.plain.setItem(key, encoded);
-      storageLog('SAVE', 'creationStorage', true);
       return true;
     } catch (e) {
-      storageLog('SAVE', 'creationStorage', false, e);
       // Fall through to localStorage
     }
   }
@@ -4103,11 +4089,9 @@ async function saveToStorage(key, value) {
   try {
     const jsonString = JSON.stringify(value);
     localStorage.setItem(key, jsonString);
-    storageLog('SAVE', 'localStorage', true);
     return true;
   } catch (e) {
-    storageLog('SAVE', 'localStorage', false, e);
-    console.error('All storage methods failed for key:', key);
+    // Storage failed
   }
 
   return false;
@@ -4126,11 +4110,9 @@ async function loadFromStorage(key) {
       if (stored) {
         const decoded = atob(stored);
         const parsed = JSON.parse(decoded);
-        storageLog('LOAD', 'creationStorage', true);
         return parsed;
       }
     } catch (e) {
-      storageLog('LOAD', 'creationStorage', false, e);
       // Fall through to localStorage
     }
   }
@@ -4140,14 +4122,11 @@ async function loadFromStorage(key) {
     const stored = localStorage.getItem(key);
     if (stored) {
       const parsed = JSON.parse(stored);
-      storageLog('LOAD', 'localStorage', true);
       return parsed;
     }
   } catch (e) {
-    storageLog('LOAD', 'localStorage', false, e);
+    // Storage failed
   }
-
-  console.log('No saved data found for key:', key);
   return null;
 }
 
