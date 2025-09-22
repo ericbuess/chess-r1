@@ -3985,20 +3985,14 @@ class ChessUI {
   }
 
   async loadGameState() {
-    console.log('[DEBUG] Starting loadGameState()');
     try {
       // First check what was the last game mode used
       const lastModeData = await loadFromStorage('last_game_mode');
-      console.log('[DEBUG] Last mode data:', lastModeData);
       const preferredMode = lastModeData?.mode || null;
-
-      
 
       // Load states from both game modes
       const humanVsBotKey = 'chess_game_state_human_vs_bot';
       const humanVsHumanKey = 'chess_game_state_human_vs_human';
-
-      
 
       const humanVsBotState = await loadFromStorage(humanVsBotKey);
       const humanVsHumanState = await loadFromStorage(humanVsHumanKey);
