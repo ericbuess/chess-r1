@@ -215,30 +215,37 @@ class ChessGame {
         this.gameStatus === 'check', this.gameStatus === 'checkmate');
       const commentary = this.generateMoveCommentary(fromRow, fromCol, toRow, toCol, movedPiece, targetPiece, null);
 
-      // Use unified state recording method
+      // Capture sound metadata for faithful replay
+      const soundsPlayed = {};
+
+      // Play action sound (capture or move) and record what was played
+      if (isCapture) {
+        const indices = this.playSound('capture');
+        if (indices) soundsPlayed.action = { type: 'capture', indices };
+      } else {
+        const index = this.playSound('move');
+        if (typeof index === 'number') soundsPlayed.action = { type: 'move', index };
+      }
+
+      // Play status sound with delay if there was a capture and record
+      if (this.gameStatus === 'checkmate') {
+        soundsPlayed.status = 'checkmate';
+        setTimeout(() => this.playSound('checkmate'), isCapture ? 100 : 0);
+      } else if (this.gameStatus === 'check') {
+        soundsPlayed.status = 'check';
+        setTimeout(() => this.playSound('check'), isCapture ? 100 : 0);
+      }
+
+      // Use unified state recording method with sound metadata
       this.recordGameState({
         from: { row: fromRow, col: fromCol },
         to: { row: toRow, col: toCol },
         piece: movedPiece,
         captured: targetPiece,
         notation: notation,
-        commentary: commentary
+        commentary: commentary,
+        sounds: Object.keys(soundsPlayed).length > 0 ? soundsPlayed : null
       });
-
-      // Play sound - action first, then status
-      // Play action sound (capture or move)
-      if (isCapture) {
-        this.playSound('capture');
-      } else {
-        this.playSound('move');
-      }
-
-      // Play status sound with delay if there was a capture
-      if (this.gameStatus === 'checkmate') {
-        setTimeout(() => this.playSound('checkmate'), isCapture ? 100 : 0);
-      } else if (this.gameStatus === 'check') {
-        setTimeout(() => this.playSound('check'), isCapture ? 100 : 0);
-      }
 
       // Auto-save after successful move
       await this.autoSave();
@@ -417,30 +424,37 @@ class ChessGame {
         const commentary = this.generateMoveCommentary(fromCoords.row, fromCoords.col, toCoords.row, toCoords.col,
           movedPiece, capturedPiece, null);
 
-        // Use unified state recording method
+        // Capture sound metadata for faithful replay
+        const soundsPlayed = {};
+
+        // Play action sound (capture or move) and record what was played
+        if (capturedPiece) {
+          const indices = this.playSound('capture');
+          if (indices) soundsPlayed.action = { type: 'capture', indices };
+        } else {
+          const index = this.playSound('move');
+          if (typeof index === 'number') soundsPlayed.action = { type: 'move', index };
+        }
+
+        // Play status sound with delay if there was a capture and record
+        if (this.gameStatus === 'checkmate') {
+          soundsPlayed.status = 'checkmate';
+          setTimeout(() => this.playSound('checkmate'), capturedPiece ? 100 : 0);
+        } else if (this.gameStatus === 'check') {
+          soundsPlayed.status = 'check';
+          setTimeout(() => this.playSound('check'), capturedPiece ? 100 : 0);
+        }
+
+        // Use unified state recording method with sound metadata
         this.recordGameState({
           from: fromCoords,
           to: toCoords,
           piece: movedPiece,
           captured: capturedPiece,
           notation: notation,
-          commentary: commentary
+          commentary: commentary,
+          sounds: Object.keys(soundsPlayed).length > 0 ? soundsPlayed : null
         });
-        
-        // Play appropriate sound - action first, then status
-        // Play action sound (capture or move)
-        if (capturedPiece) {
-          this.playSound('capture');
-        } else {
-          this.playSound('move');
-        }
-
-        // Play status sound with delay if there was a capture
-        if (this.gameStatus === 'checkmate') {
-          setTimeout(() => this.playSound('checkmate'), capturedPiece ? 100 : 0);
-        } else if (this.gameStatus === 'check') {
-          setTimeout(() => this.playSound('check'), capturedPiece ? 100 : 0);
-        }
 
         // Auto-save after successful bot move
         await this.autoSave();
@@ -562,6 +576,7 @@ class ChessGame {
       },
       notation: moveData.notation,
       commentary: moveData.commentary,
+      sounds: moveData.sounds || null, // Store sound metadata for faithful replay
       timestamp: Date.now()
     };
 
@@ -1276,6 +1291,7 @@ class ChessGame {
       lastMoveIndex = availableIndices[randomIndex];
 
       playAudio(soundFiles.moves[lastMoveIndex]);
+      return lastMoveIndex; // Return the index for metadata
     };
 
     // Capture sound - two different sounds with volume variation
@@ -1289,12 +1305,26 @@ class ChessGame {
 
       // Pick second sound (different from first)
       const availableSounds = allSounds.filter((_, i) => i !== index1);
-      const index2 = Math.floor(Math.random() * availableSounds.length);
-      const sound2 = availableSounds[index2];
+      const index2Raw = Math.floor(Math.random() * availableSounds.length);
+      const sound2 = availableSounds[index2Raw];
+
+      // Find actual index of second sound in allSounds array
+      let actualIndex2 = 0;
+      for (let i = 0, j = 0; i < allSounds.length; i++) {
+        if (i !== index1) {
+          if (j === index2Raw) {
+            actualIndex2 = i;
+            break;
+          }
+          j++;
+        }
+      }
 
       // Play first sound softer (0.25 volume), second normal (0.4 volume)
       playAudio(sound1, 0.25);  // Soft touch as piece is picked up
       setTimeout(() => playAudio(sound2, 0.4), 50);  // Normal volume for placing piece
+
+      return [index1, actualIndex2]; // Return both indices for metadata
     };
 
     // Check sound
@@ -1331,12 +1361,70 @@ class ChessGame {
    * Play a sound
    */
   playSound(soundName) {
-    
+
     if (this.sounds && this.sounds[soundName]) {
-      this.sounds[soundName]();
+      return this.sounds[soundName](); // Return any metadata
+    }
+    return null;
+  }
+
+  /**
+   * Play specific sounds for undo/redo faithful replay
+   */
+  playReplayedSounds(sounds, reverse = false) {
+    if (!sounds || !this.sounds) return;
+
+    const soundFiles = woodenSoundData;
+    const allSounds = [...soundFiles.moves, ...soundFiles.quick];
+
+    // Helper to play audio directly
+    const playAudio = (base64Data, volume = 0.4) => {
+      if (!this.soundEnabled || !base64Data) return;
+      const audio = new Audio(base64Data);
+      audio.volume = volume;
+      audio.play().catch(() => {});
+    };
+
+    // Play action sounds
+    if (sounds.action) {
+      if (sounds.action.type === 'move' && typeof sounds.action.index === 'number') {
+        // Play the exact move sound that was played
+        if (soundFiles.moves[sounds.action.index]) {
+          playAudio(soundFiles.moves[sounds.action.index]);
+        }
+      } else if (sounds.action.type === 'capture' && sounds.action.indices) {
+        const [idx1, idx2] = sounds.action.indices;
+        if (reverse) {
+          // For undo, play capture sounds in reverse order
+          if (allSounds[idx2]) {
+            playAudio(allSounds[idx2], 0.4);  // Second sound first at normal volume
+          }
+          if (allSounds[idx1]) {
+            setTimeout(() => playAudio(allSounds[idx1], 0.25), 50);  // First sound second, softer
+          }
+        } else {
+          // For redo, play in original order
+          if (allSounds[idx1]) {
+            playAudio(allSounds[idx1], 0.25);  // Soft touch
+          }
+          if (allSounds[idx2]) {
+            setTimeout(() => playAudio(allSounds[idx2], 0.4), 50);  // Normal volume
+          }
+        }
+      }
+    }
+
+    // Play status sounds after a delay
+    const statusDelay = (sounds.action && sounds.action.type === 'capture') ? 100 : 0;
+    if (sounds.status === 'checkmate' || sounds.status === 'check') {
+      setTimeout(() => {
+        if (soundFiles.pop_check) {
+          playAudio(soundFiles.pop_check);
+        }
+      }, statusDelay);
     }
   }
-  
+
   // ============================================
   // METHODS FOR COMPATIBILITY (NO-OP OR SIMPLE)
   // ============================================
@@ -1456,24 +1544,9 @@ class ChessGame {
     // Set flag to indicate we're in undo/redo state
     this.isInUndoRedoState = true;
 
-    // Play appropriate sound for the move being undone
-    // Play action sound (capture or move)
-    if (wasCapture) {
-      this.playSound('capture');
-      
-    } else {
-      this.playSound('move');
-      
-    }
-
-    // Play status sound with delay if there was a capture
-    // Check the restored state for check/checkmate status
-    if (this.gameStatus === 'checkmate') {
-      setTimeout(() => this.playSound('checkmate'), wasCapture ? 100 : 0);
-      
-    } else if (this.gameStatus === 'check') {
-      setTimeout(() => this.playSound('check'), wasCapture ? 100 : 0);
-      
+    // Play sounds faithfully from the move being undone (in reverse for undo)
+    if (undoingState && undoingState.sounds) {
+      this.playReplayedSounds(undoingState.sounds, true);  // true = reverse order for undo
     }
 
     return true;
@@ -1535,27 +1608,9 @@ class ChessGame {
     // Set flag to indicate we're in undo/redo state
     this.isInUndoRedoState = true;
 
-    // Play appropriate sound for the move being redone
-    // Check if the redone move was a capture
-    const wasCapture = targetState.move && targetState.move.captured;
-
-    // Play action sound (capture or move)
-    if (wasCapture) {
-      this.playSound('capture');
-      
-    } else {
-      this.playSound('move');
-      
-    }
-
-    // Play status sound with delay if there was a capture
-    // Check the restored state for check/checkmate status
-    if (this.gameStatus === 'checkmate') {
-      setTimeout(() => this.playSound('checkmate'), wasCapture ? 100 : 0);
-      
-    } else if (this.gameStatus === 'check') {
-      setTimeout(() => this.playSound('check'), wasCapture ? 100 : 0);
-      
+    // Play sounds faithfully from the move being redone (in forward order)
+    if (targetState && targetState.sounds) {
+      this.playReplayedSounds(targetState.sounds, false);  // false = forward order for redo
     }
 
     return true;
