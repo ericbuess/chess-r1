@@ -3584,7 +3584,7 @@ class ChessUI {
       helpBtn.addEventListener('click', () => {
         this.hideOptionsMenu();
         setTimeout(() => {
-          showStatusIndicator();
+          showHelpDialog();
         }, 100);
       });
     }
@@ -4438,18 +4438,18 @@ window.addEventListener('sideClick', () => {
   }
 });
 
-// Function to show enhanced status indicator
-function showStatusIndicator(fromStartup = false) {
+// Function to show enhanced help dialog
+function showHelpDialog(fromStartup = false) {
   if (!gameUI) return;
 
   // Check if we should show on startup
   if (fromStartup) {
-    const hideOnStartup = localStorage.getItem('chess-r1-hide-status-on-startup') === 'true';
+    const hideOnStartup = localStorage.getItem('chess-r1-hide-help-on-startup') === 'true';
     if (hideOnStartup) return;
   }
 
-  let statusMessage = '<div class="status-indicator-content">';
-  statusMessage += '<div class="status-header">Chess R1 by Eric Buess v0.0.2</div>';
+  let helpContent = '<div class="help-dialog-content">';
+  helpContent += '<div class="help-header">Chess R1 by Eric Buess v0.0.2</div>';
 
   // Add bot info if in bot mode
   if (chessGame && chessGame.gameMode === 'human-vs-bot') {
@@ -4461,7 +4461,7 @@ function showStatusIndicator(fromStartup = false) {
       2: 'hard'
     };
     const difficultyText = difficultyDescriptions[difficulty] || 'normal';
-    statusMessage += `<div class="status-item">Playing against ${botName} (bot - ${difficultyText})</div>`;
+    helpContent += `<div class="help-item">Playing against ${botName} (bot - ${difficultyText})</div>`;
   }
 
   // Add orientation mode info for human vs human games
@@ -4472,59 +4472,67 @@ function showStatusIndicator(fromStartup = false) {
     };
     const orientationText = orientationDescriptions[chessGame.orientationMode];
     if (orientationText) {
-      statusMessage += `<div class="status-item">${orientationText}</div>`;
+      helpContent += `<div class="help-item">${orientationText}</div>`;
     }
   }
 
   // Add controls section
-  statusMessage += '<div class="status-controls">';
-  statusMessage += '<div class="controls-header">Controls & Shortcuts:</div>';
-  statusMessage += '<div class="control-item">• Top middle tap → Shows this status</div>';
-  statusMessage += '<div class="control-item">  (Long press side button on R1)</div>';
-  statusMessage += '<div class="control-item">• Captured pieces tap → Opens menu</div>';
-  statusMessage += '<div class="control-item">  (Side button on R1)</div>';
-  statusMessage += '<div class="control-item">• Top left/right edge → Undo/Redo</div>';
-  statusMessage += '<div class="control-item">  (Scroll wheel on R1)</div>';
-  statusMessage += '</div>';
+  helpContent += '<div class="help-controls">';
+  helpContent += '<div class="controls-header">Controls & Shortcuts:</div>';
+  helpContent += '<div class="control-item">• Top middle tap → Shows this help</div>';
+  helpContent += '<div class="control-item">  (Long press side button on R1)</div>';
+  helpContent += '<div class="control-item">• Captured pieces tap → Opens menu</div>';
+  helpContent += '<div class="control-item">  (Side button on R1)</div>';
+  helpContent += '<div class="control-item">• Top left/right edge → Undo/Redo</div>';
+  helpContent += '<div class="control-item">  (Scroll wheel on R1)</div>';
+  helpContent += '</div>';
 
   // Add checkbox for "Don't show on startup"
-  const hideOnStartup = localStorage.getItem('chess-r1-hide-status-on-startup') === 'true';
-  statusMessage += '<div class="status-checkbox">';
-  statusMessage += `<label><input type="checkbox" id="hide-status-checkbox" ${hideOnStartup ? 'checked' : ''}> Don't show on startup</label>`;
-  statusMessage += '</div>';
-  statusMessage += '</div>';
+  const hideOnStartup = localStorage.getItem('chess-r1-hide-help-on-startup') === 'true';
+  helpContent += '<div class="help-checkbox">';
+  helpContent += `<label><input type="checkbox" id="hide-help-checkbox" ${hideOnStartup ? 'checked' : ''}> Don't show on startup</label>`;
+  helpContent += '</div>';
 
-  // Create custom notification element
-  const existingNotification = document.querySelector('.status-notification');
-  if (existingNotification) {
-    existingNotification.remove();
+  // Add dismiss button
+  helpContent += '<div class="help-button-container">';
+  helpContent += '<button class="help-dismiss-btn">Dismiss</button>';
+  helpContent += '</div>';
+  helpContent += '</div>';
+
+  // Create custom help dialog element
+  const existingDialog = document.querySelector('.help-dialog');
+  if (existingDialog) {
+    existingDialog.remove();
   }
 
-  const notification = document.createElement('div');
-  notification.className = 'status-notification';
-  notification.innerHTML = statusMessage;
-  document.body.appendChild(notification);
+  const dialog = document.createElement('div');
+  dialog.className = 'help-dialog';
+  dialog.innerHTML = helpContent;
+  document.body.appendChild(dialog);
 
   // Add checkbox event listener
-  const checkbox = notification.querySelector('#hide-status-checkbox');
+  const checkbox = dialog.querySelector('#hide-help-checkbox');
   if (checkbox) {
     checkbox.addEventListener('change', (e) => {
-      localStorage.setItem('chess-r1-hide-status-on-startup', e.target.checked ? 'true' : 'false');
+      localStorage.setItem('chess-r1-hide-help-on-startup', e.target.checked ? 'true' : 'false');
     });
   }
 
-  // Auto-hide after 8 seconds
-  setTimeout(() => {
-    notification.classList.add('hiding');
-    setTimeout(() => notification.remove(), 500);
-  }, 8000);
+  // Add dismiss button event listener
+  const dismissBtn = dialog.querySelector('.help-dismiss-btn');
+  if (dismissBtn) {
+    dismissBtn.addEventListener('click', () => {
+      dialog.classList.add('hiding');
+      setTimeout(() => dialog.remove(), 500);
+    });
+  }
 
-  // Click outside to close
+  // Click outside to close (no auto-dismiss timer)
   setTimeout(() => {
     const closeHandler = (e) => {
-      if (!notification.contains(e.target)) {
-        notification.classList.add('hiding');
-        setTimeout(() => notification.remove(), 500);
+      if (!dialog.contains(e.target)) {
+        dialog.classList.add('hiding');
+        setTimeout(() => dialog.remove(), 500);
         document.removeEventListener('click', closeHandler);
       }
     };
@@ -4538,7 +4546,7 @@ window.addEventListener('longPressStart', () => {
 });
 
 window.addEventListener('longPressEnd', () => {
-  showStatusIndicator();
+  showHelpDialog();
 });
 
 // ===========================================
@@ -4746,10 +4754,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.dispatchEvent(new CustomEvent('sideClick'));
       }
 
-      // I key shortcut for status indicator (same as long press)
+      // I key shortcut for help dialog (same as long press)
       if (event.code === 'KeyI') {
         event.preventDefault();
-        showStatusIndicator();
+        showHelpDialog();
       }
 
       // Temporary arrow key shortcuts for undo/redo (will be removed for R1)
@@ -4786,8 +4794,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Top 40% of header = status indicator (like 'i' key)
       // Bottom 60% = open menu (like 'p' key) OR undo/redo on edges
       if (clickY < headerHeight * 0.4) {
-        // Show status indicator
-        showStatusIndicator();
+        // Show help dialog
+        showHelpDialog();
       } else {
         // Bottom region - check X position for tap zones
         if (clickX < headerWidth * 0.3) {
@@ -4846,9 +4854,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     currentPlayer: chessGame.currentPlayer
   });
 
-  // Show status indicator on startup after a brief delay
+  // Show help dialog on startup after a brief delay
   setTimeout(() => {
-    showStatusIndicator(true);
+    showHelpDialog(true);
   }, 1000);
 });
 
