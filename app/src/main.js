@@ -1758,6 +1758,8 @@ class ChessUI {
     this.isBotProcessing = false; // Flag to prevent multiple concurrent bot turns
     this.thinkingInterval = null; // Store interval for message rotation
     this.isR1Device = this.detectR1Device(); // Detect if running on R1
+    this.useR1CoordinateFix = this.shouldUseR1CoordinateFix(); // Check if R1 coordinate fix should be applied
+    this.enableR1Logging = this.shouldEnableR1Logging(); // Check if R1 debug logging is enabled
     this.botTurnTimer = null; // Global timer to prevent multiple queued bot turn calls
     this.thinkingMessageTimer = null; // Store timeout for initial thinking message display
 
@@ -1860,15 +1862,43 @@ class ChessUI {
         let row = parseInt(square.dataset.row);
         let col = parseInt(square.dataset.col);
 
+        // Debug logging for R1 touch handling
+        if (this.enableR1Logging) {
+          console.log('[R1 Touch]', {
+            isR1Device: this.isR1Device,
+            orientationMode: this.game.orientationMode,
+            boardFlipped: this.game.boardFlipped,
+            originalRow: row,
+            originalCol: col,
+            useR1Fix: this.useR1CoordinateFix,
+            touchTarget: square.className,
+            dataset: { row: square.dataset.row, col: square.dataset.col }
+          });
+        }
+
         // R1 browser fix: Manual coordinate transformation for handoff mode
         // When board is rotated 180° via CSS in handoff mode, R1 browser
         // doesn't correctly map touch coordinates to the visually transformed elements
-        if (this.isR1Device &&
+        // NOTE: This fix can be toggled via ?r1fix=true URL parameter
+        if (this.useR1CoordinateFix &&
+            this.isR1Device &&
             this.game.orientationMode === 'handoff' &&
             this.game.boardFlipped) {
           // Reverse coordinates for R1 in handoff mode when board is flipped
-          row = 7 - row;
-          col = 7 - col;
+          const fixedRow = 7 - row;
+          const fixedCol = 7 - col;
+
+          if (this.enableR1Logging) {
+            console.log('[R1 Fix Applied]', {
+              originalRow: row,
+              originalCol: col,
+              fixedRow,
+              fixedCol
+            });
+          }
+
+          row = fixedRow;
+          col = fixedCol;
         }
 
         await this.handleSquareSelection(row, col);
@@ -1904,7 +1934,36 @@ class ChessUI {
     // Also check if running in a WebView context with specific R1 characteristics
     const isWebView = window.webkit || window.flutter_inappwebview;
 
-    return (isR1Viewport && isWebView) || hasFlutterChannel || hasR1UserAgent;
+    const isR1 = (isR1Viewport && isWebView) || hasFlutterChannel || hasR1UserAgent;
+
+    // Log detection result
+    if (this.shouldEnableR1Logging()) {
+      console.log('[R1 Detection]', {
+        isR1Viewport,
+        hasFlutterChannel,
+        hasR1UserAgent,
+        isWebView,
+        result: isR1,
+        viewport: `${window.innerWidth}x${window.innerHeight}`,
+        userAgent: navigator.userAgent
+      });
+    }
+
+    return isR1;
+  }
+
+  // Check if R1 coordinate fix should be applied (can be disabled via URL param)
+  shouldUseR1CoordinateFix() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const fixParam = urlParams.get('r1fix');
+    // Default to disabled since it used to work without the fix
+    return fixParam === 'true';
+  }
+
+  // Check if R1 debug logging is enabled
+  shouldEnableR1Logging() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('r1debug') === 'true';
   }
 
   // Convert display coordinates to logical coordinates based on board flip
@@ -2788,6 +2847,18 @@ class ChessUI {
   }
 
   async handleSquareSelection(row, col) {
+    // Debug logging for R1 square selection
+    if (this.enableR1Logging) {
+      console.log('[R1 Square Selection]', {
+        inputRow: row,
+        inputCol: col,
+        isFlipping: this.isFlipping,
+        inputEnabled: this.inputEnabled,
+        currentPlayer: this.game.currentPlayer,
+        boardFlipped: this.game.boardFlipped,
+        orientationMode: this.game.orientationMode
+      });
+    }
 
     // Prevent interactions during board flip or when input is disabled
     if (this.isFlipping || this.inputEnabled === false) {
@@ -2861,6 +2932,19 @@ class ChessUI {
     const logical = this.getLogicalCoordinates(row, col);
     const logicalRow = logical.row;
     const logicalCol = logical.col;
+
+    // Debug logging for coordinate transformation
+    if (this.enableR1Logging) {
+      console.log('[R1 Coordinate Transform]', {
+        displayRow: row,
+        displayCol: col,
+        logicalRow: logical.row,
+        logicalCol: logical.col,
+        boardFlipped: this.game.boardFlipped,
+        orientationMode: this.game.orientationMode,
+        selectedPiece: this.game.board[logicalRow][logicalCol]
+      });
+    }
     
     // Piece selection logic
 
