@@ -2305,7 +2305,7 @@ class ChessUI {
   cancelBotThinking() {
     // Cancel any running worker for Asa difficulty
     if (this.currentBotWorker && typeof this.currentBotWorker.cancel === 'function') {
-      console.log('[cancelBotThinking] Cancelling Web Worker calculation');
+      // Cancelling Web Worker calculation
       // Cancel the worker - this will terminate it and reject the promise
       this.currentBotWorker.cancel();
       this.currentBotWorker = null;
@@ -2360,12 +2360,7 @@ class ChessUI {
 
     // Also mark it in the game state so it persists
     if (this.game) {
-      console.log('[cancelBotThinking] Setting game.botWasCancelled = true');
-      console.log('[cancelBotThinking] Current game state:');
-      console.log('  - currentPlayer:', this.game.currentPlayer);
-      console.log('  - humanColor:', this.game.humanColor);
-      console.log('  - gameStatus:', this.game.gameStatus);
-      console.log('  - stateHistory length:', this.game.stateHistory?.length);
+      // Bot cancellation - setting flag
       this.game.botWasCancelled = true;
     }
 
@@ -3013,7 +3008,7 @@ class ChessUI {
                     this.handleBotTurn();
                   }, 150);
                 } else {
-                  console.log('Bot already processing, skipping bot turn scheduling');
+                  // Bot already processing, skipping bot turn scheduling
                 }
               } else {
                 
@@ -3792,7 +3787,7 @@ class ChessUI {
   showNotification(message, type = 'default', duration = null) {
     // Don't interfere with rotating bot thinking messages
     if (this.thinkingInterval) {
-      console.log('Skipping notification during bot thinking:', message);
+      // Skipping notification during bot thinking
       return;
     }
 
