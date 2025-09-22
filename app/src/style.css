@@ -1196,10 +1196,12 @@ html, body {
 }
 
 .help-checkbox {
-    margin-top: 3vw;
-    padding-top: 3vw;
-    padding-bottom: 3vw;
+    margin: 0;
+    padding: 4vw 0;
     border-top: 1px solid rgba(254, 95, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .help-checkbox label {

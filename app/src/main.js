@@ -1788,10 +1788,11 @@ class ChessUI {
     }
 
     this.initializeBoard();
-    this.updateDisplay();
+    // Don't call updateDisplay() here - it will be called after game state is loaded
+    // this.updateDisplay();
 
-    // Check if it's bot's turn at startup (for human-vs-bot mode when human plays black)
-    this.checkInitialBotTurn();
+    // Don't check for bot turn here - will be done after game state is loaded
+    // this.checkInitialBotTurn();
   }
 
   initializeBoard() {
@@ -4650,9 +4651,10 @@ function calculateChecksum(str) {
 }
 
 // Wait for storage API to be available (for R1 plugin environment)
-async function waitForStorageAPI(maxWaitTime = 5000) {
+async function waitForStorageAPI(maxWaitTime = 500) {
+  // Reduce wait time to 500ms since we have localStorage fallback
   const startTime = Date.now();
-  const checkInterval = 100; // Check every 100ms
+  const checkInterval = 50; // Check every 50ms
 
   while (Date.now() - startTime < maxWaitTime) {
     // Check if creationStorage is available
@@ -4841,18 +4843,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   const loaded = await gameUI.loadGameState();
   if (loaded) {
     gameUI.updateDisplay();
-    gameUI.updateCapturedPiecesDisplay(); // Ensure display shows after loading
+    gameUI.updateCapturedPiecesDisplay();
     gameUI.gameStatusElement.textContent = 'Game resumed';
     setTimeout(() => {
       gameUI.gameStatusElement.textContent = '';
     }, 2000);
+    // Check if it's bot's turn after restoring game
+    gameUI.checkInitialBotTurn();
   } else {
     chessGame.newGame();
     gameUI.updateDisplay();
+    gameUI.updateCapturedPiecesDisplay();
+    // Check if it's bot's turn for new game
+    gameUI.checkInitialBotTurn();
   }
-
-  // Ensure captured pieces display is shown on page load
-  gameUI.updateCapturedPiecesDisplay();
 
   // Send initialization event
   sendGameEvent('game_initialized', {
@@ -4863,7 +4867,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Show help dialog on startup after a brief delay
   setTimeout(() => {
     showHelpDialog(true);
-  }, 1000);
+  }, 500);
 });
 
 // ===========================================
