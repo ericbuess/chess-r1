@@ -1197,11 +1197,12 @@ html, body {
 
 .help-checkbox {
     margin: 0;
-    padding: 4vw 0;
+    padding: 5vw 0;
     border-top: 1px solid rgba(254, 95, 0, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 10vw;
 }
 
 .help-checkbox label {
@@ -1222,8 +1223,8 @@ html, body {
 /* Help dialog dismiss button */
 .help-button-container {
     margin-top: 0;
-    padding-top: 3vw;
-    padding-bottom: 4vw;
+    padding-top: 5vw;
+    padding-bottom: 5vw;
     border-top: 1px solid rgba(254, 95, 0, 0.3);
     display: flex;
     justify-content: center;
