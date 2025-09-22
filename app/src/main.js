@@ -2981,9 +2981,8 @@ class ChessUI {
     gameContainer.classList.remove('orientation-table', 'orientation-handoff', 'orientation-none');
 
     // Set data attributes that determine orientation
-    // For bot mode, use 'none' to prevent CSS rotation (coordinate reversal handles it)
-    const orientationMode = this.game.gameMode === 'human-vs-bot' ?
-                           'none' : this.game.orientationMode;
+    // Use the actual orientation mode - CSS and coordinate logic work together
+    const orientationMode = this.game.orientationMode;
 
     gameContainer.setAttribute('data-orientation-mode', orientationMode);
     gameContainer.setAttribute('data-board-flipped', this.game.boardFlipped.toString());
