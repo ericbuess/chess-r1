@@ -166,10 +166,11 @@ html, body {
     display: inline-block;
     letter-spacing: normal;
     position: relative;
-    top: -0.3vw;
+    top: 0; /* Keep pieces vertically centered */
     overflow: hidden;
     text-overflow: clip;
     white-space: nowrap;
+    vertical-align: middle; /* Ensure vertical centering */
 }
 
 /* Dynamic sizing based on piece count */
