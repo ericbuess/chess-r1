@@ -373,49 +373,9 @@ class ChessGame {
       // For high difficulties (3+), try to use a simpler approach
       // that's more responsive but still challenging
 
-      let aiMove;
-      let finalEngineState;
-
-      // Use Web Worker for Asa (difficulty 3) to make it interruptible
-      if (this.botDifficulty === 3) {
-
-        // Import the worker functions
-        const { createCancellableBotMove } = await import('./chess-worker-inline.js');
-
-        try {
-          // Create a cancellable worker promise
-          this.currentBotWorker = createCancellableBotMove(engineStateBeforeBot, 3);
-
-          // Wait for the worker to complete
-          const result = await this.currentBotWorker;
-
-          // Check if cancelled during worker calculation
-          if (this.botWasCancelled) {
-            return null;
-          }
-
-          aiMove = result.move;
-          finalEngineState = result.finalState;
-
-          // Only update the engine if not cancelled
-          if (!this.botWasCancelled) {
-            this.engine = new window.jsChessEngine.Game(finalEngineState);
-          }
-
-        } catch (error) {
-          if (error.message === 'Bot calculation cancelled' ||
-              error.message === 'Bot calculation timed out' ||
-              this.botWasCancelled) {
-            return null;
-          }
-          throw error;
-        } finally {
-          this.currentBotWorker = null;
-        }
-      } else {
-        // For other difficulties, use the synchronous method
-        aiMove = this.engine.aiMove(this.botDifficulty);
-      }
+      // All difficulties now use the synchronous method (no Web Worker)
+      // Difficulty levels: 0 = Easy (Evy), 1 = Normal (Emmy), 2 = Hard (Asa)
+      const aiMove = this.engine.aiMove(this.botDifficulty);
 
       // Check if bot was cancelled during calculation
       if (this.botWasCancelled) {
@@ -546,10 +506,12 @@ class ChessGame {
     
     // Calculate delay for natural feel (reduced since we added pre-calculation delay)
     const thinkingTime = Date.now() - startTime;
-    const targetDelay = 200 + Math.random() * 200; // 200-400ms (was 800-1200ms)
+    // Ensure minimum 1 second total time for bot move (1000-1200ms total)
+    const minimumTotalTime = 1000;
+    const targetDelay = minimumTotalTime + Math.random() * 200; // 1000-1200ms total
     const remainingDelay = Math.max(0, targetDelay - thinkingTime);
 
-    // Wait for remaining delay
+    // Wait for remaining delay to ensure minimum time
     await new Promise(resolve => setTimeout(resolve, remainingDelay));
     
     // Move was already executed by generateBotMove()
@@ -1195,12 +1157,11 @@ class ChessGame {
    */
   getBotDifficultyText() {
     const difficulties = {
-      0: 'Ella',
-      1: 'Evy',
-      2: 'Emmy',
-      3: 'Asa'
+      0: 'Evy',   // Easy (was Ella)
+      1: 'Emmy',  // Normal (was Evy)
+      2: 'Asa'    // Hard (was Emmy, removed old Asa at 3)
     };
-    return difficulties[this.botDifficulty] || 'Ella';
+    return difficulties[this.botDifficulty] || 'Evy';
   }
   
   /**
@@ -2262,13 +2223,8 @@ class ChessUI {
 
   // Cancel bot thinking when user interrupts (e.g., undo)
   cancelBotThinking() {
-    // Cancel any running worker for Asa difficulty
-    if (this.currentBotWorker && typeof this.currentBotWorker.cancel === 'function') {
-      // Cancelling Web Worker calculation
-      // Cancel the worker - this will terminate it and reject the promise
-      this.currentBotWorker.cancel();
-      this.currentBotWorker = null;
-    }
+    // Note: Web Worker cancellation removed since we no longer use Web Workers
+    // Bot thinking can still be interrupted via timers and flags
 
     // Clear bot turn timer (prevents delayed bot execution)
     if (this.botTurnTimer) {
@@ -4463,10 +4419,9 @@ window.addEventListener('longPressEnd', () => {
 
       // Map difficulty levels to descriptions
       const difficultyDescriptions = {
-        0: 'easy',
-        1: 'normal',
-        2: 'hard',
-        3: 'hardest'  // Asa is the hardest difficulty
+        0: 'easy',    // Evy
+        1: 'normal',  // Emmy
+        2: 'hard'     // Asa (no more difficulty 3)
       };
 
       const difficultyText = difficultyDescriptions[difficulty] || 'normal';
