@@ -4785,6 +4785,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   chessGame = new ChessGame();
   gameUI = new ChessUI(chessGame);
 
+  // Show help dialog on startup after a brief delay (AFTER gameUI is ready)
+  setTimeout(() => {
+    showHelpDialog(true);
+  }, 500);
+
   // Setup header tap zones for status indicator, menu, and undo/redo
   const gameHeader = document.getElementById('game-header');
   if (gameHeader) {
@@ -4860,10 +4865,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     currentPlayer: chessGame.currentPlayer
   });
 
-  // Show help dialog on startup after a brief delay
-  setTimeout(() => {
-    showHelpDialog(true);
-  }, 500);
 });
 
 // ===========================================
