@@ -1762,22 +1762,10 @@ class ChessUI {
     this.enableR1Logging = this.shouldEnableR1Logging(); // Check if R1 debug logging is enabled
     this.botTurnTimer = null; // Global timer to prevent multiple queued bot turn calls
     this.thinkingMessageTimer = null; // Store timeout for initial thinking message display
+    this.handledByTouch = false; // Flag to prevent double-handling of touch+click
 
-    // Initialize audio on first user interaction (Chrome/Android requirement)
-    const initAudioOnInteraction = () => {
-      if (!this.audioInitialized) {
-        // Trigger a dummy sound play to initialize the audio system
-        this.game.playSound('move');
-        this.audioInitialized = true;
-        // Remove all initialization listeners after first interaction
-        document.removeEventListener('click', initAudioOnInteraction);
-        document.removeEventListener('touchstart', initAudioOnInteraction);
-      }
-    };
-
-    // Add listeners for audio initialization
-    document.addEventListener('click', initAudioOnInteraction, { once: true });
-    document.addEventListener('touchstart', initAudioOnInteraction, { once: true });
+    // Removed audio initialization - audio should only play on actual moves/undo/redo
+    // This was causing first tap to be consumed without performing the intended action
 
     // Add click handler for expand button
     const expandButton = document.getElementById('move-expand');
@@ -1826,6 +1814,12 @@ class ChessUI {
   }
 
   async handleSquareClick(event) {
+    // Skip if this was triggered by a touch event (touch events also trigger click)
+    if (this.handledByTouch) {
+      this.handledByTouch = false;
+      return;
+    }
+
     let row = parseInt(event.target.dataset.row);
     let col = parseInt(event.target.dataset.col);
 
@@ -1839,7 +1833,10 @@ class ChessUI {
   }
 
   handleTouchStart(event) {
-    event.preventDefault();
+    // Only preventDefault if we're actually on a chess square to avoid blocking other interactions
+    if (event.target.classList.contains('chess-square')) {
+      event.preventDefault();
+    }
     this.touchStartTime = Date.now();
     this.touchTarget = event.target;
 
@@ -1850,7 +1847,10 @@ class ChessUI {
   }
 
   async handleTouchEnd(event) {
-    event.preventDefault();
+    // Only preventDefault if we're actually on a chess square
+    if (event.target.classList.contains('chess-square')) {
+      event.preventDefault();
+    }
 
     // Remove visual feedback immediately
     if (this.touchTarget && this.touchTarget.classList.contains('chess-square')) {
@@ -1874,6 +1874,9 @@ class ChessUI {
         const pieceStr = piece ? this.game.getPieceSymbol(piece) : 'empty';
         this.showNotification(`TOUCH:${row},${col} [${pieceStr}] Mode:${this.game.orientationMode} Flip:${this.game.boardFlipped}`, 'info', 5000);
 
+        // Mark that we handled this via touch to prevent double-handling with click
+        this.handledByTouch = true;
+
         // No coordinate fix needed - CSS now rotates container for both table and handoff modes
 
         await this.handleSquareSelection(row, col);
@@ -1885,7 +1888,10 @@ class ChessUI {
   }
 
   handleTouchCancel(event) {
-    event.preventDefault();
+    // Only preventDefault if we're actually on a chess square
+    if (event.target.classList.contains('chess-square')) {
+      event.preventDefault();
+    }
 
     // Remove visual feedback immediately
     if (this.touchTarget && this.touchTarget.classList.contains('chess-square')) {
