@@ -12,6 +12,13 @@
 7. ✅ **Table Mode Selection** - Fixed black piece selection after board flip
 8. ✅ **Bot Difficulty Labels** - Updated to match new 3-level system
 
+### Status Indicator Enhancement (9/22/2025)
+1. ✅ **Show on Launch** - Status indicator appears on game startup with controls guide
+2. ✅ **Controls Section** - Explains all tap zones and R1-specific controls
+3. ✅ **Preference Checkbox** - "Don't show on startup" with localStorage persistence
+4. ✅ **Help Button** - Added to options menu to show status indicator on demand
+5. ✅ **Auto-dismiss** - Closes after 8 seconds or click outside
+
 ## Current Status
 - **App Version**: v0.0.2
 - **Dev Server**: Running on port 5187
