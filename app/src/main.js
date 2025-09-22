@@ -4531,15 +4531,20 @@ function showHelpDialog(fromStartup = false, fromMenu = false) {
   setTimeout(() => {
     const closeHandler = (e) => {
       if (!dialog.contains(e.target)) {
+        // Prevent event from propagating to header click handler
+        e.stopPropagation();
+        e.preventDefault();
+
         dialog.classList.add('hiding');
         setTimeout(() => {
           dialog.remove();
           // Don't need to reopen menu - it stays open behind help
         }, 500);
-        document.removeEventListener('click', closeHandler);
+        document.removeEventListener('click', closeHandler, true);
       }
     };
-    document.addEventListener('click', closeHandler);
+    // Use capture phase to intercept before header handler
+    document.addEventListener('click', closeHandler, true);
   }, 100);
 }
 
@@ -4795,10 +4800,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (gameHeader) {
     gameHeader.addEventListener('click', (event) => {
       const rect = gameHeader.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const clickY = event.clientY - rect.top;
+      let clickX = event.clientX - rect.left;
+      let clickY = event.clientY - rect.top;
       const headerWidth = rect.width;
       const headerHeight = rect.height;
+
+      // When board is flipped in table mode, we need to flip tap zones
+      const isTableMode = chessGame.orientationMode === 'table';
+      const boardFlipped = chessGame.boardFlipped;
+
+      if (isTableMode && boardFlipped) {
+        // In table mode when flipped, reverse the Y coordinate
+        // What appears at top is actually the bottom header
+        clickY = headerHeight - clickY;
+        // Also reverse X for undo/redo zones
+        clickX = headerWidth - clickX;
+      }
 
       // Top 40% of header = status indicator (like 'i' key)
       // Bottom 60% = open menu (like 'p' key) OR undo/redo on edges
