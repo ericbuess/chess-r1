@@ -1453,27 +1453,34 @@ class ChessGame {
       audio.play().catch(() => {});
     };
 
-    // Only play sounds for redo (forward), never for undo (reverse)
-    // Undo means going back to before the move, so no sound should play
-    if (sounds.action && !reverse) {
-      // For redo, play sounds when piece lands at destination
+    // Handle both undo (reverse) and redo (forward) sounds
+    if (sounds.action) {
       if (sounds.action.type === 'move' && typeof sounds.action.index === 'number') {
-        // Play the exact move sound that was played
+        // Play the exact move sound that was originally played
         if (soundFiles.moves[sounds.action.index]) {
           playAudio(soundFiles.moves[sounds.action.index]);
         }
       } else if (sounds.action.type === 'capture' && sounds.action.indices) {
         const [idx1, idx2] = sounds.action.indices;
-        // Play in original order for redo with proper timing separation
-        if (allSounds[idx1]) {
-          playAudio(allSounds[idx1], 0.25);  // Soft touch
-        }
-        if (allSounds[idx2]) {
-          setTimeout(() => playAudio(allSounds[idx2], 0.4), 150);  // Normal volume with proper delay
+        if (reverse) {
+          // For undo, play capture sounds in reverse order
+          if (allSounds[idx2]) {
+            playAudio(allSounds[idx2], 0.4);  // Second sound first at normal volume
+          }
+          if (allSounds[idx1]) {
+            setTimeout(() => playAudio(allSounds[idx1], 0.25), 150);  // First sound second, softer
+          }
+        } else {
+          // For redo, play in original order
+          if (allSounds[idx1]) {
+            playAudio(allSounds[idx1], 0.25);  // Soft touch
+          }
+          if (allSounds[idx2]) {
+            setTimeout(() => playAudio(allSounds[idx2], 0.4), 150);  // Normal volume with proper delay
+          }
         }
       }
     }
-    // No sounds for undo (reverse = true)
 
     // Play status sounds after a delay (only for redo, not undo)
     if (!reverse) {
@@ -1607,14 +1614,17 @@ class ChessGame {
     // Set flag to indicate we're in undo/redo state
     this.isInUndoRedoState = true;
 
-    // Play sounds for the undo - piece landing at its original position
-    // Delay to sync with visual movement
-    if (undoingState && undoingState.sounds && undoingState.move) {
+    // Play sounds from the state we're arriving at (targetState), not the state we're leaving
+    // When undoing to index N, play the sounds that were recorded at index N
+    // This gives the effect of hearing the "previous" move landing
+    if (this.currentStateIndex > 0 && targetState && targetState.sounds) {
       setTimeout(() => {
-        // Play a single move sound to indicate the piece landing
-        this.playSound('move');
+        // Play the exact sounds from the target state (where we're arriving)
+        // Use reverse=true to play capture sounds in reverse order
+        this.playReplayedSounds(targetState.sounds, true);
       }, 100);
     }
+    // No sounds when undoing to index 0 (initial state) - this is correct
 
     return true;
   }
