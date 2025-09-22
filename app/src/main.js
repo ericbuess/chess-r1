@@ -4689,22 +4689,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   chessGame = new ChessGame();
   gameUI = new ChessUI(chessGame);
 
-  // Setup header tap zones for status indicator and menu
+  // Setup header tap zones for status indicator, menu, and undo/redo
   const gameHeader = document.getElementById('game-header');
   if (gameHeader) {
     gameHeader.addEventListener('click', (event) => {
       const rect = gameHeader.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
       const clickY = event.clientY - rect.top;
+      const headerWidth = rect.width;
       const headerHeight = rect.height;
 
       // Top 40% of header = status indicator (like 'i' key)
-      // Bottom 60% = open menu (like 'p' key)
+      // Bottom 60% = open menu (like 'p' key) OR undo/redo on edges
       if (clickY < headerHeight * 0.4) {
         // Show status indicator - trigger longPressEnd event
         window.dispatchEvent(new CustomEvent('longPressEnd'));
       } else {
-        // Open menu - trigger sideClick event
-        window.dispatchEvent(new CustomEvent('sideClick'));
+        // Bottom region - check X position for tap zones
+        if (clickX < headerWidth * 0.3) {
+          // Left edge (30%) - trigger undo (scrollDown)
+          window.dispatchEvent(new CustomEvent('scrollDown'));
+        } else if (clickX > headerWidth * 0.7) {
+          // Right edge (30%) - trigger redo (scrollUp)
+          window.dispatchEvent(new CustomEvent('scrollUp'));
+        } else {
+          // Middle region (40%) - open menu (sideClick)
+          window.dispatchEvent(new CustomEvent('sideClick'));
+        }
       }
     });
   }
