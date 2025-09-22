@@ -216,7 +216,7 @@ html, body {
     font-size: 0.75em; /* 75% of the size of other pieces */
     vertical-align: middle; /* Center align with other pieces */
     position: relative;
-    top: 0.1em; /* Slight upward adjustment to align bottoms */
+    top: -0.4em; /* Move pawns up significantly to align bottoms with text */
 }
 
 /* Chess Board - Responsive scaling for any viewport */
