@@ -4629,42 +4629,24 @@ function showHelpDialog(fromStartup = false, fromMenu = false) {
     });
   }
 
-  // Click outside to close (no auto-dismiss timer)
-  // Only add handler if NOT from startup to avoid consuming first game interaction
-  if (!fromStartup) {
+  // Click outside to close - but ONLY for menu-opened dialog, never for startup
+  // This prevents the startup dialog from consuming the first game tap
+  if (!fromStartup && fromMenu) {
     setTimeout(() => {
       const closeHandler = (e) => {
         if (!dialog.contains(e.target)) {
-          // Only prevent propagation if clicking on UI elements, not game board
-          if (!e.target.classList.contains('chess-square')) {
-            e.stopPropagation();
-            e.preventDefault();
-          }
-
           dialog.classList.add('hiding');
           setTimeout(() => {
             dialog.remove();
-            // Don't need to reopen menu - it stays open behind help
           }, 500);
-          document.removeEventListener('click', closeHandler, true);
+          document.removeEventListener('click', closeHandler);
         }
       };
-      // Use capture phase to intercept before header handler
-      document.addEventListener('click', closeHandler, true);
+      // Use regular bubbling phase, not capture, to avoid interfering
+      document.addEventListener('click', closeHandler);
     }, 100);
-  } else {
-    // For startup dialog, auto-dismiss after 8 seconds instead of click-to-close
-    setTimeout(() => {
-      if (dialog && dialog.parentNode) {
-        dialog.classList.add('hiding');
-        setTimeout(() => {
-          if (dialog.parentNode) {
-            dialog.remove();
-          }
-        }, 500);
-      }
-    }, 8000);
   }
+  // For startup dialog, just rely on the dismiss button - no auto-close or click-outside
 }
 
 // Long press shows status information
