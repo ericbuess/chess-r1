@@ -198,24 +198,12 @@ html, body {
     line-height: 1;
 }
 
-/* Make pawns smaller in captured pieces display */
+/* Make captured pieces smaller with better proportions */
 .captured-pieces-list {
-    font-size: 4.5vw; /* Base size for captured pieces */
-}
-
-/* Specifically target the pawn character to make it smaller */
-.captured-pieces-list::after {
-    content: '';
-}
-
-/* Use CSS to detect and style the pawn character (♟) */
-@supports (font-variant-emoji: text) {
-    .captured-pieces-list {
-        letter-spacing: -0.1vw; /* Tighter spacing for pawns */
-        transform: scale(0.85); /* Slightly smaller overall */
-        transform-origin: left center;
-        display: inline-block;
-    }
+    font-size: 3.5vw; /* Smaller size for all captured pieces */
+    transform: scale(0.9); /* Additional scaling to make pieces smaller */
+    transform-origin: left center;
+    display: inline-block;
 }
 
 /* Chess Board - Responsive scaling for any viewport */
