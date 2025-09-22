@@ -1223,9 +1223,8 @@ html, body {
 /* Help dialog dismiss button */
 .help-button-container {
     margin-top: 0;
-    padding-top: 5vw;
+    padding-top: 2vw;
     padding-bottom: 5vw;
-    border-top: 1px solid rgba(254, 95, 0, 0.3);
     display: flex;
     justify-content: center;
 }
