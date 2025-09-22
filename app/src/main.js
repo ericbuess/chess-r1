@@ -1862,18 +1862,10 @@ class ChessUI {
         let row = parseInt(square.dataset.row);
         let col = parseInt(square.dataset.col);
 
-        // Debug logging for R1 touch handling
-        if (this.enableR1Logging) {
-          console.log('[R1 Touch]', {
-            isR1Device: this.isR1Device,
-            orientationMode: this.game.orientationMode,
-            boardFlipped: this.game.boardFlipped,
-            originalRow: row,
-            originalCol: col,
-            useR1Fix: this.useR1CoordinateFix,
-            touchTarget: square.className,
-            dataset: { row: square.dataset.row, col: square.dataset.col }
-          });
+        // Visual debug for R1 (since no console access)
+        if (this.isR1Device) {
+          const debugInfo = `T:${row},${col} ${this.game.boardFlipped ? 'F' : 'N'} Fix:${this.useR1CoordinateFix ? 'Y' : 'N'}`;
+          this.showNotification(debugInfo, 'info', 500);
         }
 
         // R1 browser fix: Manual coordinate transformation for handoff mode
@@ -1888,13 +1880,8 @@ class ChessUI {
           const fixedRow = 7 - row;
           const fixedCol = 7 - col;
 
-          if (this.enableR1Logging) {
-            console.log('[R1 Fix Applied]', {
-              originalRow: row,
-              originalCol: col,
-              fixedRow,
-              fixedCol
-            });
+          if (this.isR1Device) {
+            this.showNotification(`Fixed: ${row},${col}→${fixedRow},${fixedCol}`, 'warning', 500);
           }
 
           row = fixedRow;
@@ -1954,14 +1941,28 @@ class ChessUI {
 
   // Check if R1 coordinate fix should be applied (can be disabled via URL param)
   shouldUseR1CoordinateFix() {
+    // Check localStorage first for persistent setting
+    const storedFix = localStorage.getItem('r1CoordinateFix');
+    if (storedFix !== null) {
+      return storedFix === 'true';
+    }
+
+    // Then check URL params
     const urlParams = new URLSearchParams(window.location.search);
     const fixParam = urlParams.get('r1fix');
+
     // Default to disabled since it used to work without the fix
     return fixParam === 'true';
   }
 
   // Check if R1 debug logging is enabled
   shouldEnableR1Logging() {
+    // Always enable logging on R1 devices for debugging
+    if (this.isR1Device) {
+      return true;
+    }
+
+    // For non-R1, check URL params
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('r1debug') === 'true';
   }
@@ -3528,6 +3529,21 @@ class ChessUI {
   }
 
   setupOptionsEventListeners() {
+    // Toggle R1 coordinate fix (only shown on R1 devices)
+    const r1FixToggle = document.getElementById('r1-fix-toggle');
+    if (this.isR1Device && r1FixToggle) {
+      r1FixToggle.style.display = 'block';
+      r1FixToggle.textContent = `R1 Fix: ${this.useR1CoordinateFix ? 'ON' : 'OFF'}`;
+
+      r1FixToggle.addEventListener('click', () => {
+        this.useR1CoordinateFix = !this.useR1CoordinateFix;
+        localStorage.setItem('r1CoordinateFix', this.useR1CoordinateFix.toString());
+        r1FixToggle.textContent = `R1 Fix: ${this.useR1CoordinateFix ? 'ON' : 'OFF'}`;
+        console.log('[R1 Fix Toggle]', { enabled: this.useR1CoordinateFix });
+        this.showNotification(`R1 coordinate fix ${this.useR1CoordinateFix ? 'enabled' : 'disabled'}`, 'info');
+      });
+    }
+
     // Game Mode radio buttons
     const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
     gameModeRadios.forEach(radio => {
