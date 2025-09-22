@@ -1881,14 +1881,15 @@ class ChessUI {
   getLogicalCoordinates(displayRow, displayCol) {
     // Apply coordinate reversal based on game mode:
     // - Bot games: Always use coordinate reversal when boardFlipped (black at bottom)
-    // - Table mode: NO coordinate reversal (CSS rotation handles everything)
+    // - Table mode: ALSO uses coordinate reversal (different from CSS-only modes)
     // - Handoff mode: NO coordinate reversal (CSS rotation only)
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
     const isTableMode = this.game.orientationMode === 'table';
 
-    // Table mode uses CSS rotation, so data-row/data-col don't need reversal
-    const needsCoordinateReversal = this.game.boardFlipped && isBotGame && !isTableMode;
+    // Both bot games AND table mode need coordinate reversal when board is flipped
+    const needsCoordinateReversal = this.game.boardFlipped &&
+                                    (isBotGame || isTableMode);
 
     if (needsCoordinateReversal) {
       return {
@@ -1903,14 +1904,15 @@ class ChessUI {
   getDisplayCoordinates(logicalRow, logicalCol) {
     // Apply coordinate reversal based on game mode:
     // - Bot games: Always use coordinate reversal when boardFlipped (black at bottom)
-    // - Table mode: NO coordinate reversal (CSS rotation handles everything)
+    // - Table mode: ALSO uses coordinate reversal (different from CSS-only modes)
     // - Handoff mode: NO coordinate reversal (CSS rotation only)
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
     const isTableMode = this.game.orientationMode === 'table';
 
-    // Table mode uses CSS rotation, so data-row/data-col don't need reversal
-    const needsCoordinateReversal = this.game.boardFlipped && isBotGame && !isTableMode;
+    // Both bot games AND table mode need coordinate reversal when board is flipped
+    const needsCoordinateReversal = this.game.boardFlipped &&
+                                    (isBotGame || isTableMode);
 
     if (needsCoordinateReversal) {
       return {
@@ -2981,8 +2983,9 @@ class ChessUI {
     gameContainer.classList.remove('orientation-table', 'orientation-handoff', 'orientation-none');
 
     // Set data attributes that determine orientation
-    // Use the actual orientation mode - CSS and coordinate logic work together
-    const orientationMode = this.game.orientationMode;
+    // For bot mode, use 'none' to prevent CSS rotation (coordinate reversal handles it)
+    const orientationMode = this.game.gameMode === 'human-vs-bot' ?
+                           'none' : this.game.orientationMode;
 
     gameContainer.setAttribute('data-orientation-mode', orientationMode);
     gameContainer.setAttribute('data-board-flipped', this.game.boardFlipped.toString());
