@@ -1889,8 +1889,10 @@ class ChessUI {
     const isTableMode = this.game.orientationMode === 'table';
 
     // Both bot games AND table mode need coordinate reversal when board is flipped
+    // EXCEPTION: Handoff mode uses CSS rotation only, never coordinate reversal
+    const isHandoffMode = this.game.orientationMode === 'handoff';
     const needsCoordinateReversal = this.game.boardFlipped &&
-                                    (isBotGame || isTableMode);
+                                    (isBotGame || (isTableMode && !isHandoffMode));
 
     if (needsCoordinateReversal) {
       return {
@@ -1912,8 +1914,10 @@ class ChessUI {
     const isTableMode = this.game.orientationMode === 'table';
 
     // Both bot games AND table mode need coordinate reversal when board is flipped
+    // EXCEPTION: Handoff mode uses CSS rotation only, never coordinate reversal
+    const isHandoffMode = this.game.orientationMode === 'handoff';
     const needsCoordinateReversal = this.game.boardFlipped &&
-                                    (isBotGame || isTableMode);
+                                    (isBotGame || (isTableMode && !isHandoffMode));
 
     if (needsCoordinateReversal) {
       return {
@@ -4800,22 +4804,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (gameHeader) {
     gameHeader.addEventListener('click', (event) => {
       const rect = gameHeader.getBoundingClientRect();
-      let clickX = event.clientX - rect.left;
-      let clickY = event.clientY - rect.top;
+      const clickX = event.clientX - rect.left;
+      const clickY = event.clientY - rect.top;
       const headerWidth = rect.width;
       const headerHeight = rect.height;
 
-      // When board is flipped in table mode, we need to flip tap zones
-      const isTableMode = chessGame.orientationMode === 'table';
-      const boardFlipped = chessGame.boardFlipped;
-
-      if (isTableMode && boardFlipped) {
-        // In table mode when flipped, reverse the Y coordinate
-        // What appears at top is actually the bottom header
-        clickY = headerHeight - clickY;
-        // Also reverse X for undo/redo zones
-        clickX = headerWidth - clickX;
-      }
+      // Simplified logic - removed complex coordinate transformations for R1 performance
+      // The header tap zones remain consistent regardless of board orientation
 
       // Top 40% of header = status indicator (like 'i' key)
       // Bottom 60% = open menu (like 'p' key) OR undo/redo on edges
