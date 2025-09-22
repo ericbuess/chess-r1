@@ -1882,19 +1882,13 @@ class ChessUI {
     // Apply coordinate reversal based on game mode:
     // - Bot games: Always use coordinate reversal when boardFlipped (black at bottom)
     // - Table mode: NO coordinate reversal (CSS rotation handles everything)
-    // - Handoff mode: NEEDS coordinate reversal when flipped (for R1 compatibility)
+    // - Handoff mode: NO coordinate reversal (CSS rotation only)
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
-    const isHumanGame = this.game.gameMode === 'human-vs-human';
     const isTableMode = this.game.orientationMode === 'table';
-    const isHandoffMode = this.game.orientationMode === 'handoff';
 
-    // Bot games need reversal when flipped
-    // Handoff mode ALSO needs reversal when flipped (fixes R1 touch issue)
-    // Table mode does NOT need reversal (CSS rotation handles it)
-    const needsCoordinateReversal = this.game.boardFlipped &&
-                                   (isBotGame || (isHumanGame && isHandoffMode)) &&
-                                   !isTableMode;
+    // Table mode uses CSS rotation, so data-row/data-col don't need reversal
+    const needsCoordinateReversal = this.game.boardFlipped && isBotGame && !isTableMode;
 
     if (needsCoordinateReversal) {
       return {
@@ -1910,19 +1904,13 @@ class ChessUI {
     // Apply coordinate reversal based on game mode:
     // - Bot games: Always use coordinate reversal when boardFlipped (black at bottom)
     // - Table mode: NO coordinate reversal (CSS rotation handles everything)
-    // - Handoff mode: NEEDS coordinate reversal when flipped (for R1 compatibility)
+    // - Handoff mode: NO coordinate reversal (CSS rotation only)
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
-    const isHumanGame = this.game.gameMode === 'human-vs-human';
     const isTableMode = this.game.orientationMode === 'table';
-    const isHandoffMode = this.game.orientationMode === 'handoff';
 
-    // Bot games need reversal when flipped
-    // Handoff mode ALSO needs reversal when flipped (fixes R1 touch issue)
-    // Table mode does NOT need reversal (CSS rotation handles it)
-    const needsCoordinateReversal = this.game.boardFlipped &&
-                                   (isBotGame || (isHumanGame && isHandoffMode)) &&
-                                   !isTableMode;
+    // Table mode uses CSS rotation, so data-row/data-col don't need reversal
+    const needsCoordinateReversal = this.game.boardFlipped && isBotGame && !isTableMode;
 
     if (needsCoordinateReversal) {
       return {
@@ -3984,9 +3972,11 @@ class ChessUI {
   }
 
   async loadGameState() {
+    console.log('[DEBUG] Starting loadGameState()');
     try {
       // First check what was the last game mode used
       const lastModeData = await loadFromStorage('last_game_mode');
+      console.log('[DEBUG] Last mode data:', lastModeData);
       const preferredMode = lastModeData?.mode || null;
 
       
@@ -4009,10 +3999,8 @@ class ChessUI {
 
         if (preferredMode === 'human-vs-human') {
           state = humanVsHumanState; // May be null, that's ok
-
         } else if (preferredMode === 'human-vs-bot') {
           state = humanVsBotState; // May be null, that's ok
-
         }
       }
 
@@ -4070,7 +4058,6 @@ class ChessUI {
         // CRITICAL: Set the correct game mode BEFORE loading state
         if (selectedMode) {
           this.game.gameMode = selectedMode;
-          
         }
 
         this.game.loadGameState(state);
