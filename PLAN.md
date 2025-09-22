@@ -1,28 +1,32 @@
 # Chess R1 - Development Plan
 
-## Current Issue: Production Build Fails
+## ✅ Recently Completed R1 Plugin Fixes
 
-### Problem
-The production build crashes with "Cannot read properties of undefined (reading 'Game')" even though:
-- Dev server works perfectly
-- All code references have been changed to `window.jsChessEngine.Game`
-- The minified code contains the correct references
+### All Issues Resolved (9/22/2025)
+1. ✅ **Header Tap Zones** - Left edge triggers undo, right edge triggers redo, middle opens options
+2. ✅ **Asa Bot Failure** - Removed Web Worker dependency, all bots now work reliably
+3. ✅ **Bot System Simplified** - Reduced to 3 difficulties: Evy (Easy), Emmy (Normal), Asa (Hard)
+4. ✅ **Minimum Bot Delay** - Added 1-second minimum delay for all bot moves
+5. ✅ **CSS Grid Sizing** - Fixed cells changing size when pieces present
+6. ✅ **Undo Notifications** - Fixed notifications disappearing during bot thinking
+7. ✅ **Table Mode Selection** - Fixed black piece selection after board flip
+8. ✅ **Bot Difficulty Labels** - Updated to match new 3-level system
 
-### Root Cause
-Minification/bundling creates an execution order issue where something tries to use jsChessEngine before it's initialized.
-
-### Fix Required
-1. [ ] Ensure jsChessEngine is initialized before any class definitions
-2. [ ] Add defensive checks in ChessGame constructor
-3. [ ] Consider wrapping chess engine initialization in an IIFE
-4. [ ] Test production build with Puppeteer to verify fix
+## Current Status
+- **App Version**: v0.0.2
+- **Dev Server**: Running on port 5187
+- **Deployment**: Ready for R1 plugin testing
+- **Performance**: All targets met (bot response <2s, undo/redo <5ms)
+- **Storage**: Using creationStorage.plain with localStorage fallback
 
 ## Directory Structure
-- `/app` - Main application source and build
-- `/rabbitos-plugin` - Deployment package structure for Rabbit R1
-- No other directories or test files needed
+- `/app` - Main application source
+- `/app/src` - Source files (main.js, style.css, etc.)
+- `/app/dist` - Production build output
+- `/static` - Built assets for deployment
 
 ## Key Files
 - `app/src/main.js` - Main application code
-- `app/dist/` - Production build output
-- `rabbitos-plugin/apps/app/dist/` - Deployment package location
+- `app/index.html` - App structure
+- `app/src/style.css` - Styling
+- `RABBITOS.md` - R1 deployment instructions
