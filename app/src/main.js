@@ -507,27 +507,11 @@ class ChessGame {
    */
   async executeBotMove() {
 
-    // DEBUG: Show on page for visibility
-    const debugMsg = `DEBUG: botWasCancelled=${this.botWasCancelled}`;
-    if (window.gameUI) {
-      window.gameUI.showNotification(debugMsg, 'info');
-    }
-
-    // Debug each condition separately
+    // Check conditions
     const isHumanVsBot = this.gameMode === 'human-vs-bot';
     const isBotTurn = this.isBotTurn();
     const isValidStatus = this.gameStatus === 'playing' || this.gameStatus === 'check';
     const engineTurn = this.engine.exportJson().turn;
-
-      isHumanVsBot,
-      isBotTurn,
-      isValidStatus,
-      gameMode: this.gameMode,
-      currentPlayer: this.currentPlayer,
-      humanColor: this.humanColor,
-      gameStatus: this.gameStatus,
-      engineTurn: engineTurn
-    });
 
     if (!isHumanVsBot || !isBotTurn || !isValidStatus) {
       const failReason = {
@@ -535,11 +519,6 @@ class ChessGame {
         botTurn_fail: !isBotTurn ? `Not bot turn (${this.currentPlayer} === ${this.humanColor})` : 'OK',
         validStatus_fail: !isValidStatus ? `Invalid status (${this.gameStatus})` : 'OK'
       };
-
-      // DEBUG: Show failure reason on page
-      if (window.gameUI && !isBotTurn) {
-        window.gameUI.showNotification(`DEBUG: Bot skipped - not bot's turn`, 'warning');
-      }
 
       return { success: false, enteredCheck: false };
     }
@@ -2844,13 +2823,6 @@ class ChessUI {
 
     // In human-vs-bot mode, prevent human from moving during bot's turn
     // BUT allow moves if bot was cancelled via undo
-      gameMode: this.game.gameMode,
-      isBotTurn: this.game.isBotTurn(),
-      botCancelled: this.botCancelled,
-      botWasCancelled: this.game.botWasCancelled,
-      currentPlayer: this.game.currentPlayer,
-      humanColor: this.game.humanColor
-    });
     if (this.game.gameMode === 'human-vs-bot' && this.game.isBotTurn() && !this.botCancelled && !this.game.botWasCancelled) {
       // If we're in undo/redo state, allow the user to make a move for bot
       if (this.game.isInUndoRedoState) {
@@ -3023,16 +2995,6 @@ class ChessUI {
     } else {
       // Select piece if it belongs to current player
       const piece = this.game.board[logicalRow][logicalCol];
-
-        logicalRow,
-        logicalCol,
-        piece: piece ? `${piece.color} ${piece.type}` : 'null',
-        pieceColor: piece?.color,
-        humanColor: this.game.humanColor,
-        currentPlayer: this.game.currentPlayer,
-        botCancelled: this.botCancelled,
-        gameBotWasCancelled: this.game.botWasCancelled
-      });
 
       // FIX: When bot is cancelled, allow selecting human pieces regardless of whose turn it is
       const canSelectPiece = (this.botCancelled || this.game.botWasCancelled)
