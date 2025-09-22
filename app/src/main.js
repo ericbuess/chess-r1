@@ -218,23 +218,41 @@ class ChessGame {
       // Capture sound metadata for faithful replay
       const soundsPlayed = {};
 
-      // Play action sound (capture or move) and record what was played
+      // Record what sounds should be played but don't play them yet
       if (isCapture) {
-        const indices = this.playSound('capture');
+        // Pre-select capture sound indices
+        const indices = this.sounds.capture();
         if (indices) soundsPlayed.action = { type: 'capture', indices };
       } else {
-        const index = this.playSound('move');
-        if (typeof index === 'number') soundsPlayed.action = { type: 'move', index };
+        // Pre-select move sound index
+        const lastIndex = this.sounds.lastMoveIndex || 0;
+        const index = (lastIndex + 1 + Math.floor(Math.random() * 3)) % 5;
+        soundsPlayed.action = { type: 'move', index };
       }
 
-      // Play status sound with delay if there was a capture and record
+      // Record status sound metadata
       if (this.gameStatus === 'checkmate') {
         soundsPlayed.status = 'checkmate';
-        setTimeout(() => this.playSound('checkmate'), isCapture ? 100 : 0);
       } else if (this.gameStatus === 'check') {
         soundsPlayed.status = 'check';
-        setTimeout(() => this.playSound('check'), isCapture ? 100 : 0);
       }
+
+      // Play sounds after a small delay to sync with visual updates
+      setTimeout(() => {
+        // Play action sound
+        if (isCapture) {
+          this.playSound('capture');
+        } else {
+          this.playSound('move');
+        }
+
+        // Play status sound with additional delay if there was a capture
+        if (this.gameStatus === 'checkmate') {
+          setTimeout(() => this.playSound('checkmate'), isCapture ? 100 : 0);
+        } else if (this.gameStatus === 'check') {
+          setTimeout(() => this.playSound('check'), isCapture ? 100 : 0);
+        }
+      }, 100); // Small delay to let piece visually land
 
       // Use unified state recording method with sound metadata
       this.recordGameState({
@@ -459,26 +477,9 @@ class ChessGame {
           sounds: Object.keys(soundsPlayed).length > 0 ? soundsPlayed : null
         });
 
-        // Now actually play the sounds after a delay to sync with animation
-        setTimeout(() => {
-          // Play the pre-selected sounds
-          if (soundsPlayed.action) {
-            if (soundsPlayed.action.type === 'capture' && soundsPlayed.action.indices) {
-              // Play capture with the pre-selected indices
-              this.playSound('capture');
-            } else if (soundsPlayed.action.type === 'move') {
-              // Play move sound
-              this.playSound('move');
-            }
-          }
-
-          // Play status sounds
-          if (soundsPlayed.status === 'checkmate') {
-            setTimeout(() => this.playSound('checkmate'), capturedPiece ? 100 : 0);
-          } else if (soundsPlayed.status === 'check') {
-            setTimeout(() => this.playSound('check'), capturedPiece ? 100 : 0);
-          }
-        }, 400);
+        // Don't play sounds here - let the UI layer handle timing after display update
+        // Store what sounds to play in a temporary property for UI to access
+        this.pendingBotSounds = { soundsPlayed, capturedPiece };
 
         // Auto-save after successful bot move
         await this.autoSave();
@@ -1423,9 +1424,10 @@ class ChessGame {
       audio.play().catch(() => {});
     };
 
-    // Play action sounds only for the move landing, not the return
+    // Only play sounds for redo (forward), never for undo (reverse)
+    // Undo means going back to before the move, so no sound should play
     if (sounds.action && !reverse) {
-      // For redo (forward), play sounds when piece lands at destination
+      // For redo, play sounds when piece lands at destination
       if (sounds.action.type === 'move' && typeof sounds.action.index === 'number') {
         // Play the exact move sound that was played
         if (soundFiles.moves[sounds.action.index]) {
@@ -1441,33 +1443,19 @@ class ChessGame {
           setTimeout(() => playAudio(allSounds[idx2], 0.4), 150);  // Normal volume with proper delay
         }
       }
-    } else if (sounds.action && reverse) {
-      // For undo (reverse), play sounds when piece returns to destination (which is the original source)
-      // But we want sounds to play at the "landing" position of the undo animation
-      if (sounds.action.type === 'move' && typeof sounds.action.index === 'number') {
-        if (soundFiles.moves[sounds.action.index]) {
-          playAudio(soundFiles.moves[sounds.action.index]);
-        }
-      } else if (sounds.action.type === 'capture' && sounds.action.indices) {
-        const [idx1, idx2] = sounds.action.indices;
-        // For undo, play capture sounds in reverse order with proper timing
-        if (allSounds[idx2]) {
-          playAudio(allSounds[idx2], 0.4);  // Second sound first at normal volume
-        }
-        if (allSounds[idx1]) {
-          setTimeout(() => playAudio(allSounds[idx1], 0.25), 150);  // First sound second, softer with proper delay
-        }
-      }
     }
+    // No sounds for undo (reverse = true)
 
-    // Play status sounds after a delay
-    const statusDelay = (sounds.action && sounds.action.type === 'capture') ? 100 : 0;
-    if (sounds.status === 'checkmate' || sounds.status === 'check') {
-      setTimeout(() => {
-        if (soundFiles.pop_check) {
-          playAudio(soundFiles.pop_check);
-        }
-      }, statusDelay);
+    // Play status sounds after a delay (only for redo, not undo)
+    if (!reverse) {
+      const statusDelay = (sounds.action && sounds.action.type === 'capture') ? 100 : 0;
+      if (sounds.status === 'checkmate' || sounds.status === 'check') {
+        setTimeout(() => {
+          if (soundFiles.pop_check) {
+            playAudio(soundFiles.pop_check);
+          }
+        }, statusDelay);
+      }
     }
   }
 
@@ -1590,11 +1578,8 @@ class ChessGame {
     // Set flag to indicate we're in undo/redo state
     this.isInUndoRedoState = true;
 
-    // Play sounds faithfully from the move being undone (in reverse for undo)
-    // Only play if we're undoing an actual move (not returning to initial state)
-    if (undoingState && undoingState.sounds && undoingState.move) {
-      this.playReplayedSounds(undoingState.sounds, true);  // true = reverse order for undo
-    }
+    // Don't play sounds on undo - we're going back to before the move happened
+    // Sounds should only play when moves are made or redone, not when undone
 
     return true;
   }
@@ -2344,7 +2329,34 @@ class ChessUI {
           this.highlightKing(this.game.humanColor);
         }
 
-        // Sound is already played in generateBotMove() - removed duplicate
+        // Play bot sounds after display update with a small delay to sync with visual
+        if (this.game.pendingBotSounds) {
+          const { soundsPlayed, capturedPiece } = this.game.pendingBotSounds;
+
+          // Small delay to let display update render
+          setTimeout(() => {
+            // Play the pre-selected sounds
+            if (soundsPlayed.action) {
+              if (soundsPlayed.action.type === 'capture' && soundsPlayed.action.indices) {
+                // Play capture sound
+                this.game.playSound('capture');
+              } else if (soundsPlayed.action.type === 'move') {
+                // Play move sound
+                this.game.playSound('move');
+              }
+            }
+
+            // Play status sounds
+            if (soundsPlayed.status === 'checkmate') {
+              setTimeout(() => this.game.playSound('checkmate'), capturedPiece ? 100 : 0);
+            } else if (soundsPlayed.status === 'check') {
+              setTimeout(() => this.game.playSound('check'), capturedPiece ? 100 : 0);
+            }
+          }, 100); // Small delay to sync with visual update
+
+          // Clear pending sounds
+          this.game.pendingBotSounds = null;
+        }
 
         // Hide thinking indicator and re-enable input only after successful move
         this.showBotThinking(false);
