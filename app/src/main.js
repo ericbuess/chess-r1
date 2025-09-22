@@ -3714,14 +3714,8 @@ class ChessUI {
       });
     });
 
-    // Close menu when clicking outside
-    if (overlay) {
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) {
-          this.hideOptionsMenu();
-        }
-      });
-    }
+    // Removed: Menu should only close via buttons, not clicking outside
+    // This ensures users can't accidentally close the menu
   }
 
   confirmNewGame() {
