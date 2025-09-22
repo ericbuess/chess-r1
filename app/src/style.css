@@ -210,7 +210,7 @@ html, body {
     display: inline-block;
     vertical-align: middle; /* Center on x-height */
     position: relative;
-    top: -0.1em; /* Shift all pieces up to align better */
+    top: -0.15em; /* Shift all pieces up to align better */
 }
 
 /* Make only pawns smaller - they are naturally shorter pieces */
