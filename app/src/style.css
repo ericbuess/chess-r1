@@ -206,6 +206,7 @@ html, body {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
+    gap: 0; /* Prevent grid gaps that might cause lines */
     border: 2px solid #FE5F00;
     margin: 0.5vh auto 0;
     transform-style: preserve-3d;
@@ -218,6 +219,9 @@ html, body {
     /* Safari-compatible transition */
     -webkit-transition: -webkit-transform 0.3s ease-in-out;
     transition: transform 0.3s ease-in-out;
+    /* Prevent subpixel rendering issues */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 /* Orientation Modes */
@@ -251,6 +255,10 @@ html, body {
     /* Safari stacking fix */
     z-index: 1;
     position: relative;
+    /* Fix rendering lines during rotation */
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* In table mode, board and pieces inherit container rotation - no additional rotation needed */
@@ -381,6 +389,10 @@ html, body {
     transition: transform 0.02s ease;
     touch-action: manipulation; /* Prevent browser tap delays */
     -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+    /* Prevent subpixel rendering artifacts */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
 .chess-square:active {

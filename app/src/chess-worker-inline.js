@@ -24,11 +24,9 @@ export function createChessWorker() {
           importScripts(url);
           if (self["js-chess-engine"]) {
             loaded = true;
-            console.log('Chess engine loaded from:', url);
             break;
           }
         } catch (e) {
-          console.log('Failed to load from:', path);
         }
       }
     }
