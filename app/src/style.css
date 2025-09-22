@@ -208,14 +208,15 @@ html, body {
 /* Individual captured piece styling */
 .captured-piece {
     display: inline-block;
-    vertical-align: text-bottom; /* Align with bottom of text */
+    vertical-align: middle; /* Center on x-height */
+    position: relative;
+    top: 0.1em; /* Shift all pieces down slightly to align better */
 }
 
 /* Make only pawns smaller - they are naturally shorter pieces */
 .captured-pawn {
     font-size: 0.75em; /* 75% of the size of other pieces */
-    margin-bottom: -0.2em; /* Compensate for empty space in pawn glyph */
-    /* Inherits text-bottom alignment from .captured-piece */
+    /* Inherits alignment from .captured-piece */
 }
 
 /* Chess Board - Responsive scaling for any viewport */
