@@ -1689,8 +1689,8 @@ class ChessGame {
       'rook': { white: '♜', black: '♜' },
       'bishop': { white: '♝', black: '♝' },
       'knight': { white: '♞', black: '♞' },
-      // Use simple pawn symbol without variation selector for consistency
-      'pawn': { white: '♟', black: '♟' }  // U+265F only
+      // Use pawn with variation selector to force text rendering (not emoji)
+      'pawn': { white: '♟︎', black: '♟︎' }  // U+265F + U+FE0E
     };
     return symbols[piece.type]?.[piece.color] || '';
   }
@@ -1886,11 +1886,9 @@ class ChessUI {
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
     const isTableMode = this.game.orientationMode === 'table';
-    const isHandoffMode = this.game.orientationMode === 'handoff';
 
-    // Table and Handoff modes use CSS rotation, so data-row/data-col don't need reversal
-    // Only bot games need coordinate reversal when board is flipped
-    const needsCoordinateReversal = this.game.boardFlipped && isBotGame;
+    // Table mode uses CSS rotation, so data-row/data-col don't need reversal
+    const needsCoordinateReversal = this.game.boardFlipped && isBotGame && !isTableMode;
 
     if (needsCoordinateReversal) {
       return {
@@ -1910,11 +1908,9 @@ class ChessUI {
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
     const isTableMode = this.game.orientationMode === 'table';
-    const isHandoffMode = this.game.orientationMode === 'handoff';
 
-    // Table and Handoff modes use CSS rotation, so data-row/data-col don't need reversal
-    // Only bot games need coordinate reversal when board is flipped
-    const needsCoordinateReversal = this.game.boardFlipped && isBotGame;
+    // Table mode uses CSS rotation, so data-row/data-col don't need reversal
+    const needsCoordinateReversal = this.game.boardFlipped && isBotGame && !isTableMode;
 
     if (needsCoordinateReversal) {
       return {
