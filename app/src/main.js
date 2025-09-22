@@ -354,9 +354,6 @@ class ChessGame {
    * Generate bot move
    */
   async generateBotMove() {
-    console.log('[generateBotMove] === ENTRY ===');
-    console.log('[generateBotMove] botWasCancelled:', this.botWasCancelled);
-    console.log('[generateBotMove] botDifficulty:', this.botDifficulty);
 
     try {
       // Get the piece positions before the move for history tracking
@@ -368,7 +365,6 @@ class ChessGame {
 
       // Check if bot was cancelled (use game.botWasCancelled for ChessGame instance)
       if (this.botWasCancelled) {
-        console.log('[generateBotMove] ❌ CANCELLED before calculation - botWasCancelled flag is true');
         return null;
       }
 
@@ -377,14 +373,12 @@ class ChessGame {
 
       // For high difficulties (3+), try to use a simpler approach
       // that's more responsive but still challenging
-      console.log('[generateBotMove] Calling engine.aiMove() with difficulty:', this.botDifficulty);
 
       let aiMove;
       let finalEngineState;
 
       // Use Web Worker for Asa (difficulty 3) to make it interruptible
       if (this.botDifficulty === 3) {
-        console.log('[generateBotMove] Using Web Worker for Asa (difficulty 3)');
 
         // Import the worker functions
         const { createCancellableBotMove } = await import('./chess-worker-inline.js');
@@ -398,7 +392,6 @@ class ChessGame {
 
           // Check if cancelled during worker calculation
           if (this.botWasCancelled) {
-            console.log('[generateBotMove] ❌ CANCELLED during worker calculation');
             return null;
           }
 
@@ -407,13 +400,11 @@ class ChessGame {
 
           // Update the engine with the new state from the worker
           this.engine = new window.jsChessEngine.Game(finalEngineState);
-          console.log('[generateBotMove] Worker returned move:', aiMove);
 
         } catch (error) {
           if (error.message === 'Bot calculation cancelled' ||
               error.message === 'Bot calculation timed out' ||
               this.botWasCancelled) {
-            console.log('[generateBotMove] Worker calculation cancelled or timed out:', error.message);
             return null;
           }
           throw error;
@@ -423,12 +414,10 @@ class ChessGame {
       } else {
         // For other difficulties, use the synchronous method
         aiMove = this.engine.aiMove(this.botDifficulty);
-        console.log('[generateBotMove] aiMove returned:', aiMove);
       }
 
       // Check if bot was cancelled during calculation
       if (this.botWasCancelled) {
-        console.log('[generateBotMove] ❌ CANCELLED after calculation - restoring engine state');
         // Restore the engine state from before the bot move
         this.engine = new window.jsChessEngine.Game(engineStateBeforeBot);
         this.updateCachedState();
@@ -438,7 +427,6 @@ class ChessGame {
 
       // Extract moves from aiMove object (it returns an object like {"E2": "E4"})
       const moves = Object.entries(aiMove || {});
-      console.log('[generateBotMove] Extracted moves:', moves);
 
       // Only update cached state if NOT cancelled
       // The move has already been made in the engine
@@ -496,7 +484,6 @@ class ChessGame {
         // Auto-save after successful bot move
         await this.autoSave();
 
-        console.log('[generateBotMove] ✅ SUCCESS - returning move');
         return {
           from: fromCoords,
           to: toCoords,
@@ -504,7 +491,6 @@ class ChessGame {
           enteredCheck
         };
       } else {
-        console.log('[generateBotMove] ❌ No valid moves in aiMove result');
         return null;
       }
     } catch (error) {
@@ -519,10 +505,6 @@ class ChessGame {
    * Execute bot move
    */
   async executeBotMove() {
-    console.log('\n[executeBotMove] ===== ENTRY =====');
-    console.log('[executeBotMove] botWasCancelled:', this.botWasCancelled);
-    console.log('[executeBotMove] _globalBotProcessing:', ChessUI._globalBotProcessing);
-    console.log('[executeBotMove] Stack trace:', new Error().stack.split('\n').slice(1, 4).join('\n'));
 
     // DEBUG: Show on page for visibility
     const debugMsg = `DEBUG: botWasCancelled=${this.botWasCancelled}`;
@@ -536,7 +518,6 @@ class ChessGame {
     const isValidStatus = this.gameStatus === 'playing' || this.gameStatus === 'check';
     const engineTurn = this.engine.exportJson().turn;
 
-    console.log('[executeBotMove] Conditions Check:', {
       isHumanVsBot,
       isBotTurn,
       isValidStatus,
@@ -548,13 +529,11 @@ class ChessGame {
     });
 
     if (!isHumanVsBot || !isBotTurn || !isValidStatus) {
-      console.log('[executeBotMove] ❌ CONDITIONS FAILED');
       const failReason = {
         humanVsBot_fail: !isHumanVsBot ? 'Not human vs bot mode' : 'OK',
         botTurn_fail: !isBotTurn ? `Not bot turn (${this.currentPlayer} === ${this.humanColor})` : 'OK',
         validStatus_fail: !isValidStatus ? `Invalid status (${this.gameStatus})` : 'OK'
       };
-      console.log('[executeBotMove] Failed because:', failReason);
 
       // DEBUG: Show failure reason on page
       if (window.gameUI && !isBotTurn) {
@@ -565,20 +544,15 @@ class ChessGame {
     }
 
     // Clear cancellation flag only after we confirm bot should move
-    console.log('[executeBotMove] ✅ Conditions passed, clearing botWasCancelled flag');
     this.botWasCancelled = false;
 
     const startTime = Date.now();
     
     // Generate AND execute bot move (aiMove() does both!)
-    console.log('[executeBotMove] Calling generateBotMove()...');
     const botMove = await this.generateBotMove();
 
-    console.log('[executeBotMove] Bot move result:', botMove ? 'Move generated' : 'NULL - Move failed/cancelled');
 
     if (!botMove) {
-      console.log('[executeBotMove] ❌ NO BOT MOVE - returning failure');
-      console.log('[executeBotMove] botWasCancelled after generateBotMove:', this.botWasCancelled);
       return { success: false, enteredCheck: false };
     }
     
@@ -2063,7 +2037,6 @@ class ChessUI {
     // CRITICAL: Clear bot cancellation flag when starting a new bot turn
     // This ensures previous cancellations don't affect new bot moves
     if (this.game && this.game.botWasCancelled) {
-      console.log('[handleBotTurn] Clearing stale botWasCancelled flag');
       this.game.botWasCancelled = false;
     }
 
@@ -2305,7 +2278,6 @@ class ChessUI {
   cancelBotThinking() {
     // Cancel any running worker for Asa difficulty
     if (this.currentBotWorker && typeof this.currentBotWorker.cancel === 'function') {
-      console.log('[cancelBotThinking] Cancelling Web Worker calculation');
       // Cancel the worker - this will terminate it and reject the promise
       this.currentBotWorker.cancel();
       this.currentBotWorker = null;
@@ -2360,12 +2332,6 @@ class ChessUI {
 
     // Also mark it in the game state so it persists
     if (this.game) {
-      console.log('[cancelBotThinking] Setting game.botWasCancelled = true');
-      console.log('[cancelBotThinking] Current game state:');
-      console.log('  - currentPlayer:', this.game.currentPlayer);
-      console.log('  - humanColor:', this.game.humanColor);
-      console.log('  - gameStatus:', this.game.gameStatus);
-      console.log('  - stateHistory length:', this.game.stateHistory?.length);
       this.game.botWasCancelled = true;
     }
 
@@ -2842,12 +2808,9 @@ class ChessUI {
   }
 
   async handleSquareSelection(row, col) {
-    console.log(`[handleSquareSelection] Click at row=${row}, col=${col}`);
-    console.log(`[handleSquareSelection] State: isFlipping=${this.isFlipping}, inputEnabled=${this.inputEnabled}`);
 
     // Prevent interactions during board flip or when input is disabled
     if (this.isFlipping || this.inputEnabled === false) {
-      console.log('[handleSquareSelection] BLOCKED - isFlipping or input disabled');
       return;
     }
 
@@ -2864,19 +2827,16 @@ class ChessUI {
       this.justCancelledBot = false;
       // Only block if there's a risk of auto-move (i.e., selectedSquare exists)
       if (this.game.selectedSquare) {
-        console.log('[handleSquareSelection] BLOCKED - clearing stale selection after bot cancel');
         this.game.selectedSquare = null;
         this.game.possibleMoves = [];
         this.updateDisplay();
         return;
       }
       // If no selected square, allow the click to proceed normally
-      console.log('[handleSquareSelection] Bot was cancelled but no stale selection, allowing click');
     }
 
     // In human-vs-bot mode, prevent human from moving during bot's turn
     // BUT allow moves if bot was cancelled via undo
-    console.log('[handleSquareSelection] Bot turn check:', {
       gameMode: this.game.gameMode,
       isBotTurn: this.game.isBotTurn(),
       botCancelled: this.botCancelled,
@@ -2930,7 +2890,6 @@ class ChessUI {
     const logicalCol = logical.col;
     
     // Piece selection logic
-    console.log('[handleSquareSelection] selectedSquare before logic:', this.game.selectedSquare);
 
     if (this.game.selectedSquare) {
       const fromRow = this.game.selectedSquare.row;
@@ -2945,10 +2904,7 @@ class ChessUI {
       } else {
         // Check if the attempted move is valid before trying to make it
         const possibleMoves = this.game.getPossibleMoves(fromRow, fromCol);
-        console.log('[handleSquareSelection] Checking move from', fromRow, fromCol, 'to', logicalRow, logicalCol);
-        console.log('[handleSquareSelection] Possible moves:', possibleMoves.map(m => `(${m.row},${m.col})`).join(', '));
         const attemptedMove = possibleMoves.find(m => m.row === logicalRow && m.col === logicalCol);
-        console.log('[handleSquareSelection] Is valid move?', !!attemptedMove);
 
         if (attemptedMove) {
           // Move is valid, attempt to make it
@@ -2963,7 +2919,6 @@ class ChessUI {
             // CRITICAL: Clear bot cancelled flags since we've made a successful move
             // This ensures the bot will run on the next turn
             this.botCancelled = false;
-            console.log('[handleSquareSelection] Clearing game.botWasCancelled after human move');
             this.game.botWasCancelled = false;
 
             this.game.selectedSquare = null;
@@ -3013,7 +2968,6 @@ class ChessUI {
                     this.handleBotTurn();
                   }, 150);
                 } else {
-                  console.log('Bot already processing, skipping bot turn scheduling');
                 }
               } else {
                 
@@ -3062,7 +3016,6 @@ class ChessUI {
       // Select piece if it belongs to current player
       const piece = this.game.board[logicalRow][logicalCol];
 
-      console.log('[handleSquareSelection] Piece selection check:', {
         logicalRow,
         logicalCol,
         piece: piece ? `${piece.color} ${piece.type}` : 'null',
@@ -3078,13 +3031,10 @@ class ChessUI {
         ? (piece && piece.color === this.game.humanColor)  // After bot cancel, select human pieces
         : (piece && piece.color === this.game.currentPlayer); // Normal: select current player's pieces
 
-      console.log('[handleSquareSelection] canSelectPiece:', canSelectPiece);
 
       if (canSelectPiece) {
-        console.log('[handleSquareSelection] SELECTING PIECE at', logicalRow, logicalCol);
         this.game.selectedSquare = { row: logicalRow, col: logicalCol };
       } else {
-        console.log('[handleSquareSelection] CANNOT SELECT - wrong color or no piece');
       }
     }
     
@@ -3792,7 +3742,6 @@ class ChessUI {
   showNotification(message, type = 'default', duration = null) {
     // Don't interfere with rotating bot thinking messages
     if (this.thinkingInterval) {
-      console.log('Skipping notification during bot thinking:', message);
       return;
     }
 
@@ -4401,9 +4350,7 @@ window.addEventListener('scrollDown', async () => {
       }
 
       // Now undo the human move (or the only move if no bot cancellation)
-      console.log('[scrollDown] Before undo - currentPlayer:', chessGame.currentPlayer, 'humanColor:', chessGame.humanColor);
       const undoResult = chessGame.undoMove();
-      console.log('[scrollDown] After undo - currentPlayer:', chessGame.currentPlayer, 'humanColor:', chessGame.humanColor);
 
       // Determine if we're undoing a bot move for animation purposes
       let isUndoingBotMove = false;
@@ -4433,7 +4380,6 @@ window.addEventListener('scrollDown', async () => {
           // This prevents redoing the move that triggered bot thinking
           // The bot never made its move, so we can't redo past this point
           if (chessGame.currentStateIndex < chessGame.stateHistory.length - 1) {
-            console.log('[Undo] Truncating redo history after bot cancellation');
             chessGame.stateHistory = chessGame.stateHistory.slice(0, chessGame.currentStateIndex + 1);
           }
 
