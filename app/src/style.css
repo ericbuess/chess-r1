@@ -215,6 +215,8 @@ html, body {
 .captured-pawn {
     font-size: 0.75em; /* 75% of the size of other pieces */
     vertical-align: baseline; /* Align baseline with text */
+    position: relative;
+    top: -0.05em; /* Slight adjustment up to align with text baseline */
 }
 
 /* Chess Board - Responsive scaling for any viewport */
