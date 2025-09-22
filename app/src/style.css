@@ -269,8 +269,8 @@ html, body {
 
 /* ==== DATA ATTRIBUTE BASED ORIENTATION (Robust Solution) ==== */
 
-/* Table mode with board flipped - rotate board wrapper only */
-#game-container[data-orientation-mode="table"][data-board-flipped="true"] #board-wrapper {
+/* Table mode with board flipped - rotate entire container (UI and board) */
+#game-container[data-orientation-mode="table"][data-board-flipped="true"] {
     transform: rotate(180deg) translateZ(0);
     /* Safari stacking fix */
     z-index: 1;
