@@ -761,8 +761,7 @@ class ChessGame {
     this.boardFlipped = this.determineOrientation();
     
 
-    // Play new game sound
-    this.playSound('newGame');
+    // Removed new game sound - only play sounds on moves/undo/redo
   }
   
   /**
@@ -1259,13 +1258,9 @@ class ChessGame {
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         return playPromise.catch((error) => {
-          // If autoplay blocked, try to play on next user interaction
-          if (error.name === 'NotAllowedError') {
-            // Store for retry on next user interaction
-            document.addEventListener('click', () => {
-              audio.play().catch(() => {});
-            }, { once: true });
-          }
+          // If autoplay blocked, just silently fail
+          // Don't try to play on next interaction as it consumes the first tap
+          // Audio will work on subsequent actual moves
         });
       }
       return Promise.resolve();
