@@ -405,8 +405,10 @@ class ChessGame {
           aiMove = result.move;
           finalEngineState = result.finalState;
 
-          // Update the engine with the new state from the worker
-          this.engine = new window.jsChessEngine.Game(finalEngineState);
+          // Only update the engine if not cancelled
+          if (!this.botWasCancelled) {
+            this.engine = new window.jsChessEngine.Game(finalEngineState);
+          }
           console.log('[generateBotMove] Worker returned move:', aiMove);
 
         } catch (error) {
@@ -575,6 +577,12 @@ class ChessGame {
     const botMove = await this.generateBotMove();
 
     console.log('[executeBotMove] Bot move result:', botMove ? 'Move generated' : 'NULL - Move failed/cancelled');
+
+    // Check if bot was cancelled during generateBotMove (even if it returned a move)
+    if (this.botWasCancelled) {
+      console.log('[executeBotMove] ❌ Bot was cancelled during move generation - discarding move');
+      return { success: false, enteredCheck: false };
+    }
 
     if (!botMove) {
       console.log('[executeBotMove] ❌ NO BOT MOVE - returning failure');
