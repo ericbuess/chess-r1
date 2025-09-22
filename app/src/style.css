@@ -294,13 +294,14 @@ html, body {
     backface-visibility: hidden;
 }
 
-/* Handoff mode with board flipped - only rotate board and pieces */
-#game-container[data-orientation-mode="handoff"][data-board-flipped="true"] #chess-board {
-    transform: rotate(180deg) translateZ(1px);
+/* Handoff mode with board flipped - rotate container but keep pieces upright */
+#game-container[data-orientation-mode="handoff"][data-board-flipped="true"] {
+    transform: rotate(180deg) translateZ(0);
     /* Ensure transform is applied in Safari */
     will-change: transform;
 }
 
+/* Counter-rotate pieces in handoff mode to keep them upright after container rotation */
 #game-container[data-orientation-mode="handoff"][data-board-flipped="true"] .chess-piece {
     transform: rotate(180deg) translateZ(2px);
     /* Safari rendering fix */

@@ -1758,7 +1758,7 @@ class ChessUI {
     this.isBotProcessing = false; // Flag to prevent multiple concurrent bot turns
     this.thinkingInterval = null; // Store interval for message rotation
     this.isR1Device = this.detectR1Device(); // Detect if running on R1
-    this.useR1CoordinateFix = this.shouldUseR1CoordinateFix(); // Check if R1 coordinate fix should be applied
+    this.useR1CoordinateFix = true; // FIX IS ALWAYS ON FOR THIS BUILD
     this.enableR1Logging = this.shouldEnableR1Logging(); // Check if R1 debug logging is enabled
     this.botTurnTimer = null; // Global timer to prevent multiple queued bot turn calls
     this.thinkingMessageTimer = null; // Store timeout for initial thinking message display
@@ -1826,8 +1826,15 @@ class ChessUI {
   }
 
   async handleSquareClick(event) {
-    const row = parseInt(event.target.dataset.row);
-    const col = parseInt(event.target.dataset.col);
+    let row = parseInt(event.target.dataset.row);
+    let col = parseInt(event.target.dataset.col);
+
+    // Show what was clicked and what piece is there
+    const piece = this.game.board[row][col];
+    const pieceStr = piece ? this.game.getPieceSymbol(piece) : 'empty';
+    this.showNotification(`CLICK:${row},${col} [${pieceStr}] Mode:${this.game.orientationMode} Flip:${this.game.boardFlipped}`, 'info', 5000);
+
+    // Clicks in Chrome work correctly - no fix needed
     await this.handleSquareSelection(row, col);
   }
 
@@ -1862,31 +1869,12 @@ class ChessUI {
         let row = parseInt(square.dataset.row);
         let col = parseInt(square.dataset.col);
 
-        // Visual debug for R1 (since no console access)
-        if (this.isR1Device) {
-          const debugInfo = `T:${row},${col} ${this.game.boardFlipped ? 'F' : 'N'} Fix:${this.useR1CoordinateFix ? 'Y' : 'N'}`;
-          this.showNotification(debugInfo, 'info', 500);
-        }
+        // Show debug info with piece information
+        const piece = this.game.board[row][col];
+        const pieceStr = piece ? this.game.getPieceSymbol(piece) : 'empty';
+        this.showNotification(`TOUCH:${row},${col} [${pieceStr}] Mode:${this.game.orientationMode} Flip:${this.game.boardFlipped}`, 'info', 5000);
 
-        // R1 browser fix: Manual coordinate transformation for handoff mode
-        // When board is rotated 180° via CSS in handoff mode, R1 browser
-        // doesn't correctly map touch coordinates to the visually transformed elements
-        // NOTE: This fix can be toggled via ?r1fix=true URL parameter
-        if (this.useR1CoordinateFix &&
-            this.isR1Device &&
-            this.game.orientationMode === 'handoff' &&
-            this.game.boardFlipped) {
-          // Reverse coordinates for R1 in handoff mode when board is flipped
-          const fixedRow = 7 - row;
-          const fixedCol = 7 - col;
-
-          if (this.isR1Device) {
-            this.showNotification(`Fixed: ${row},${col}→${fixedRow},${fixedCol}`, 'warning', 500);
-          }
-
-          row = fixedRow;
-          col = fixedCol;
-        }
+        // No coordinate fix needed - CSS now rotates container for both table and handoff modes
 
         await this.handleSquareSelection(row, col);
       }
@@ -1910,6 +1898,13 @@ class ChessUI {
 
   // Detect if running on Rabbit R1 device
   detectR1Device() {
+    // Allow testing R1 features in Chrome with ?r1test=true
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('r1test') === 'true') {
+      console.log('[R1 Test Mode] Simulating R1 device in Chrome');
+      return true;
+    }
+
     // Check for R1-specific characteristics
     // R1 has specific viewport dimensions and user agent patterns
     const isR1Viewport = window.innerWidth === 240 && window.innerHeight === 320;
@@ -1921,7 +1916,8 @@ class ChessUI {
     // Also check if running in a WebView context with specific R1 characteristics
     const isWebView = window.webkit || window.flutter_inappwebview;
 
-    const isR1 = (isR1Viewport && isWebView) || hasFlutterChannel || hasR1UserAgent;
+    // Simplified detection - just check viewport size as primary indicator
+    const isR1 = isR1Viewport || hasFlutterChannel || hasR1UserAgent;
 
     // Log detection result
     if (this.shouldEnableR1Logging()) {
@@ -2848,21 +2844,12 @@ class ChessUI {
   }
 
   async handleSquareSelection(row, col) {
-    // Debug logging for R1 square selection
-    if (this.enableR1Logging) {
-      console.log('[R1 Square Selection]', {
-        inputRow: row,
-        inputCol: col,
-        isFlipping: this.isFlipping,
-        inputEnabled: this.inputEnabled,
-        currentPlayer: this.game.currentPlayer,
-        boardFlipped: this.game.boardFlipped,
-        orientationMode: this.game.orientationMode
-      });
-    }
+    // ALWAYS show selection info
+    this.showNotification(`SELECT:${row},${col} Turn:${this.game.currentPlayer} Mode:${this.game.orientationMode} Flip:${this.game.boardFlipped}`, 'warning', 5000);
 
     // Prevent interactions during board flip or when input is disabled
     if (this.isFlipping || this.inputEnabled === false) {
+      this.showNotification('Input disabled!', 'error', 3000);
       return;
     }
 
@@ -2934,17 +2921,12 @@ class ChessUI {
     const logicalRow = logical.row;
     const logicalCol = logical.col;
 
-    // Debug logging for coordinate transformation
-    if (this.enableR1Logging) {
-      console.log('[R1 Coordinate Transform]', {
-        displayRow: row,
-        displayCol: col,
-        logicalRow: logical.row,
-        logicalCol: logical.col,
-        boardFlipped: this.game.boardFlipped,
-        orientationMode: this.game.orientationMode,
-        selectedPiece: this.game.board[logicalRow][logicalCol]
-      });
+    // Visual debug for coordinate transformation on R1
+    if (this.isR1Device) {
+      const piece = this.game.board[logicalRow][logicalCol];
+      const pieceStr = piece ? `${piece.color[0]}${piece.type[0].toUpperCase()}` : '--';
+      const coordInfo = `D:${row},${col}→L:${logical.row},${logical.col} [${pieceStr}]`;
+      this.showNotification(coordInfo, 'warning', 10000);
     }
     
     // Piece selection logic
@@ -3529,20 +3511,6 @@ class ChessUI {
   }
 
   setupOptionsEventListeners() {
-    // Toggle R1 coordinate fix (only shown on R1 devices)
-    const r1FixToggle = document.getElementById('r1-fix-toggle');
-    if (this.isR1Device && r1FixToggle) {
-      r1FixToggle.style.display = 'block';
-      r1FixToggle.textContent = `R1 Fix: ${this.useR1CoordinateFix ? 'ON' : 'OFF'}`;
-
-      r1FixToggle.addEventListener('click', () => {
-        this.useR1CoordinateFix = !this.useR1CoordinateFix;
-        localStorage.setItem('r1CoordinateFix', this.useR1CoordinateFix.toString());
-        r1FixToggle.textContent = `R1 Fix: ${this.useR1CoordinateFix ? 'ON' : 'OFF'}`;
-        console.log('[R1 Fix Toggle]', { enabled: this.useR1CoordinateFix });
-        this.showNotification(`R1 coordinate fix ${this.useR1CoordinateFix ? 'enabled' : 'disabled'}`, 'info');
-      });
-    }
 
     // Game Mode radio buttons
     const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
