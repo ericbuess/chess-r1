@@ -1757,6 +1757,7 @@ class ChessUI {
     this.audioInitialized = false; // Track audio initialization for Chrome/Android
     this.isBotProcessing = false; // Flag to prevent multiple concurrent bot turns
     this.thinkingInterval = null; // Store interval for message rotation
+    this.isR1Device = this.detectR1Device(); // Detect if running on R1
     this.botTurnTimer = null; // Global timer to prevent multiple queued bot turn calls
     this.thinkingMessageTimer = null; // Store timeout for initial thinking message display
 
@@ -1856,8 +1857,20 @@ class ChessUI {
       }
       
       if (square && square.dataset.row !== undefined) {
-        const row = parseInt(square.dataset.row);
-        const col = parseInt(square.dataset.col);
+        let row = parseInt(square.dataset.row);
+        let col = parseInt(square.dataset.col);
+
+        // R1 browser fix: Manual coordinate transformation for handoff mode
+        // When board is rotated 180° via CSS in handoff mode, R1 browser
+        // doesn't correctly map touch coordinates to the visually transformed elements
+        if (this.isR1Device &&
+            this.game.orientationMode === 'handoff' &&
+            this.game.boardFlipped) {
+          // Reverse coordinates for R1 in handoff mode when board is flipped
+          row = 7 - row;
+          col = 7 - col;
+        }
+
         await this.handleSquareSelection(row, col);
       }
     }
@@ -1873,9 +1886,25 @@ class ChessUI {
     if (this.touchTarget && this.touchTarget.classList.contains('chess-square')) {
       this.touchTarget.classList.remove('touch-active');
     }
-    
+
     this.touchStartTime = null;
     this.touchTarget = null;
+  }
+
+  // Detect if running on Rabbit R1 device
+  detectR1Device() {
+    // Check for R1-specific characteristics
+    // R1 has specific viewport dimensions and user agent patterns
+    const isR1Viewport = window.innerWidth === 240 && window.innerHeight === 320;
+    const hasFlutterChannel = typeof window.flutter_inappwebview !== 'undefined';
+    const hasR1UserAgent = navigator.userAgent.includes('Rabbit') ||
+                           navigator.userAgent.includes('R1') ||
+                           navigator.userAgent.includes('Flutter');
+
+    // Also check if running in a WebView context with specific R1 characteristics
+    const isWebView = window.webkit || window.flutter_inappwebview;
+
+    return (isR1Viewport && isWebView) || hasFlutterChannel || hasR1UserAgent;
   }
 
   // Convert display coordinates to logical coordinates based on board flip
