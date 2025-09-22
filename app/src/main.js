@@ -1920,13 +1920,14 @@ class ChessUI {
   getLogicalCoordinates(displayRow, displayCol) {
     // Apply coordinate reversal based on game mode:
     // - Bot games: Always use coordinate reversal when boardFlipped (black at bottom)
-    // - Table mode: Use coordinate reversal (with CSS rotation)
+    // - Table mode: NO coordinate reversal (CSS rotation handles everything)
     // - Handoff mode: NO coordinate reversal (CSS rotation only)
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
     const isTableMode = this.game.orientationMode === 'table';
-    const needsCoordinateReversal = this.game.boardFlipped &&
-                                    (isBotGame || isTableMode);
+
+    // Table mode uses CSS rotation, so data-row/data-col don't need reversal
+    const needsCoordinateReversal = this.game.boardFlipped && isBotGame && !isTableMode;
 
     if (needsCoordinateReversal) {
       return {
@@ -1941,13 +1942,14 @@ class ChessUI {
   getDisplayCoordinates(logicalRow, logicalCol) {
     // Apply coordinate reversal based on game mode:
     // - Bot games: Always use coordinate reversal when boardFlipped (black at bottom)
-    // - Table mode: Use coordinate reversal (with CSS rotation)
+    // - Table mode: NO coordinate reversal (CSS rotation handles everything)
     // - Handoff mode: NO coordinate reversal (CSS rotation only)
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
     const isTableMode = this.game.orientationMode === 'table';
-    const needsCoordinateReversal = this.game.boardFlipped &&
-                                    (isBotGame || isTableMode);
+
+    // Table mode uses CSS rotation, so data-row/data-col don't need reversal
+    const needsCoordinateReversal = this.game.boardFlipped && isBotGame && !isTableMode;
 
     if (needsCoordinateReversal) {
       return {
@@ -3704,10 +3706,19 @@ class ChessUI {
    * @param {number} duration - Optional duration in ms (defaults based on type)
    */
   showNotification(message, type = 'default', duration = null) {
-    // Don't interfere with rotating bot thinking messages
-    if (this.thinkingInterval) {
-      // Skipping notification during bot thinking
+    // Check if this is an undo/redo notification (move count display)
+    const isUndoRedoNotification = message.includes('At move') || message.includes('At start of game');
+
+    // Don't interfere with rotating bot thinking messages UNLESS it's an undo/redo notification
+    if (this.thinkingInterval && !isUndoRedoNotification) {
+      // Skipping notification during bot thinking (except for undo/redo)
       return;
+    }
+
+    // If showing undo/redo notification during bot thinking, temporarily stop the thinking animation
+    if (this.thinkingInterval && isUndoRedoNotification) {
+      clearInterval(this.thinkingInterval);
+      this.thinkingInterval = null;
     }
 
     const label = document.getElementById('instruction-label');
@@ -3854,12 +3865,13 @@ class ChessUI {
 
     if (type === 'undo') {
       if (currentIndex >= 0) {
-        this.showInstructionLabel(`At move ${currentMoveNumber} (${currentIndex + 1}/${totalMoves})`);
+        // Show with longer duration (3000ms instead of default 2000ms)
+        this.showNotification(`At move ${currentMoveNumber} (${currentIndex + 1}/${totalMoves})`, 'info', 3000);
       } else {
-        this.showInstructionLabel(`At start of game`);
+        this.showNotification(`At start of game`, 'info', 3000);
       }
     } else if (type === 'redo') {
-      this.showInstructionLabel(`At move ${currentMoveNumber} (${currentIndex + 1}/${totalMoves})`);
+      this.showNotification(`At move ${currentMoveNumber} (${currentIndex + 1}/${totalMoves})`, 'info', 3000);
     }
   }
 
@@ -4454,8 +4466,7 @@ window.addEventListener('longPressEnd', () => {
         0: 'easy',
         1: 'normal',
         2: 'hard',
-        3: 'harder',
-        4: 'hardest'
+        3: 'hardest'  // Asa is the hardest difficulty
       };
 
       const difficultyText = difficultyDescriptions[difficulty] || 'normal';

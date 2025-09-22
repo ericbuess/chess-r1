@@ -393,6 +393,11 @@ html, body {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     transform: translateZ(0);
+    /* Ensure uniform grid cell sizing */
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .chess-square:active {
