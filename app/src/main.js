@@ -220,9 +220,9 @@ class ChessGame {
 
       // Record what sounds should be played but don't play them yet
       if (isCapture) {
-        // Pre-select capture sound indices
-        const indices = this.sounds.capture();
-        if (indices) soundsPlayed.action = { type: 'capture', indices };
+        // Get capture sound indices WITHOUT playing them
+        const indices = this.sounds.getCaptureIndices();
+        soundsPlayed.action = { type: 'capture', indices };
       } else {
         // Pre-select move sound index
         const lastIndex = this.sounds.lastMoveIndex || 0;
@@ -448,12 +448,11 @@ class ChessGame {
 
         // Determine what sounds would be played and store the metadata
         if (capturedPiece) {
-          // For captures, pre-select the indices that will be played
-          const indices = this.sounds.capture();  // This returns indices without playing
+          // For captures, get the indices WITHOUT playing sounds
+          const indices = this.sounds.getCaptureIndices();
           if (indices) soundsPlayed.action = { type: 'capture', indices };
         } else {
           // For moves, pre-select the index that will be played
-          const moveSound = this.sounds.move;
           const lastIndex = this.sounds.lastMoveIndex || 0;
           const index = (lastIndex + 1 + Math.floor(Math.random() * 3)) % 5;
           soundsPlayed.action = { type: 'move', index };
@@ -1379,6 +1378,36 @@ class ChessGame {
       playAudio(soundFiles.moves[randomIndex]);
     };
 
+    // Store soundFiles for access from other methods
+    sounds.soundFiles = soundFiles;
+    sounds.lastMoveIndex = lastMoveIndex;
+
+    // Create a method to get capture indices without playing
+    sounds.getCaptureIndices = () => {
+      const allSounds = [...soundFiles.moves, ...soundFiles.quick];
+
+      // Pick first sound randomly
+      const index1 = Math.floor(Math.random() * allSounds.length);
+
+      // Pick second sound (different from first)
+      const availableSounds = allSounds.filter((_, i) => i !== index1);
+      const index2Raw = Math.floor(Math.random() * availableSounds.length);
+
+      // Find actual index of second sound in allSounds array
+      let actualIndex2 = 0;
+      for (let i = 0, j = 0; i < allSounds.length; i++) {
+        if (i !== index1) {
+          if (j === index2Raw) {
+            actualIndex2 = i;
+            break;
+          }
+          j++;
+        }
+      }
+
+      return [index1, actualIndex2];
+    };
+
     return sounds;
   }
   
@@ -1578,8 +1607,14 @@ class ChessGame {
     // Set flag to indicate we're in undo/redo state
     this.isInUndoRedoState = true;
 
-    // Don't play sounds on undo - we're going back to before the move happened
-    // Sounds should only play when moves are made or redone, not when undone
+    // Play sounds for the undo - piece landing at its original position
+    // Delay to sync with visual movement
+    if (undoingState && undoingState.sounds && undoingState.move) {
+      setTimeout(() => {
+        // Play a single move sound to indicate the piece landing
+        this.playSound('move');
+      }, 100);
+    }
 
     return true;
   }
