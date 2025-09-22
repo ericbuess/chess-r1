@@ -3584,7 +3584,7 @@ class ChessUI {
       helpBtn.addEventListener('click', () => {
         this.hideOptionsMenu();
         setTimeout(() => {
-          showHelpDialog();
+          showHelpDialog(false, true); // Pass fromMenu = true
         }, 100);
       });
     }
@@ -4439,7 +4439,7 @@ window.addEventListener('sideClick', () => {
 });
 
 // Function to show enhanced help dialog
-function showHelpDialog(fromStartup = false) {
+function showHelpDialog(fromStartup = false, fromMenu = false) {
   if (!gameUI) return;
 
   // Check if we should show on startup
@@ -4523,7 +4523,13 @@ function showHelpDialog(fromStartup = false) {
   if (dismissBtn) {
     dismissBtn.addEventListener('click', () => {
       dialog.classList.add('hiding');
-      setTimeout(() => dialog.remove(), 500);
+      setTimeout(() => {
+        dialog.remove();
+        // If opened from menu, reopen the menu
+        if (fromMenu && gameUI) {
+          gameUI.showOptionsMenu();
+        }
+      }, 500);
     });
   }
 
@@ -4532,7 +4538,13 @@ function showHelpDialog(fromStartup = false) {
     const closeHandler = (e) => {
       if (!dialog.contains(e.target)) {
         dialog.classList.add('hiding');
-        setTimeout(() => dialog.remove(), 500);
+        setTimeout(() => {
+          dialog.remove();
+          // If opened from menu, reopen the menu
+          if (fromMenu && gameUI) {
+            gameUI.showOptionsMenu();
+          }
+        }, 500);
         document.removeEventListener('click', closeHandler);
       }
     };

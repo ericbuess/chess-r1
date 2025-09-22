@@ -1219,6 +1219,7 @@ html, body {
 .help-button-container {
     margin-top: 4vw;
     padding-top: 3vw;
+    padding-bottom: 4vw;
     border-top: 1px solid rgba(254, 95, 0, 0.3);
     display: flex;
     justify-content: center;
