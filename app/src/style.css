@@ -214,6 +214,7 @@ html, body {
 /* Make only pawns smaller - they are naturally shorter pieces */
 .captured-pawn {
     font-size: 0.75em; /* 75% of the size of other pieces */
+    margin-bottom: -0.2em; /* Compensate for empty space in pawn glyph */
     /* Inherits text-bottom alignment from .captured-piece */
 }
 
