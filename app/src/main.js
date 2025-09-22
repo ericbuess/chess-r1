@@ -424,25 +424,28 @@ class ChessGame {
         const commentary = this.generateMoveCommentary(fromCoords.row, fromCoords.col, toCoords.row, toCoords.col,
           movedPiece, capturedPiece, null);
 
-        // Capture sound metadata for faithful replay
+        // Capture sound metadata for faithful replay - we need to determine what sounds to play
+        // but delay the actual playing
         const soundsPlayed = {};
 
-        // Play action sound (capture or move) and record what was played
+        // Determine what sounds would be played and store the metadata
         if (capturedPiece) {
-          const indices = this.playSound('capture');
+          // For captures, pre-select the indices that will be played
+          const indices = this.sounds.capture();  // This returns indices without playing
           if (indices) soundsPlayed.action = { type: 'capture', indices };
         } else {
-          const index = this.playSound('move');
-          if (typeof index === 'number') soundsPlayed.action = { type: 'move', index };
+          // For moves, pre-select the index that will be played
+          const moveSound = this.sounds.move;
+          const lastIndex = this.sounds.lastMoveIndex || 0;
+          const index = (lastIndex + 1 + Math.floor(Math.random() * 3)) % 5;
+          soundsPlayed.action = { type: 'move', index };
         }
 
-        // Play status sound with delay if there was a capture and record
+        // Record status sound metadata
         if (this.gameStatus === 'checkmate') {
           soundsPlayed.status = 'checkmate';
-          setTimeout(() => this.playSound('checkmate'), capturedPiece ? 100 : 0);
         } else if (this.gameStatus === 'check') {
           soundsPlayed.status = 'check';
-          setTimeout(() => this.playSound('check'), capturedPiece ? 100 : 0);
         }
 
         // Use unified state recording method with sound metadata
@@ -455,6 +458,27 @@ class ChessGame {
           commentary: commentary,
           sounds: Object.keys(soundsPlayed).length > 0 ? soundsPlayed : null
         });
+
+        // Now actually play the sounds after a delay to sync with animation
+        setTimeout(() => {
+          // Play the pre-selected sounds
+          if (soundsPlayed.action) {
+            if (soundsPlayed.action.type === 'capture' && soundsPlayed.action.indices) {
+              // Play capture with the pre-selected indices
+              this.playSound('capture');
+            } else if (soundsPlayed.action.type === 'move') {
+              // Play move sound
+              this.playSound('move');
+            }
+          }
+
+          // Play status sounds
+          if (soundsPlayed.status === 'checkmate') {
+            setTimeout(() => this.playSound('checkmate'), capturedPiece ? 100 : 0);
+          } else if (soundsPlayed.status === 'check') {
+            setTimeout(() => this.playSound('check'), capturedPiece ? 100 : 0);
+          }
+        }, 400);
 
         // Auto-save after successful bot move
         await this.autoSave();
@@ -1409,12 +1433,12 @@ class ChessGame {
         }
       } else if (sounds.action.type === 'capture' && sounds.action.indices) {
         const [idx1, idx2] = sounds.action.indices;
-        // Play in original order for redo
+        // Play in original order for redo with proper timing separation
         if (allSounds[idx1]) {
           playAudio(allSounds[idx1], 0.25);  // Soft touch
         }
         if (allSounds[idx2]) {
-          setTimeout(() => playAudio(allSounds[idx2], 0.4), 50);  // Normal volume
+          setTimeout(() => playAudio(allSounds[idx2], 0.4), 150);  // Normal volume with proper delay
         }
       }
     } else if (sounds.action && reverse) {
@@ -1426,12 +1450,12 @@ class ChessGame {
         }
       } else if (sounds.action.type === 'capture' && sounds.action.indices) {
         const [idx1, idx2] = sounds.action.indices;
-        // For undo, play capture sounds in reverse order
+        // For undo, play capture sounds in reverse order with proper timing
         if (allSounds[idx2]) {
           playAudio(allSounds[idx2], 0.4);  // Second sound first at normal volume
         }
         if (allSounds[idx1]) {
-          setTimeout(() => playAudio(allSounds[idx1], 0.25), 50);  // First sound second, softer
+          setTimeout(() => playAudio(allSounds[idx1], 0.25), 150);  // First sound second, softer with proper delay
         }
       }
     }
