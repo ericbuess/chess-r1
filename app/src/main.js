@@ -1882,13 +1882,19 @@ class ChessUI {
     // Apply coordinate reversal based on game mode:
     // - Bot games: Always use coordinate reversal when boardFlipped (black at bottom)
     // - Table mode: NO coordinate reversal (CSS rotation handles everything)
-    // - Handoff mode: NO coordinate reversal (CSS rotation only)
+    // - Handoff mode: NEEDS coordinate reversal when flipped (for R1 compatibility)
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
+    const isHumanGame = this.game.gameMode === 'human-vs-human';
     const isTableMode = this.game.orientationMode === 'table';
+    const isHandoffMode = this.game.orientationMode === 'handoff';
 
-    // Table mode uses CSS rotation, so data-row/data-col don't need reversal
-    const needsCoordinateReversal = this.game.boardFlipped && isBotGame && !isTableMode;
+    // Bot games need reversal when flipped
+    // Handoff mode ALSO needs reversal when flipped (fixes R1 touch issue)
+    // Table mode does NOT need reversal (CSS rotation handles it)
+    const needsCoordinateReversal = this.game.boardFlipped &&
+                                   (isBotGame || (isHumanGame && isHandoffMode)) &&
+                                   !isTableMode;
 
     if (needsCoordinateReversal) {
       return {
@@ -1904,13 +1910,19 @@ class ChessUI {
     // Apply coordinate reversal based on game mode:
     // - Bot games: Always use coordinate reversal when boardFlipped (black at bottom)
     // - Table mode: NO coordinate reversal (CSS rotation handles everything)
-    // - Handoff mode: NO coordinate reversal (CSS rotation only)
+    // - Handoff mode: NEEDS coordinate reversal when flipped (for R1 compatibility)
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
+    const isHumanGame = this.game.gameMode === 'human-vs-human';
     const isTableMode = this.game.orientationMode === 'table';
+    const isHandoffMode = this.game.orientationMode === 'handoff';
 
-    // Table mode uses CSS rotation, so data-row/data-col don't need reversal
-    const needsCoordinateReversal = this.game.boardFlipped && isBotGame && !isTableMode;
+    // Bot games need reversal when flipped
+    // Handoff mode ALSO needs reversal when flipped (fixes R1 touch issue)
+    // Table mode does NOT need reversal (CSS rotation handles it)
+    const needsCoordinateReversal = this.game.boardFlipped &&
+                                   (isBotGame || (isHumanGame && isHandoffMode)) &&
+                                   !isTableMode;
 
     if (needsCoordinateReversal) {
       return {
@@ -3597,8 +3609,32 @@ class ChessUI {
       });
     });
 
-    // Removed: Menu should only close via buttons, not clicking outside
-    // This ensures users can't accidentally close the menu
+    // Smart overlay click handler - uses same logic as PTT button
+    if (overlay) {
+      overlay.addEventListener('click', (event) => {
+        // Only handle clicks on the overlay itself, not the menu
+        if (event.target === overlay) {
+          // Use same logic as PTT button press (lines 4390-4397)
+          const backBtn = document.getElementById('back-btn');
+          const newGameBtn = document.getElementById('new-game-btn');
+
+          if (backBtn && !backBtn.disabled) {
+            // Back to Game is available - close menu
+            this.hideOptionsMenu();
+          } else if (newGameBtn && !newGameBtn.disabled) {
+            // Back to Game is disabled (no game in progress) - scroll to show buttons
+            const optionsMenu = document.getElementById('options-menu');
+            if (optionsMenu) {
+              // Smooth scroll to bottom to show the action buttons
+              optionsMenu.scrollTo({
+                top: optionsMenu.scrollHeight,
+                behavior: 'smooth'
+              });
+            }
+          }
+        }
+      });
+    }
   }
 
   confirmNewGame() {
@@ -4538,6 +4574,28 @@ function calculateChecksum(str) {
   return Math.abs(hash).toString(16);
 }
 
+// Wait for storage API to be available (for R1 plugin environment)
+async function waitForStorageAPI(maxWaitTime = 5000) {
+  const startTime = Date.now();
+  const checkInterval = 100; // Check every 100ms
+
+  while (Date.now() - startTime < maxWaitTime) {
+    // Check if creationStorage is available
+    if (window.creationStorage &&
+        window.creationStorage.plain &&
+        typeof window.creationStorage.plain.setItem === 'function' &&
+        typeof window.creationStorage.plain.getItem === 'function') {
+      return true;
+    }
+
+    // Wait before next check
+    await new Promise(resolve => setTimeout(resolve, checkInterval));
+  }
+
+  // Timeout - creationStorage not available, will use localStorage
+  return false;
+}
+
 // Save data to persistent storage (matches working R1 version - no cookies)
 async function saveToStorage(key, value) {
   // Validate input
@@ -4698,6 +4756,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (orientationGroup) orientationGroup.style.display = 'none';
   if (undoGroup) undoGroup.style.display = 'block';
   
+  // Wait for storage API to be available before loading game state
+  // This is critical for R1 plugin which may not have creationStorage immediately
+  const storageReady = await waitForStorageAPI();
+  if (!storageReady) {
+    console.log('R1 storage API not available, using localStorage fallback');
+  }
+
   // Try to load saved game state
   const loaded = await gameUI.loadGameState();
   if (loaded) {
