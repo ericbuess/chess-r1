@@ -3578,6 +3578,17 @@ class ChessUI {
       });
     }
 
+    // Help button
+    const helpBtn = document.getElementById('help-btn');
+    if (helpBtn) {
+      helpBtn.addEventListener('click', () => {
+        this.hideOptionsMenu();
+        setTimeout(() => {
+          showStatusIndicator();
+        }, 100);
+      });
+    }
+
     // Orientation Mode radio buttons
     const orientationModeRadios = document.querySelectorAll('input[name="orientationMode"]');
     orientationModeRadios.forEach(radio => {
@@ -4427,46 +4438,107 @@ window.addEventListener('sideClick', () => {
   }
 });
 
+// Function to show enhanced status indicator
+function showStatusIndicator(fromStartup = false) {
+  if (!gameUI) return;
+
+  // Check if we should show on startup
+  if (fromStartup) {
+    const hideOnStartup = localStorage.getItem('chess-r1-hide-status-on-startup') === 'true';
+    if (hideOnStartup) return;
+  }
+
+  let statusMessage = '<div class="status-indicator-content">';
+  statusMessage += '<div class="status-header">Chess R1 by Eric Buess v0.0.2</div>';
+
+  // Add bot info if in bot mode
+  if (chessGame && chessGame.gameMode === 'human-vs-bot') {
+    const botName = chessGame.getBotDifficultyText();
+    const difficulty = chessGame.botDifficulty;
+    const difficultyDescriptions = {
+      0: 'easy',
+      1: 'normal',
+      2: 'hard'
+    };
+    const difficultyText = difficultyDescriptions[difficulty] || 'normal';
+    statusMessage += `<div class="status-item">Playing against ${botName} (bot - ${difficultyText})</div>`;
+  }
+
+  // Add orientation mode info for human vs human games
+  if (chessGame && chessGame.gameMode === 'human-vs-human' && chessGame.orientationMode !== 'none') {
+    const orientationDescriptions = {
+      'handoff': 'Handoff mode (pass device)',
+      'table': 'Table mode (sitting across)'
+    };
+    const orientationText = orientationDescriptions[chessGame.orientationMode];
+    if (orientationText) {
+      statusMessage += `<div class="status-item">${orientationText}</div>`;
+    }
+  }
+
+  // Add controls section
+  statusMessage += '<div class="status-controls">';
+  statusMessage += '<div class="controls-header">Controls & Shortcuts:</div>';
+  statusMessage += '<div class="control-item">• Top middle tap → Shows this status</div>';
+  statusMessage += '<div class="control-item">  (Long press side button on R1)</div>';
+  statusMessage += '<div class="control-item">• Captured pieces tap → Opens menu</div>';
+  statusMessage += '<div class="control-item">  (Side button on R1)</div>';
+  statusMessage += '<div class="control-item">• Top left/right edge → Undo/Redo</div>';
+  statusMessage += '<div class="control-item">  (Scroll wheel on R1)</div>';
+  statusMessage += '</div>';
+
+  // Add checkbox for "Don't show on startup"
+  const hideOnStartup = localStorage.getItem('chess-r1-hide-status-on-startup') === 'true';
+  statusMessage += '<div class="status-checkbox">';
+  statusMessage += `<label><input type="checkbox" id="hide-status-checkbox" ${hideOnStartup ? 'checked' : ''}> Don't show on startup</label>`;
+  statusMessage += '</div>';
+  statusMessage += '</div>';
+
+  // Create custom notification element
+  const existingNotification = document.querySelector('.status-notification');
+  if (existingNotification) {
+    existingNotification.remove();
+  }
+
+  const notification = document.createElement('div');
+  notification.className = 'status-notification';
+  notification.innerHTML = statusMessage;
+  document.body.appendChild(notification);
+
+  // Add checkbox event listener
+  const checkbox = notification.querySelector('#hide-status-checkbox');
+  if (checkbox) {
+    checkbox.addEventListener('change', (e) => {
+      localStorage.setItem('chess-r1-hide-status-on-startup', e.target.checked ? 'true' : 'false');
+    });
+  }
+
+  // Auto-hide after 8 seconds
+  setTimeout(() => {
+    notification.classList.add('hiding');
+    setTimeout(() => notification.remove(), 500);
+  }, 8000);
+
+  // Click outside to close
+  setTimeout(() => {
+    const closeHandler = (e) => {
+      if (!notification.contains(e.target)) {
+        notification.classList.add('hiding');
+        setTimeout(() => notification.remove(), 500);
+        document.removeEventListener('click', closeHandler);
+      }
+    };
+    document.addEventListener('click', closeHandler);
+  }, 100);
+}
+
 // Long press shows status information
 window.addEventListener('longPressStart', () => {
   // Prevent default long press behavior
 });
 
 window.addEventListener('longPressEnd', () => {
-  // Show app status information
-  if (gameUI) {
-    let statusMessage = 'Chess R1 by Eric Buess v0.0.2';
-
-    // Add bot info if in bot mode
-    if (chessGame && chessGame.gameMode === 'human-vs-bot') {
-      const botName = chessGame.getBotDifficultyText();
-      const difficulty = chessGame.botDifficulty;
-
-      // Map difficulty levels to descriptions
-      const difficultyDescriptions = {
-        0: 'easy',    // Evy
-        1: 'normal',  // Emmy
-        2: 'hard'     // Asa (no more difficulty 3)
-      };
-
-      const difficultyText = difficultyDescriptions[difficulty] || 'normal';
-      statusMessage += `\nPlaying against ${botName} (bot - ${difficultyText})`;
-    }
-
-    // Add orientation mode info for human vs human games
-    if (chessGame && chessGame.gameMode === 'human-vs-human' && chessGame.orientationMode !== 'none') {
-      const orientationDescriptions = {
-        'handoff': 'Handoff mode (pass device)',
-        'table': 'Table mode (sitting across)'
-      };
-      const orientationText = orientationDescriptions[chessGame.orientationMode];
-      if (orientationText) {
-        statusMessage += `\n${orientationText}`;
-      }
-    }
-
-    gameUI.showNotification(statusMessage, 'info', 3000);
-  }
+  showStatusIndicator();
 });
 
 // ===========================================
@@ -4677,8 +4749,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // I key shortcut for status indicator (same as long press)
       if (event.code === 'KeyI') {
         event.preventDefault();
-        // Trigger the same event as longPressEnd (shows status)
-        window.dispatchEvent(new CustomEvent('longPressEnd'));
+        showStatusIndicator();
       }
 
       // Temporary arrow key shortcuts for undo/redo (will be removed for R1)
@@ -4715,8 +4786,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Top 40% of header = status indicator (like 'i' key)
       // Bottom 60% = open menu (like 'p' key) OR undo/redo on edges
       if (clickY < headerHeight * 0.4) {
-        // Show status indicator - trigger longPressEnd event
-        window.dispatchEvent(new CustomEvent('longPressEnd'));
+        // Show status indicator
+        showStatusIndicator();
       } else {
         // Bottom region - check X position for tap zones
         if (clickX < headerWidth * 0.3) {
@@ -4774,6 +4845,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     theme: chessGame.theme,
     currentPlayer: chessGame.currentPlayer
   });
+
+  // Show status indicator on startup after a brief delay
+  setTimeout(() => {
+    showStatusIndicator(true);
+  }, 1000);
 });
 
 // ===========================================

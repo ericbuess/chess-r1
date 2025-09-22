@@ -1099,3 +1099,111 @@ html, body {
         transform: rotate(360deg);
     }
 }
+
+/* Enhanced Status Notification */
+.status-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.95);
+    border: 2px solid #FE5F00;
+    border-radius: 2vw;
+    padding: 4vw;
+    max-width: 85vw;
+    max-height: 80vh;
+    overflow-y: auto;
+    z-index: 1100;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 3.5vw;
+    box-shadow: 0 0 20px rgba(254, 95, 0, 0.3);
+    animation: statusFadeIn 0.3s ease;
+}
+
+@keyframes statusFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.status-notification.hiding {
+    animation: statusFadeOut 0.3s ease;
+    opacity: 0;
+}
+
+@keyframes statusFadeOut {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.95);
+    }
+}
+
+.status-indicator-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3vw;
+}
+
+.status-header {
+    color: #FE5F00;
+    font-weight: bold;
+    font-size: 4vw;
+    border-bottom: 1px solid rgba(254, 95, 0, 0.3);
+    padding-bottom: 2vw;
+    margin-bottom: 2vw;
+}
+
+.status-item {
+    margin: 1vw 0;
+    line-height: 1.4;
+}
+
+.status-controls {
+    margin-top: 3vw;
+    padding-top: 3vw;
+    border-top: 1px solid rgba(254, 95, 0, 0.3);
+}
+
+.controls-header {
+    color: #FE5F00;
+    font-weight: bold;
+    margin-bottom: 2vw;
+    font-size: 3.8vw;
+}
+
+.control-item {
+    margin: 1.5vw 0;
+    padding-left: 2vw;
+    line-height: 1.3;
+    font-size: 3.2vw;
+}
+
+.status-checkbox {
+    margin-top: 3vw;
+    padding-top: 3vw;
+    border-top: 1px solid rgba(254, 95, 0, 0.3);
+}
+
+.status-checkbox label {
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+    cursor: pointer;
+    font-size: 3.5vw;
+}
+
+.status-checkbox input[type="checkbox"] {
+    width: 4vw;
+    height: 4vw;
+    cursor: pointer;
+}
