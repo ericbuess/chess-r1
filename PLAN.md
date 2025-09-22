@@ -19,6 +19,11 @@
 4. ✅ **Help Button** - Added to options menu to show status indicator on demand
 5. ✅ **Auto-dismiss** - Closes after 8 seconds or click outside
 
+### R1 Touch Coordinate Fix (9/22/2025)
+1. ✅ **R1 Device Detection** - Added method to detect R1 browser environment
+2. ✅ **Handoff Mode Fix** - Fixed black pieces not responding in handoff mode on R1
+3. ✅ **Coordinate Transformation** - Manual touch coordinate reversal when board is rotated
+
 ## Current Status
 - **App Version**: v0.0.2
 - **Dev Server**: Running on port 5187
