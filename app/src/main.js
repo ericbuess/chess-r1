@@ -3190,6 +3190,10 @@ class ChessUI {
   showOptionsMenu() {
     const overlay = document.getElementById('options-overlay');
     if (overlay) {
+      // Check if menu is already visible
+      if (!overlay.classList.contains('hidden')) {
+        return; // Menu already visible, don't show again
+      }
       overlay.classList.remove('hidden');
 
       // Track the original game mode when menu opens (only if not already tracking)
@@ -3583,10 +3587,8 @@ class ChessUI {
     const helpBtn = document.getElementById('help-btn');
     if (helpBtn) {
       helpBtn.addEventListener('click', () => {
-        this.hideOptionsMenu();
-        setTimeout(() => {
-          showHelpDialog(false, true); // Pass fromMenu = true
-        }, 100);
+        // Don't hide the menu - just show help on top
+        showHelpDialog(false, true); // Pass fromMenu = true
       });
     }
 
@@ -4520,10 +4522,7 @@ function showHelpDialog(fromStartup = false, fromMenu = false) {
       dialog.classList.add('hiding');
       setTimeout(() => {
         dialog.remove();
-        // If opened from menu, reopen the menu
-        if (fromMenu && gameUI) {
-          gameUI.showOptionsMenu();
-        }
+        // Don't need to reopen menu - it stays open behind help
       }, 500);
     });
   }
@@ -4535,10 +4534,7 @@ function showHelpDialog(fromStartup = false, fromMenu = false) {
         dialog.classList.add('hiding');
         setTimeout(() => {
           dialog.remove();
-          // If opened from menu, reopen the menu
-          if (fromMenu && gameUI) {
-            gameUI.showOptionsMenu();
-          }
+          // Don't need to reopen menu - it stays open behind help
         }, 500);
         document.removeEventListener('click', closeHandler);
       }
