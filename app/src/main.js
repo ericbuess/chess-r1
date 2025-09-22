@@ -2799,8 +2799,13 @@ class ChessUI {
 
       const whitePiecesList = document.createElement('span');
       whitePiecesList.className = 'captured-pieces-list';
-      whitePiecesList.textContent = whitePieces.length > 0 ?
-        whitePieces.map(p => this.game.getPieceSymbol(p)).join('') : '-';
+      if (whitePieces.length > 0) {
+        whitePiecesList.innerHTML = whitePieces.map(p =>
+          `<span class="captured-piece captured-${p.type}">${this.game.getPieceSymbol(p)}</span>`
+        ).join('');
+      } else {
+        whitePiecesList.textContent = '-';
+      }
       leftSection.appendChild(whitePiecesList);
       leftSection.dataset.pieceCount = whitePieces.length;
 
@@ -2812,8 +2817,13 @@ class ChessUI {
 
       const blackPiecesList = document.createElement('span');
       blackPiecesList.className = 'captured-pieces-list';
-      blackPiecesList.textContent = blackPieces.length > 0 ?
-        blackPieces.map(p => this.game.getPieceSymbol(p)).join('') : '-';
+      if (blackPieces.length > 0) {
+        blackPiecesList.innerHTML = blackPieces.map(p =>
+          `<span class="captured-piece captured-${p.type}">${this.game.getPieceSymbol(p)}</span>`
+        ).join('');
+      } else {
+        blackPiecesList.textContent = '-';
+      }
       rightSection.appendChild(blackPiecesList);
       rightSection.dataset.pieceCount = blackPieces.length;
     } else {
@@ -2826,8 +2836,13 @@ class ChessUI {
 
       const whitePieces = document.createElement('span');
       whitePieces.className = 'captured-pieces-list';
-      whitePieces.textContent = blackCaptured.length > 0 ?
-        blackCaptured.map(p => this.game.getPieceSymbol(p)).join('') : '-';
+      if (blackCaptured.length > 0) {
+        whitePieces.innerHTML = blackCaptured.map(p =>
+          `<span class="captured-piece captured-${p.type}">${this.game.getPieceSymbol(p)}</span>`
+        ).join('');
+      } else {
+        whitePieces.textContent = '-';
+      }
       leftSection.appendChild(whitePieces);
       leftSection.dataset.pieceCount = blackCaptured.length;
 
@@ -2839,8 +2854,13 @@ class ChessUI {
 
       const blackPieces = document.createElement('span');
       blackPieces.className = 'captured-pieces-list';
-      blackPieces.textContent = whiteCaptured.length > 0 ?
-        whiteCaptured.map(p => this.game.getPieceSymbol(p)).join('') : '-';
+      if (whiteCaptured.length > 0) {
+        blackPieces.innerHTML = whiteCaptured.map(p =>
+          `<span class="captured-piece captured-${p.type}">${this.game.getPieceSymbol(p)}</span>`
+        ).join('');
+      } else {
+        blackPieces.textContent = '-';
+      }
       rightSection.appendChild(blackPieces);
       rightSection.dataset.pieceCount = whiteCaptured.length;
     }
