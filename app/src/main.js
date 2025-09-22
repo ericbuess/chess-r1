@@ -4630,24 +4630,41 @@ function showHelpDialog(fromStartup = false, fromMenu = false) {
   }
 
   // Click outside to close (no auto-dismiss timer)
-  setTimeout(() => {
-    const closeHandler = (e) => {
-      if (!dialog.contains(e.target)) {
-        // Prevent event from propagating to header click handler
-        e.stopPropagation();
-        e.preventDefault();
+  // Only add handler if NOT from startup to avoid consuming first game interaction
+  if (!fromStartup) {
+    setTimeout(() => {
+      const closeHandler = (e) => {
+        if (!dialog.contains(e.target)) {
+          // Only prevent propagation if clicking on UI elements, not game board
+          if (!e.target.classList.contains('chess-square')) {
+            e.stopPropagation();
+            e.preventDefault();
+          }
 
+          dialog.classList.add('hiding');
+          setTimeout(() => {
+            dialog.remove();
+            // Don't need to reopen menu - it stays open behind help
+          }, 500);
+          document.removeEventListener('click', closeHandler, true);
+        }
+      };
+      // Use capture phase to intercept before header handler
+      document.addEventListener('click', closeHandler, true);
+    }, 100);
+  } else {
+    // For startup dialog, auto-dismiss after 8 seconds instead of click-to-close
+    setTimeout(() => {
+      if (dialog && dialog.parentNode) {
         dialog.classList.add('hiding');
         setTimeout(() => {
-          dialog.remove();
-          // Don't need to reopen menu - it stays open behind help
+          if (dialog.parentNode) {
+            dialog.remove();
+          }
         }, 500);
-        document.removeEventListener('click', closeHandler, true);
       }
-    };
-    // Use capture phase to intercept before header handler
-    document.addEventListener('click', closeHandler, true);
-  }, 100);
+    }, 8000);
+  }
 }
 
 // Long press shows status information
@@ -4893,8 +4910,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   gameUI = new ChessUI(chessGame);
 
   // Show help dialog on startup after a brief delay (AFTER gameUI is ready)
+  // Pass fromStartup=true to avoid click-outside handler that consumes first tap
   setTimeout(() => {
-    showHelpDialog(true);
+    showHelpDialog(true); // fromStartup=true prevents click-to-close
   }, 500);
 
   // Setup header tap zones for status indicator, menu, and undo/redo
