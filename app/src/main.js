@@ -1374,7 +1374,21 @@ class ChessGame {
   playReplayedSounds(sounds, reverse = false) {
     if (!sounds || !this.sounds) return;
 
-    const soundFiles = woodenSoundData;
+    // Reconstruct the sound arrays from imported data
+    const soundFiles = {
+      moves: [
+        woodenSoundData.move_1,
+        woodenSoundData.move_2,
+        woodenSoundData.move_3,
+        woodenSoundData.move_4,
+        woodenSoundData.move_5
+      ],
+      quick: [
+        woodenSoundData.quick_1,
+        woodenSoundData.quick_2
+      ],
+      pop_check: woodenSoundData.pop_check
+    };
     const allSounds = [...soundFiles.moves, ...soundFiles.quick];
 
     // Helper to play audio directly
@@ -1385,8 +1399,9 @@ class ChessGame {
       audio.play().catch(() => {});
     };
 
-    // Play action sounds
-    if (sounds.action) {
+    // Play action sounds only for the move landing, not the return
+    if (sounds.action && !reverse) {
+      // For redo (forward), play sounds when piece lands at destination
       if (sounds.action.type === 'move' && typeof sounds.action.index === 'number') {
         // Play the exact move sound that was played
         if (soundFiles.moves[sounds.action.index]) {
@@ -1394,22 +1409,29 @@ class ChessGame {
         }
       } else if (sounds.action.type === 'capture' && sounds.action.indices) {
         const [idx1, idx2] = sounds.action.indices;
-        if (reverse) {
-          // For undo, play capture sounds in reverse order
-          if (allSounds[idx2]) {
-            playAudio(allSounds[idx2], 0.4);  // Second sound first at normal volume
-          }
-          if (allSounds[idx1]) {
-            setTimeout(() => playAudio(allSounds[idx1], 0.25), 50);  // First sound second, softer
-          }
-        } else {
-          // For redo, play in original order
-          if (allSounds[idx1]) {
-            playAudio(allSounds[idx1], 0.25);  // Soft touch
-          }
-          if (allSounds[idx2]) {
-            setTimeout(() => playAudio(allSounds[idx2], 0.4), 50);  // Normal volume
-          }
+        // Play in original order for redo
+        if (allSounds[idx1]) {
+          playAudio(allSounds[idx1], 0.25);  // Soft touch
+        }
+        if (allSounds[idx2]) {
+          setTimeout(() => playAudio(allSounds[idx2], 0.4), 50);  // Normal volume
+        }
+      }
+    } else if (sounds.action && reverse) {
+      // For undo (reverse), play sounds when piece returns to destination (which is the original source)
+      // But we want sounds to play at the "landing" position of the undo animation
+      if (sounds.action.type === 'move' && typeof sounds.action.index === 'number') {
+        if (soundFiles.moves[sounds.action.index]) {
+          playAudio(soundFiles.moves[sounds.action.index]);
+        }
+      } else if (sounds.action.type === 'capture' && sounds.action.indices) {
+        const [idx1, idx2] = sounds.action.indices;
+        // For undo, play capture sounds in reverse order
+        if (allSounds[idx2]) {
+          playAudio(allSounds[idx2], 0.4);  // Second sound first at normal volume
+        }
+        if (allSounds[idx1]) {
+          setTimeout(() => playAudio(allSounds[idx1], 0.25), 50);  // First sound second, softer
         }
       }
     }
@@ -1545,7 +1567,8 @@ class ChessGame {
     this.isInUndoRedoState = true;
 
     // Play sounds faithfully from the move being undone (in reverse for undo)
-    if (undoingState && undoingState.sounds) {
+    // Only play if we're undoing an actual move (not returning to initial state)
+    if (undoingState && undoingState.sounds && undoingState.move) {
       this.playReplayedSounds(undoingState.sounds, true);  // true = reverse order for undo
     }
 
