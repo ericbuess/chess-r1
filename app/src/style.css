@@ -939,15 +939,15 @@ html, body {
     left: 0;
     right: 0;
     width: 100vw; /* Full width of screen */
-    background: none; /* Truly transparent */
-    background-color: transparent; /* Ensure no background color */
-    color: #FE5F00; /* Orange text for visibility */
+    background: none !important; /* Truly transparent */
+    background-color: transparent !important; /* Ensure no background color */
+    color: #FE5F00 !important; /* Orange text for visibility */
     padding: 2vh 2vw; /* Vertical padding to fill space */
     font-size: 4.5vw; /* Large, readable font */
     font-weight: bold; /* Bold text for readability */
     text-align: center;
-    border: none; /* No border */
-    box-shadow: none; /* No shadow */
+    border: none !important; /* No border */
+    box-shadow: none !important; /* No shadow */
     backdrop-filter: none;
     transition: all 0.3s ease;
     z-index: 1000;
@@ -984,21 +984,25 @@ html, body {
 
 /* Game end message styling */
 #instruction-label.game-end {
-    background: rgba(254, 95, 0, 0.9);
-    border-color: #FE5F00;
+    background: none !important;
+    background-color: transparent !important;
+    border: none;
     font-weight: bold;
+    color: #FE5F00;
 }
 
 #instruction-label.victory {
-    color: #fff;
-    border-color: #FE5F00;
-    background: rgba(254, 95, 0, 0.9);
+    color: #4CAF50 !important; /* Green for victory */
+    border: none;
+    background: none !important;
+    background-color: transparent !important;
 }
 
 #instruction-label.defeat {
-    color: #fff;
-    border-color: #FE5F00;
-    background: rgba(254, 95, 0, 0.9);
+    color: #FF6B6B !important; /* Red for defeat */
+    border: none;
+    background: none !important;
+    background-color: transparent !important;
 }
     z-index: 500;
     animation: fadeInOut 2s ease-in-out;
