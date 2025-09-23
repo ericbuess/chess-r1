@@ -2204,17 +2204,17 @@ class ChessUI {
   getLogicalCoordinates(displayRow, displayCol) {
     // Apply coordinate reversal based on game mode:
     // - Bot games: Always use coordinate reversal when boardFlipped (black at bottom)
-    // - Table mode: ALSO uses coordinate reversal (different from CSS-only modes)
-    // - Handoff mode: NO coordinate reversal (CSS rotation only)
+    // - Table mode: Uses coordinate reversal when boardFlipped
+    // - Handoff mode: Uses coordinate reversal when boardFlipped (CSS rotates visually)
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
     const isTableMode = this.game.orientationMode === 'table';
 
     // Both bot games AND table mode need coordinate reversal when board is flipped
-    // EXCEPTION: Handoff mode uses CSS rotation only, never coordinate reversal
+    // Handoff mode ALSO needs coordinate reversal since CSS rotates the board
     const isHandoffMode = this.game.orientationMode === 'handoff';
     const needsCoordinateReversal = this.game.boardFlipped &&
-                                    (isBotGame || (isTableMode && !isHandoffMode));
+                                    (isBotGame || isTableMode || isHandoffMode);
 
     if (needsCoordinateReversal) {
       return {
@@ -2229,17 +2229,17 @@ class ChessUI {
   getDisplayCoordinates(logicalRow, logicalCol) {
     // Apply coordinate reversal based on game mode:
     // - Bot games: Always use coordinate reversal when boardFlipped (black at bottom)
-    // - Table mode: ALSO uses coordinate reversal (different from CSS-only modes)
-    // - Handoff mode: NO coordinate reversal (CSS rotation only)
+    // - Table mode: Uses coordinate reversal when boardFlipped
+    // - Handoff mode: Uses coordinate reversal when boardFlipped (CSS rotates visually)
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
     const isTableMode = this.game.orientationMode === 'table';
 
     // Both bot games AND table mode need coordinate reversal when board is flipped
-    // EXCEPTION: Handoff mode uses CSS rotation only, never coordinate reversal
+    // Handoff mode ALSO needs coordinate reversal since CSS rotates the board
     const isHandoffMode = this.game.orientationMode === 'handoff';
     const needsCoordinateReversal = this.game.boardFlipped &&
-                                    (isBotGame || (isTableMode && !isHandoffMode));
+                                    (isBotGame || isTableMode || isHandoffMode);
 
     if (needsCoordinateReversal) {
       return {
