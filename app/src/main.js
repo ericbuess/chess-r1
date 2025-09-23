@@ -848,11 +848,18 @@ class ChessGame {
 
     // Removed new game sound - only play sounds on moves/undo/redo
 
-    // Reset dialogue manager and show game start greeting
+    // Reset dialogue manager and show game start greeting for bot mode only
     dialogueManager.reset();
-    setTimeout(() => {
-      this.showBotDialogue('gameStart', true); // Force show greeting
-    }, 500);
+    if (this.gameMode === 'human-vs-bot') {
+      setTimeout(() => {
+        this.showBotDialogue('gameStart', true); // Force show greeting
+      }, 500);
+    } else {
+      // Hide bot dialogue for human vs human mode
+      if (window.gameUI) {
+        window.gameUI.hideBotDialogue();
+      }
+    }
   }
   
   /**
@@ -1277,7 +1284,7 @@ class ChessGame {
       console.log(`[showBotDialogue] Has dialogue, checking for window.gameUI...`);
 
       if (window.gameUI) {
-        console.log(`[showBotDialogue] window.gameUI exists, showing dialogue in instruction label`);
+        console.log(`[showBotDialogue] window.gameUI exists, showing persistent dialogue`);
 
         // Clear any active thinking interval to allow dialogue to show
         if (window.gameUI.thinkingInterval) {
@@ -1286,17 +1293,8 @@ class ChessGame {
           window.gameUI.thinkingInterval = null;
         }
 
-        // Mark that we're showing a bot dialogue BEFORE calling showInstructionLabel
-        window.gameUI.showingBotDialogue = true;
-        console.log(`[showBotDialogue] Set showingBotDialogue = true`);
-
-        window.gameUI.showInstructionLabel(dialogue);
-
-        // Clear the flag after the dialogue display duration
-        setTimeout(() => {
-          window.gameUI.showingBotDialogue = false;
-          console.log(`[showBotDialogue] Cleared showingBotDialogue = false`);
-        }, 2500); // Slightly longer than default notification duration
+        // Show persistent bot dialogue at bottom of screen
+        window.gameUI.showBotDialoguePersistent(dialogue, botName);
       } else {
         console.error(`[showBotDialogue] ERROR: window.gameUI is not available!`);
       }
@@ -3944,6 +3942,9 @@ class ChessUI {
   }
 
   pauseBotTimers() {
+    // Hide bot dialogue when pausing for menu
+    this.hideBotDialogue();
+
     // Only pause if bot is actually thinking
     if (!this.isBotProcessing) {
       return;
@@ -4396,6 +4397,48 @@ class ChessUI {
     console.log(`[showInstructionLabel] Called with text: "${text}"`);
     // Delegate to unified notification system
     this.showNotification(text, 'default', 2000);
+  }
+
+  /**
+   * Show persistent bot dialogue at bottom of screen
+   * @param {string} dialogue - The bot's dialogue text
+   * @param {string} botName - The bot's name (Evy, Emmy, Asa)
+   */
+  showBotDialoguePersistent(dialogue, botName) {
+    const dialogueArea = document.getElementById('bot-dialogue-area');
+    if (!dialogueArea) return;
+
+    // Set the bot's dialogue text
+    dialogueArea.textContent = dialogue;
+    dialogueArea.className = `bot-dialogue-${botName.toLowerCase()}`;
+    dialogueArea.classList.remove('hidden');
+
+    // Apply consistent styling
+    dialogueArea.style.backgroundColor = '#FE5F00';
+    dialogueArea.style.color = 'white';
+    dialogueArea.style.fontWeight = 'bold';
+    dialogueArea.style.fontSize = '11px';
+    dialogueArea.style.padding = '4px 8px';
+    dialogueArea.style.textAlign = 'center';
+    dialogueArea.style.position = 'absolute';
+    dialogueArea.style.bottom = '10px';
+    dialogueArea.style.left = '10px';
+    dialogueArea.style.right = '10px';
+    dialogueArea.style.borderRadius = '4px';
+    dialogueArea.style.zIndex = '10';
+
+    console.log(`[showBotDialoguePersistent] Displayed: "${dialogue}" for bot: ${botName}`);
+  }
+
+  /**
+   * Hide the persistent bot dialogue area
+   */
+  hideBotDialogue() {
+    const dialogueArea = document.getElementById('bot-dialogue-area');
+    if (dialogueArea) {
+      dialogueArea.classList.add('hidden');
+      console.log(`[hideBotDialogue] Bot dialogue hidden`);
+    }
   }
 
   // Show temporary alert for check-related move rejections
@@ -5413,7 +5456,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Initialize chess game
   chessGame = new ChessGame();
   gameUI = new ChessUI(chessGame);
-  window.gameUI = gameUI;  // Make gameUI globally accessible for bot dialogues
+
+  // Make objects globally accessible for R1 and bot dialogues
+  window.gameUI = gameUI;
+  window.chessGame = chessGame;
 
   // Show help dialog on startup after a brief delay (AFTER gameUI is ready)
   // Pass fromStartup=true to avoid click-outside handler that consumes first tap
