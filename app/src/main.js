@@ -4423,36 +4423,34 @@ class ChessUI {
     dialogueArea.className = `bot-dialogue-${botName.toLowerCase()}`;
     dialogueArea.classList.remove('hidden');
 
-    // Create layout structure
+    // Create layout structure - orange button area
     const botInfo = document.createElement('div');
     botInfo.style.display = 'flex';
     botInfo.style.flexDirection = 'column';
     botInfo.style.alignItems = 'center';
     botInfo.style.justifyContent = 'center';
-    botInfo.style.padding = '1px 3px';
-    botInfo.style.minWidth = '35px';
+    botInfo.style.padding = '2px 5px';
+    botInfo.style.minWidth = '40px';
     botInfo.style.textAlign = 'center';
+    botInfo.style.backgroundColor = '#FE5F00';  // Orange button background
 
     // Bot icon (using chess piece emoji based on bot)
     const botIcon = document.createElement('div');
     const icons = { 'Evy': '♟', 'Emmy': '♞', 'Asa': '♛' };
     botIcon.textContent = icons[botName] || '♟';
     botIcon.style.fontSize = '14px';
-    botIcon.style.color = '#FE5F00';
+    botIcon.style.color = '#000';  // Black icon on orange background
     botIcon.style.lineHeight = '1';
-    botIcon.style.filter = 'drop-shadow(0 0 3px #FE5F00)';
-    botIcon.style.textShadow = '0 0 5px rgba(254, 95, 0, 0.6)';
     botInfo.appendChild(botIcon);
 
     // Bot name
     const botNameLabel = document.createElement('div');
     botNameLabel.textContent = botName;
     botNameLabel.style.fontSize = '8px';
-    botNameLabel.style.color = '#FE5F00';
+    botNameLabel.style.color = '#000';  // Black text on orange background
     botNameLabel.style.fontWeight = 'bold';
     botNameLabel.style.marginTop = '1px';
     botNameLabel.style.lineHeight = '1';
-    botNameLabel.style.textShadow = '0 0 3px rgba(254, 95, 0, 0.5)';
     botInfo.appendChild(botNameLabel);
 
     // Vertical divider
