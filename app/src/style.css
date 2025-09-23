@@ -38,14 +38,14 @@ html, body {
 #game-header {
     width: 100%;
     height: auto;
-    min-height: 2vh;
-    max-height: 3vh;
+    min-height: 0;
+    max-height: 2vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0; /* Remove margin */
-    padding: 0; /* No padding needed when mostly empty */
+    margin: 0; /* No margin */
+    padding: 0; /* No padding */
     flex-shrink: 0; /* Prevent header from shrinking */
 }
 
@@ -231,7 +231,7 @@ html, body {
     grid-template-rows: repeat(8, 1fr);
     gap: 0; /* Prevent grid gaps that might cause lines */
     border: 2px solid #FE5F00; /* Restore 2px border as requested */
-    margin: 0.5vh auto 0; /* Reduced top margin to move board up */
+    margin: 0 auto 0; /* No top margin - board abuts bot area */
     /* Remove 3D transforms - not needed for 2D board */
     /* transform-style: preserve-3d; - REMOVED for performance */
     /* perspective: 1000px; - REMOVED for performance */

@@ -4438,25 +4438,27 @@ class ChessUI {
     const icons = { 'Evy': '♟', 'Emmy': '♞', 'Asa': '♛' };
     botIcon.textContent = icons[botName] || '♟';
     botIcon.style.fontSize = '14px';
-    botIcon.style.color = '#000';
+    botIcon.style.color = '#FE5F00';
     botIcon.style.lineHeight = '1';
-    botIcon.style.filter = 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.5))';
+    botIcon.style.filter = 'drop-shadow(0 0 3px #FE5F00)';
+    botIcon.style.textShadow = '0 0 5px rgba(254, 95, 0, 0.6)';
     botInfo.appendChild(botIcon);
 
     // Bot name
     const botNameLabel = document.createElement('div');
     botNameLabel.textContent = botName;
     botNameLabel.style.fontSize = '8px';
-    botNameLabel.style.color = '#000';
+    botNameLabel.style.color = '#FE5F00';
     botNameLabel.style.fontWeight = 'bold';
     botNameLabel.style.marginTop = '1px';
     botNameLabel.style.lineHeight = '1';
+    botNameLabel.style.textShadow = '0 0 3px rgba(254, 95, 0, 0.5)';
     botInfo.appendChild(botNameLabel);
 
     // Vertical divider
     const divider = document.createElement('div');
     divider.style.width = '1px';
-    divider.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+    divider.style.backgroundColor = '#333';
     divider.style.margin = '0 4px';
     divider.style.alignSelf = 'stretch';  // Extend full height
 
@@ -4464,27 +4466,26 @@ class ChessUI {
     const dialogueText = document.createElement('div');
     dialogueText.textContent = dialogue;
     dialogueText.style.flex = '1';
-    dialogueText.style.color = '#000';
+    dialogueText.style.color = '#FE5F00';
     dialogueText.style.fontSize = '9px';
     dialogueText.style.textAlign = 'left';
     dialogueText.style.padding = '4px 6px';
     dialogueText.style.lineHeight = '1.3';
-    dialogueText.style.fontWeight = '500';
+    dialogueText.style.fontWeight = '400';
 
     // Apply container styling - button-like appearance
     dialogueArea.style.display = 'flex';
     dialogueArea.style.alignItems = 'center';
-    dialogueArea.style.backgroundColor = '#FE5F00';  // Orange background
+    dialogueArea.style.backgroundColor = '#000';  // Black background
     dialogueArea.style.position = 'relative';  // In document flow
     dialogueArea.style.width = '100%';
     dialogueArea.style.height = 'auto';  // Auto height at top
-    dialogueArea.style.minHeight = '28px';  // Slightly taller for button feel
+    dialogueArea.style.minHeight = '26px';  // Compact height
     dialogueArea.style.borderRadius = '0';  // No rounded corners
     dialogueArea.style.border = 'none';
-    dialogueArea.style.marginTop = '0';  // No gap at top
-    dialogueArea.style.marginBottom = '0.5vh';  // Small gap before game content
+    dialogueArea.style.margin = '0';  // No margin at all
+    dialogueArea.style.padding = '0';  // No padding
     dialogueArea.style.cursor = 'pointer';  // Show it's clickable
-    dialogueArea.style.boxShadow = '0 2px 4px rgba(254, 95, 0, 0.3)';  // Subtle glow
     dialogueArea.style.transition = 'all 0.2s ease';  // Smooth hover effect
 
     // Add all elements
