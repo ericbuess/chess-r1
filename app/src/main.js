@@ -4429,8 +4429,9 @@ class ChessUI {
     botInfo.style.flexDirection = 'column';
     botInfo.style.alignItems = 'center';
     botInfo.style.justifyContent = 'center';
-    botInfo.style.padding = '3px 8px';
-    botInfo.style.minWidth = '45px';
+    botInfo.style.padding = '3px 4px';
+    botInfo.style.width = '38px';
+    botInfo.style.height = '38px';
     botInfo.style.textAlign = 'center';
     botInfo.style.backgroundColor = '#FE5F00';  // Orange button background
     botInfo.style.borderRadius = '4px';  // Rounded corners for button look
