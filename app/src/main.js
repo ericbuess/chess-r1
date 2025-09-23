@@ -4438,6 +4438,14 @@ class ChessUI {
     botInfo.style.cursor = 'pointer';
     botInfo.style.margin = '6px 0 4px 3px';  // Good spacing top and bottom
 
+    // Add click handler to open menu
+    botInfo.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent event bubbling
+      if (window.gameUI) {
+        window.gameUI.showOptionsMenu();
+      }
+    });
+
     // Bot icon (using chess piece emoji based on bot)
     const botIcon = document.createElement('div');
     const icons = { 'Evy': '♟', 'Emmy': '♞', 'Asa': '♛' };
