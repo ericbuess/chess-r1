@@ -27,7 +27,7 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1vw 0; /* Equal vertical padding for breathing room */
+    padding: 0; /* Remove padding to maximize space */
     position: relative;
     box-sizing: border-box;
 }
@@ -38,14 +38,14 @@ html, body {
 #game-header {
     width: 100%;
     height: auto;
-    min-height: 10vh;
-    max-height: 12vh;
+    min-height: 7vh;
+    max-height: 9vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0.5vh; /* Comfortable margin */
-    padding: 0.5vh 1vw; /* Better padding for header content */
+    margin-bottom: 0; /* Remove margin */
+    padding: 0.25vh 1vw; /* Minimal padding */
     flex-shrink: 0; /* Prevent header from shrinking */
 }
 
@@ -84,8 +84,8 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1vh; /* A bit more space below the top line */
-    padding: 0.5vh 0; /* Slightly more padding */
+    margin-bottom: 0.25vh; /* Minimal space */
+    padding: 0.25vh 0; /* Minimal padding */
     max-width: 100%;
 }
 

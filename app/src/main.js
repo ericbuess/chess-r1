@@ -4429,43 +4429,43 @@ class ChessUI {
     botInfo.style.flexDirection = 'column';
     botInfo.style.alignItems = 'center';
     botInfo.style.justifyContent = 'center';
-    botInfo.style.padding = '2px 4px';
-    botInfo.style.minWidth = '35px';
+    botInfo.style.padding = '1px 3px';
+    botInfo.style.minWidth = '30px';
 
     // Bot icon (using chess piece emoji based on bot)
     const botIcon = document.createElement('div');
     const icons = { 'Evy': '♟', 'Emmy': '♞', 'Asa': '♛' };
     botIcon.textContent = icons[botName] || '♟';
-    botIcon.style.fontSize = '14px';
+    botIcon.style.fontSize = '11px';
     botIcon.style.color = '#FE5F00';
-    botIcon.style.lineHeight = '1';
+    botIcon.style.lineHeight = '0.9';
     botInfo.appendChild(botIcon);
 
     // Bot name
     const botNameLabel = document.createElement('div');
     botNameLabel.textContent = botName;
-    botNameLabel.style.fontSize = '7px';
+    botNameLabel.style.fontSize = '6px';
     botNameLabel.style.color = '#FE5F00';
     botNameLabel.style.fontWeight = 'bold';
-    botNameLabel.style.marginTop = '1px';
-    botNameLabel.style.lineHeight = '1';
+    botNameLabel.style.marginTop = '0';
+    botNameLabel.style.lineHeight = '0.9';
     botInfo.appendChild(botNameLabel);
 
     // Vertical divider
     const divider = document.createElement('div');
     divider.style.width = '1px';
     divider.style.backgroundColor = '#FE5F00';
-    divider.style.margin = '0 6px';
+    divider.style.margin = '0 4px';
 
     // Dialogue text
     const dialogueText = document.createElement('div');
     dialogueText.textContent = dialogue;
     dialogueText.style.flex = '1';
     dialogueText.style.color = '#FE5F00';
-    dialogueText.style.fontSize = '9px';
+    dialogueText.style.fontSize = '8px';
     dialogueText.style.textAlign = 'left';
-    dialogueText.style.padding = '3px 4px';
-    dialogueText.style.lineHeight = '1.3';
+    dialogueText.style.padding = '2px 3px';
+    dialogueText.style.lineHeight = '1.2';
 
     // Apply container styling
     dialogueArea.style.display = 'flex';
@@ -4476,7 +4476,7 @@ class ChessUI {
     dialogueArea.style.left = '0';
     dialogueArea.style.right = '0';
     dialogueArea.style.height = 'auto';
-    dialogueArea.style.minHeight = '30px';
+    dialogueArea.style.minHeight = '22px';  // Very compact height
     dialogueArea.style.borderRadius = '0';  // No rounded corners
     dialogueArea.style.border = 'none';
     dialogueArea.style.borderTop = '1px solid #FE5F00';
