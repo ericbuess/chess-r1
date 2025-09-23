@@ -270,40 +270,61 @@ class ChessGame {
       // Auto-save after successful move
       await this.autoSave();
 
-      // Show bot dialogue based on move type
+      // Show dialogue based on move type
       // Determine who just moved (it's now the opponent's turn)
       const justMovedPlayer = this.currentPlayer === 'white' ? 'black' : 'white';
       const isHumanMove = (this.gameMode === 'human-vs-bot' && justMovedPlayer === this.humanColor);
       const isBotMove = (this.gameMode === 'human-vs-bot' && justMovedPlayer !== this.humanColor);
 
-      // Mark that we're about to show a bot dialogue (for timing coordination)
-      if (this.gameMode === 'human-vs-bot' && window.gameUI) {
+      // Mark that we're about to show a dialogue (for timing coordination)
+      if ((this.gameMode === 'human-vs-bot' || this.gameMode === 'human-vs-human') && window.gameUI) {
         window.gameUI.pendingBotDialogue = true;
         console.log(`[makeMove] Set pendingBotDialogue = true`);
       }
 
       // Show appropriate dialogue
       setTimeout(() => {
-        if (enteredCheck) {
-          // Check dialogue
-          if (isHumanMove) {
-            this.showBotDialogue('humanCheck', true);
-          } else if (isBotMove) {
-            this.showBotDialogue('botCheck', true);
+        if (this.gameMode === 'human-vs-bot') {
+          // Bot mode dialogues
+          if (enteredCheck) {
+            // Check dialogue
+            if (isHumanMove) {
+              this.showBotDialogue('humanCheck', true);
+            } else if (isBotMove) {
+              this.showBotDialogue('botCheck', true);
+            }
+          } else if (isCapture) {
+            // Capture dialogue
+            if (isHumanMove) {
+              this.showBotDialogue('humanCapture');
+            } else if (isBotMove) {
+              this.showBotDialogue('botCapture');
+            }
+          } else {
+            // Regular move dialogue
+            if (isHumanMove) {
+              this.showBotDialogue('humanMove');
+            } else if (isBotMove) {
+              this.showBotDialogue('botMove');
+            }
           }
-        } else if (isCapture) {
-          // Capture dialogue
-          if (isHumanMove) {
-            this.showBotDialogue('humanCapture');
-          } else if (isBotMove) {
-            this.showBotDialogue('botCapture');
+        } else if (this.gameMode === 'human-vs-human' && dialogueManager.shouldShowDialogue()) {
+          // Human vs human mode - show random bot commentary
+          const commentators = ['Evy', 'Emmy', 'Asa'];
+          const randomBot = commentators[Math.floor(Math.random() * commentators.length)];
+          let dialogueType;
+
+          if (enteredCheck) {
+            dialogueType = 'humanCheck';  // Use human check dialogue for commentary
+          } else if (isCapture) {
+            dialogueType = 'humanCapture';  // Use capture dialogue for commentary
+          } else {
+            dialogueType = 'humanMove';  // Use regular move dialogue
           }
-        } else {
-          // Regular move dialogue
-          if (isHumanMove) {
-            this.showBotDialogue('humanMove');
-          } else if (isBotMove) {
-            this.showBotDialogue('botMove');
+
+          const dialogue = getRandomDialogue(randomBot, dialogueType);
+          if (dialogue && window.gameUI) {
+            window.gameUI.showBotDialoguePersistent(dialogue, 'Human');
           }
         }
 
@@ -848,16 +869,22 @@ class ChessGame {
 
     // Removed new game sound - only play sounds on moves/undo/redo
 
-    // Reset dialogue manager and show game start greeting for bot mode only
+    // Reset dialogue manager and show appropriate greeting
     dialogueManager.reset();
     if (this.gameMode === 'human-vs-bot') {
       setTimeout(() => {
         this.showBotDialogue('gameStart', true); // Force show greeting
       }, 500);
     } else {
-      // Hide bot dialogue for human vs human mode
+      // Show human vs human interface with random bot commentary
       if (window.gameUI) {
-        window.gameUI.hideBotDialogue();
+        setTimeout(() => {
+          // Pick a random bot to provide commentary
+          const commentators = ['Evy', 'Emmy', 'Asa'];
+          const randomBot = commentators[Math.floor(Math.random() * commentators.length)];
+          const dialogue = getRandomDialogue(randomBot, 'gameStart');
+          window.gameUI.showBotDialoguePersistent(dialogue || "Let the games begin!", 'Human');
+        }, 500);
       }
     }
   }
@@ -2883,8 +2910,16 @@ class ChessUI {
           }
         }, 1000);
       } else {
-        // In human vs human, just play victory sound
+        // In human vs human, show random bot commentary and play victory sound
         isVictory = true;
+        setTimeout(() => {
+          const commentators = ['Evy', 'Emmy', 'Asa'];
+          const randomBot = commentators[Math.floor(Math.random() * commentators.length)];
+          const dialogue = getRandomDialogue(randomBot, 'humanWins');
+          if (dialogue && window.gameUI) {
+            window.gameUI.showBotDialoguePersistent(dialogue, 'Human');
+          }
+        }, 1000);
       }
     }
 
@@ -4444,9 +4479,12 @@ class ChessUI {
     const dialogueArea = document.getElementById('bot-dialogue-area');
     if (!dialogueArea) return;
 
+    // Check if this is human vs human mode
+    const isHumanMode = botName === 'Human' || this.game?.gameMode === 'human-vs-human';
+
     // Clear and rebuild content structure
     dialogueArea.innerHTML = '';
-    dialogueArea.className = `bot-dialogue-${botName.toLowerCase()}`;
+    dialogueArea.className = isHumanMode ? 'bot-dialogue-human' : `bot-dialogue-${botName.toLowerCase()}`;
     dialogueArea.classList.remove('hidden');
 
     // Create layout structure - orange button area
@@ -4473,18 +4511,22 @@ class ChessUI {
       }
     });
 
-    // Bot icon (using chess piece emoji based on bot)
+    // Icon (using chess piece emoji based on mode)
     const botIcon = document.createElement('div');
-    const icons = { 'Evy': '♟', 'Emmy': '♞', 'Asa': '♛' };
-    botIcon.textContent = icons[botName] || '♟';
+    if (isHumanMode) {
+      botIcon.textContent = '👥';  // Human icon for human vs human
+    } else {
+      const icons = { 'Evy': '♟', 'Emmy': '♞', 'Asa': '♛' };
+      botIcon.textContent = icons[botName] || '♟';
+    }
     botIcon.style.fontSize = '14px';
     botIcon.style.color = '#000';  // Black icon on orange background
     botIcon.style.lineHeight = '1';
     botInfo.appendChild(botIcon);
 
-    // Bot name
+    // Label
     const botNameLabel = document.createElement('div');
-    botNameLabel.textContent = botName;
+    botNameLabel.textContent = isHumanMode ? 'Human' : botName;
     botNameLabel.style.fontSize = '8px';
     botNameLabel.style.color = '#000';  // Black text on orange background
     botNameLabel.style.fontWeight = 'bold';
