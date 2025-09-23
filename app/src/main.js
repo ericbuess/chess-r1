@@ -279,6 +279,7 @@ class ChessGame {
       // Mark that we're about to show a bot dialogue (for timing coordination)
       if (this.gameMode === 'human-vs-bot' && window.gameUI) {
         window.gameUI.pendingBotDialogue = true;
+        console.log(`[makeMove] Set pendingBotDialogue = true`);
       }
 
       // Show appropriate dialogue
@@ -309,6 +310,7 @@ class ChessGame {
         // Clear the pending flag after showing dialogue
         if (window.gameUI) {
           window.gameUI.pendingBotDialogue = false;
+          console.log(`[makeMove] Cleared pendingBotDialogue = false`);
         }
       }, 300);
 
@@ -1281,12 +1283,16 @@ class ChessGame {
         window.gameUI.thinkingInterval = null;
       }
 
-      window.gameUI.showInstructionLabel(dialogue);
-      // Mark that we're showing a bot dialogue
+      // Mark that we're showing a bot dialogue BEFORE calling showInstructionLabel
       window.gameUI.showingBotDialogue = true;
+      console.log(`[showBotDialogue] Set showingBotDialogue = true`);
+
+      window.gameUI.showInstructionLabel(dialogue);
+
       // Clear the flag after the dialogue display duration
       setTimeout(() => {
         window.gameUI.showingBotDialogue = false;
+        console.log(`[showBotDialogue] Cleared showingBotDialogue = false`);
       }, 2500); // Slightly longer than default notification duration
     }
     return dialogue;
@@ -4354,6 +4360,8 @@ class ChessUI {
     label.style.color = 'white';
     label.style.fontWeight = 'bold';
 
+    console.log(`[showNotification] Displayed: "${message}" with type: ${type}, duration: ${duration}ms`);
+
     // Set cooldown for warning/error types to prevent spam
     if (type === 'warning' || type === 'error') {
       this.notificationCooldown = true;
@@ -4377,6 +4385,7 @@ class ChessUI {
   }
 
   showInstructionLabel(text) {
+    console.log(`[showInstructionLabel] Called with text: "${text}"`);
     // Delegate to unified notification system
     this.showNotification(text, 'default', 2000);
   }
