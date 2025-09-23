@@ -4475,11 +4475,11 @@ class ChessUI {
     dialogueArea.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
     dialogueArea.style.position = 'relative';  // In document flow
     dialogueArea.style.width = '100%';
-    dialogueArea.style.flex = '1';  // Fill remaining vertical space
+    dialogueArea.style.height = 'auto';  // Auto height at top
     dialogueArea.style.minHeight = '22px';  // Very compact height
     dialogueArea.style.borderRadius = '0';  // No rounded corners
-    dialogueArea.style.border = 'none';  // No border
-    dialogueArea.style.marginTop = '0';  // No gap between board and dialogue
+    dialogueArea.style.borderBottom = '1px solid #FE5F00';  // Bottom border when at top
+    dialogueArea.style.marginBottom = '0.5vh';  // Small gap before game content
 
     // Add all elements
     dialogueArea.appendChild(botInfo);
