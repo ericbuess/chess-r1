@@ -935,7 +935,7 @@ html, body {
 /* Enhanced Instruction Label with bot thinking states */
 #instruction-label {
     position: fixed;
-    top: calc(16vh + min(100vw - 4px, 100vh - 16vh) + 1vh); /* Right below the board */
+    top: calc(16vh + min(100vw - 4px, 100vh - 16vh) - 2vh); /* Starts higher, overlapping slightly */
     left: 0;
     right: 0;
     width: 100vw; /* Full width of screen */
@@ -953,7 +953,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: calc(100vh - 16vh - min(100vw - 4px, 100vh - 16vh) - 1vh); /* Fill remaining space */
+    min-height: calc(100vh - 16vh - min(100vw - 4px, 100vh - 16vh) + 2vh); /* Adjusted for higher position */
 }
 
 /* Bot thinking animation */
