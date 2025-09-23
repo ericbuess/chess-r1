@@ -4453,14 +4453,7 @@ class ChessUI {
     botNameLabel.style.lineHeight = '1';
     botInfo.appendChild(botNameLabel);
 
-    // Vertical divider
-    const divider = document.createElement('div');
-    divider.style.width = '1px';
-    divider.style.backgroundColor = '#333';
-    divider.style.margin = '0 4px';
-    divider.style.alignSelf = 'stretch';  // Extend full height
-
-    // Dialogue text
+    // Dialogue text (no divider needed)
     const dialogueText = document.createElement('div');
     dialogueText.textContent = dialogue;
     dialogueText.style.flex = '1';
@@ -4486,9 +4479,8 @@ class ChessUI {
     dialogueArea.style.cursor = 'pointer';  // Show it's clickable
     dialogueArea.style.transition = 'all 0.2s ease';  // Smooth hover effect
 
-    // Add all elements
+    // Add all elements (no divider)
     dialogueArea.appendChild(botInfo);
-    dialogueArea.appendChild(divider);
     dialogueArea.appendChild(dialogueText);
 
     console.log(`[showBotDialoguePersistent] Displayed: "${dialogue}" for bot: ${botName}`);
