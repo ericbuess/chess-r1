@@ -230,8 +230,9 @@ html, body {
     gap: 0; /* Prevent grid gaps that might cause lines */
     border: 2px solid #FE5F00;
     margin: 0.5vh auto 0;
-    transform-style: preserve-3d;
-    perspective: 1000px;
+    /* Remove 3D transforms - not needed for 2D board */
+    /* transform-style: preserve-3d; - REMOVED for performance */
+    /* perspective: 1000px; - REMOVED for performance */
     /* Safari fixes for 3D transforms */
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -242,7 +243,7 @@ html, body {
     transition: transform 0.3s ease-in-out;
     /* Prevent subpixel rendering issues */
     transform: translateZ(0);
-    will-change: transform;
+    /* will-change: transform; - REMOVED for performance (apply only during animation) */
 }
 
 /* Orientation Modes */
@@ -261,7 +262,7 @@ html, body {
     /* Safari fixes for rotation */
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    transform-style: preserve-3d;
+    /* transform-style: preserve-3d; - REMOVED for performance */
     z-index: 0; /* Establish stacking context */
     /* Safari-compatible transition */
     -webkit-transition: -webkit-transform 0.3s ease-in-out;
@@ -277,15 +278,15 @@ html, body {
     z-index: 1;
     position: relative;
     /* Fix rendering lines during rotation */
-    -webkit-transform-style: preserve-3d;
-    transform-style: preserve-3d;
+    /* -webkit-transform-style: preserve-3d; - REMOVED for performance */
+    /* transform-style: preserve-3d; - REMOVED for performance */
     -webkit-font-smoothing: antialiased;
 }
 
 /* In table mode, board and pieces inherit container rotation - no additional rotation needed */
 #game-container[data-orientation-mode="table"][data-board-flipped="true"] #chess-board {
     /* No additional transform - inherits container's 180° rotation */
-    will-change: transform;
+    /* will-change: transform; - REMOVED for performance */
 }
 
 #game-container[data-orientation-mode="table"][data-board-flipped="true"] .chess-piece {
@@ -299,7 +300,7 @@ html, body {
 #game-container[data-orientation-mode="handoff"][data-board-flipped="true"] #board-wrapper {
     transform: rotate(180deg) translateZ(0);
     /* Ensure transform is applied in Safari */
-    will-change: transform;
+    /* will-change: transform; - REMOVED for performance */
 }
 
 /* Counter-rotate pieces in handoff mode to keep them upright after container rotation */

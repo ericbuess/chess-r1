@@ -1891,6 +1891,13 @@ class ChessUI {
     this.thinkingMessageTimer = null; // Store timeout for initial thinking message display
     this.handledByTouch = false; // Flag to prevent double-handling of touch+click
 
+    // Track event listeners for proper cleanup
+    this.optionListeners = [];
+    this.menuOpen = false;
+
+    // Track paused timers for menu
+    this.pausedTimerStates = null;
+
     // Removed audio initialization - audio should only play on actual moves/undo/redo
     // This was causing first tap to be consumed without performing the intended action
 
@@ -2302,8 +2309,12 @@ class ChessUI {
         this.thinkingMessageTimer = null;
       }
 
-      // Show initial message after 4 seconds delay
+      // Show initial message after 4 seconds delay (unless menu is open)
       this.thinkingMessageTimer = setTimeout(() => {
+        // Don't show message if menu is open
+        if (this.menuOpen) {
+          return;
+        }
         const label = document.getElementById('instruction-label');
         const botName = this.game.getBotDifficultyText();
 
@@ -2316,8 +2327,12 @@ class ChessUI {
           label.style.fontWeight = 'bold';
           notificationShown = true;
 
-          // Start rotating messages every 4 seconds
+          // Start rotating messages every 4 seconds (unless menu is open)
           this.thinkingInterval = setInterval(() => {
+            // Skip rotation if menu is open
+            if (this.menuOpen) {
+              return;
+            }
             rotationCount++;
             messageIndex = (messageIndex + 1) % thinkingMessages.length;
             const currentLabel = document.getElementById('instruction-label');
@@ -3475,6 +3490,10 @@ class ChessUI {
         return; // Menu already visible, don't show again
       }
       overlay.classList.remove('hidden');
+      this.menuOpen = true;
+
+      // Pause bot thinking timers if they're running
+      this.pauseBotTimers();
 
       // Track the original game mode when menu opens (only if not already tracking)
       if (this.game.originalGameMode === undefined) {
@@ -3500,12 +3519,12 @@ class ChessUI {
 
       // Update button states
       this.updateOptionsButtons();
-      
-      // Add event listeners if not already added
-      if (!overlay.dataset.listenersAdded) {
-        this.setupOptionsEventListeners();
-        overlay.dataset.listenersAdded = 'true';
-      }
+
+      // Clean up any existing listeners first
+      this.removeOptionsEventListeners();
+
+      // Add fresh event listeners
+      this.setupOptionsEventListeners();
     }
   }
 
@@ -3514,6 +3533,13 @@ class ChessUI {
     if (overlay) {
       overlay.classList.add('hidden');
     }
+    this.menuOpen = false;
+
+    // Clean up event listeners to prevent memory leak
+    this.removeOptionsEventListeners();
+
+    // Resume bot timers if they were paused
+    this.resumeBotTimers();
 
     // Apply correct orientation when menu closes using deterministic logic
     const shouldFlip = this.game.determineOrientation();
@@ -3525,7 +3551,7 @@ class ChessUI {
     // Check if bot should make initial move after returning from options
     // This handles the case where user changed color and clicked "Back to game"
     if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {
-      
+
       // Use a small delay to let UI settle
       setTimeout(() => {
         this.checkInitialBotTurn();
@@ -3690,12 +3716,86 @@ class ChessUI {
     });
   }
 
+  removeOptionsEventListeners() {
+    // Remove all stored listeners
+    this.optionListeners.forEach(({ element, event, handler }) => {
+      if (element) {
+        element.removeEventListener(event, handler);
+      }
+    });
+    this.optionListeners = [];
+  }
+
+  pauseBotTimers() {
+    // Only pause if bot is actually thinking
+    if (!this.isBotProcessing) {
+      return;
+    }
+
+    this.pausedTimerStates = {
+      wasThinking: this.isBotProcessing,
+      hadThinkingInterval: !!this.thinkingInterval,
+      hadThinkingMessageTimer: !!this.thinkingMessageTimer,
+      hadBotTurnTimer: !!this.botTurnTimer,
+      thinkingStartTime: Date.now() // Track when we paused
+    };
+
+    // Clear all bot thinking timers
+    if (this.thinkingInterval) {
+      clearInterval(this.thinkingInterval);
+      this.thinkingInterval = null;
+    }
+
+    if (this.thinkingMessageTimer) {
+      clearTimeout(this.thinkingMessageTimer);
+      this.thinkingMessageTimer = null;
+    }
+
+    if (this.botTurnTimer) {
+      clearTimeout(this.botTurnTimer);
+      this.botTurnTimer = null;
+    }
+
+    // Hide thinking notification while menu is open
+    const label = document.getElementById('instruction-label');
+    if (label && !label.classList.contains('hidden')) {
+      label.classList.add('hidden');
+    }
+  }
+
+  resumeBotTimers() {
+    // Only resume if we had paused timers and bot was thinking
+    if (!this.pausedTimerStates || !this.pausedTimerStates.wasThinking) {
+      this.pausedTimerStates = null;
+      return;
+    }
+
+    // If bot is still thinking, show the indicator again
+    if (this.isBotProcessing) {
+      // Restore thinking notification
+      const label = document.getElementById('instruction-label');
+      const botName = this.game.getBotDifficultyText();
+      if (label) {
+        label.textContent = `${botName} is thinking...`;
+        label.classList.remove('hidden');
+        label.style.backgroundColor = '#FE5F00';
+        label.style.color = 'white';
+        label.style.fontWeight = 'bold';
+      }
+    }
+
+    // Clear the paused state
+    this.pausedTimerStates = null;
+  }
+
   setupOptionsEventListeners() {
+    // Clear any existing listeners first
+    this.removeOptionsEventListeners();
 
     // Game Mode radio buttons
     const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
     gameModeRadios.forEach(radio => {
-      radio.addEventListener('change', async () => {
+      const handler = async () => {
         if (radio.checked && radio.value !== this.game.gameMode) {
           try {
             // Save current game state before switching (save to current mode's key)
@@ -3789,54 +3889,62 @@ class ChessUI {
               
               
               
-              
+
             }, 10);
           }
         }
-      });
+      };
+      radio.addEventListener('change', handler);
+      this.optionListeners.push({ element: radio, event: 'change', handler });
     });
 
     // Player Color radio buttons
     const colorRadios = document.querySelectorAll('input[name="playerColor"]');
     colorRadios.forEach(radio => {
-      radio.addEventListener('change', () => {
+      const handler = () => {
         if (radio.checked) {
           this.game.setHumanColor(radio.value);
           this.game.autoSave();
           // Update button states after color change
           this.updateOptionsButtons();
         }
-      });
+      };
+      radio.addEventListener('change', handler);
+      this.optionListeners.push({ element: radio, event: 'change', handler });
     });
 
     // Sound Effects radio buttons
     const soundRadios = document.querySelectorAll('input[name="soundEffects"]');
     soundRadios.forEach(radio => {
-      radio.addEventListener('change', () => {
+      const handler = () => {
         if (radio.checked) {
           const soundEnabled = radio.value === 'on';
           this.game.soundEnabled = soundEnabled;
           this.game.autoSave();
         }
-      });
+      };
+      radio.addEventListener('change', handler);
+      this.optionListeners.push({ element: radio, event: 'change', handler });
     });
 
     // Allow Undo radio buttons
     const undoRadios = document.querySelectorAll('input[name="allowUndo"]');
     undoRadios.forEach(radio => {
-      radio.addEventListener('change', () => {
+      const handler = () => {
         if (radio.checked) {
           const allowUndo = radio.value === 'on';
           this.game.allowUndo = allowUndo;
           this.game.autoSave();
         }
-      });
+      };
+      radio.addEventListener('change', handler);
+      this.optionListeners.push({ element: radio, event: 'change', handler });
     });
 
     // Bot Difficulty radio buttons
     const difficultyRadios = document.querySelectorAll('input[name="botDifficulty"]');
     difficultyRadios.forEach(radio => {
-      radio.addEventListener('change', () => {
+      const handler = () => {
         if (radio.checked) {
           const difficulty = parseInt(radio.value);
           this.game.setBotDifficulty(difficulty);
@@ -3844,7 +3952,9 @@ class ChessUI {
           // Update button states after difficulty change
           this.updateOptionsButtons();
         }
-      });
+      };
+      radio.addEventListener('change', handler);
+      this.optionListeners.push({ element: radio, event: 'change', handler });
     });
 
     // Action buttons
@@ -3853,30 +3963,36 @@ class ChessUI {
     const overlay = document.getElementById('options-overlay');
 
     if (newGameBtn) {
-      newGameBtn.addEventListener('click', () => {
+      const handler = () => {
         this.confirmNewGame();
-      });
+      };
+      newGameBtn.addEventListener('click', handler);
+      this.optionListeners.push({ element: newGameBtn, event: 'click', handler });
     }
 
     if (backBtn) {
-      backBtn.addEventListener('click', () => {
+      const handler = () => {
         this.hideOptionsMenu();
-      });
+      };
+      backBtn.addEventListener('click', handler);
+      this.optionListeners.push({ element: backBtn, event: 'click', handler });
     }
 
     // Help button
     const helpBtn = document.getElementById('help-btn');
     if (helpBtn) {
-      helpBtn.addEventListener('click', () => {
+      const handler = () => {
         // Don't hide the menu - just show help on top
         showHelpDialog(false, true); // Pass fromMenu = true
-      });
+      };
+      helpBtn.addEventListener('click', handler);
+      this.optionListeners.push({ element: helpBtn, event: 'click', handler });
     }
 
     // Orientation Mode radio buttons
     const orientationModeRadios = document.querySelectorAll('input[name="orientationMode"]');
     orientationModeRadios.forEach(radio => {
-      radio.addEventListener('change', () => {
+      const handler = () => {
         if (radio.checked) {
           this.game.orientationMode = radio.value;
 
@@ -3891,12 +4007,14 @@ class ChessUI {
           this.showMessage(modeMessages[radio.value]);
           this.game.autoSave();
         }
-      });
+      };
+      radio.addEventListener('change', handler);
+      this.optionListeners.push({ element: radio, event: 'change', handler });
     });
 
     // Smart overlay click handler - uses same logic as PTT button
     if (overlay) {
-      overlay.addEventListener('click', (event) => {
+      const handler = (event) => {
         // Only handle clicks on the overlay itself, not the menu
         if (event.target === overlay) {
           // Use same logic as PTT button press (lines 4390-4397)
@@ -3918,7 +4036,9 @@ class ChessUI {
             }
           }
         }
-      });
+      };
+      overlay.addEventListener('click', handler);
+      this.optionListeners.push({ element: overlay, event: 'click', handler });
     }
   }
 
