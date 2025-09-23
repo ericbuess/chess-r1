@@ -935,25 +935,25 @@ html, body {
 /* Enhanced Instruction Label with bot thinking states */
 #instruction-label {
     position: fixed;
-    top: calc(16vh + min(100vw - 4px, 100vh - 16vh) - 3vh); /* Moved up another 1vh for closer positioning */
+    top: calc(16vh + min(100vw - 4px, 100vh - 16vh) - 4vh); /* Moved up another 1vh for even closer positioning */
     left: 0;
     right: 0;
     width: 100vw; /* Full width of screen */
-    background: #FE5F00; /* Orange background */
-    color: #000000; /* Dark text for contrast on orange */
+    background: transparent; /* No background, already black */
+    color: #FE5F00; /* Orange text for visibility */
     padding: 2vh 2vw; /* Vertical padding to fill space */
     font-size: 4.5vw; /* Large, readable font */
     font-weight: bold; /* Bold text for readability */
     text-align: center;
-    border-top: 2px solid #000000; /* Black border at top */
-    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3); /* Dark shadow */
-    backdrop-filter: blur(8px);
+    border-top: none; /* Remove border */
+    box-shadow: none; /* Remove shadow */
+    backdrop-filter: none;
     transition: all 0.3s ease;
     z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: calc(100vh - 16vh - min(100vw - 4px, 100vh - 16vh) + 3vh); /* Adjusted for higher position */
+    min-height: calc(100vh - 16vh - min(100vw - 4px, 100vh - 16vh) + 4vh); /* Adjusted for higher position */
 }
 
 /* Bot thinking animation */
@@ -965,8 +965,8 @@ html, body {
 /* Alternative approach for bot thinking styling */
 #instruction-label.bot-thinking {
     animation: botThinking 2s ease-in-out infinite;
-    border-color: #000000;
-    background: #FF9966; /* Lighter orange for thinking state */
+    color: #FFB366; /* Lighter orange for thinking state */
+    background: transparent;
 }
 
 @keyframes botThinking {
