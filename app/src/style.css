@@ -939,15 +939,15 @@ html, body {
     left: 0;
     right: 0;
     width: 100vw; /* Full width of screen */
-    background: none !important; /* Truly transparent */
-    background-color: transparent !important; /* Ensure no background color */
-    color: #FE5F00 !important; /* Orange text for visibility */
+    background: none; /* Truly transparent */
+    background-color: transparent; /* Ensure no background color */
+    color: #FE5F00; /* Orange text for visibility */
     padding: 2vh 2vw; /* Vertical padding to fill space */
     font-size: 4.5vw; /* Large, readable font */
     font-weight: bold; /* Bold text for readability */
     text-align: center;
-    border: none !important; /* No border */
-    box-shadow: none !important; /* No shadow */
+    border: none; /* No border */
+    box-shadow: none; /* No shadow */
     backdrop-filter: none;
     transition: all 0.3s ease;
     z-index: 1000;
@@ -957,6 +957,14 @@ html, body {
     min-height: calc(100vh - 16vh - min(100vw - 4px, 100vh - 16vh) + 3.5vh); /* Adjusted for position */
 }
 
+/* Ensure base styles take precedence over any classes */
+body #instruction-label:not(.victory):not(.defeat) {
+    background: none;
+    background-color: transparent;
+    color: #FE5F00;
+    border: none;
+}
+
 /* Bot thinking animation */
 #instruction-label:has-text("Bot is thinking") {
     animation: botThinking 2s ease-in-out infinite;
@@ -964,11 +972,12 @@ html, body {
 }
 
 /* Alternative approach for bot thinking styling */
-#instruction-label.bot-thinking {
+body #instruction-label.bot-thinking {
     animation: botThinking 2s ease-in-out infinite;
     color: #FFB366; /* Lighter orange for thinking state */
-    background: none !important;
-    background-color: transparent !important;
+    background: none;
+    background-color: transparent;
+    border: none;
 }
 
 @keyframes botThinking {
@@ -982,27 +991,27 @@ html, body {
     }
 }
 
-/* Game end message styling */
-#instruction-label.game-end {
-    background: none !important;
-    background-color: transparent !important;
+/* Game end message styling with higher specificity */
+body #instruction-label.game-end {
+    background: none;
+    background-color: transparent;
     border: none;
     font-weight: bold;
     color: #FE5F00;
 }
 
-#instruction-label.victory {
-    color: #4CAF50 !important; /* Green for victory */
+body #instruction-label.victory {
+    color: #4CAF50; /* Green for victory */
     border: none;
-    background: none !important;
-    background-color: transparent !important;
+    background: none;
+    background-color: transparent;
 }
 
-#instruction-label.defeat {
-    color: #FF6B6B !important; /* Red for defeat */
+body #instruction-label.defeat {
+    color: #FF6B6B; /* Red for defeat */
     border: none;
-    background: none !important;
-    background-color: transparent !important;
+    background: none;
+    background-color: transparent;
 }
     z-index: 500;
     animation: fadeInOut 2s ease-in-out;
