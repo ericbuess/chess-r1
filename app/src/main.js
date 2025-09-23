@@ -5413,6 +5413,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Initialize chess game
   chessGame = new ChessGame();
   gameUI = new ChessUI(chessGame);
+  window.gameUI = gameUI;  // Make gameUI globally accessible for bot dialogues
 
   // Show help dialog on startup after a brief delay (AFTER gameUI is ready)
   // Pass fromStartup=true to avoid click-outside handler that consumes first tap
