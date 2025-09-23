@@ -1893,6 +1893,8 @@ class ChessUI {
 
     // Track event listeners for proper cleanup
     this.optionListeners = [];
+    this.boardListeners = [];  // Track board square listeners
+    this.expandButtonHandler = null;  // Track expand button listener
     this.menuOpen = false;
 
     // Track paused timers for menu
@@ -1901,15 +1903,21 @@ class ChessUI {
     // Removed audio initialization - audio should only play on actual moves/undo/redo
     // This was causing first tap to be consumed without performing the intended action
 
-    // Add click handler for expand button
+    // Add click handler for expand button (with cleanup tracking)
     const expandButton = document.getElementById('move-expand');
     if (expandButton) {
-      expandButton.addEventListener('click', () => {
+      // Remove old handler if exists
+      if (this.expandButtonHandler) {
+        expandButton.removeEventListener('click', this.expandButtonHandler);
+      }
+      // Create and store new handler
+      this.expandButtonHandler = () => {
         const fullText = expandButton.dataset.fullText;
         if (fullText) {
           this.showNotification(fullText, 'info', 3000);
         }
-      });
+      };
+      expandButton.addEventListener('click', this.expandButtonHandler);
     }
 
     this.initializeBoard();
@@ -1920,7 +1928,20 @@ class ChessUI {
     // this.checkInitialBotTurn();
   }
 
+  removeBoardEventListeners() {
+    // Remove all board square event listeners
+    this.boardListeners.forEach(({ element, event, handler, options }) => {
+      if (element) {
+        element.removeEventListener(event, handler, options);
+      }
+    });
+    this.boardListeners = [];
+  }
+
   initializeBoard() {
+    // Clean up any existing board listeners before re-initializing
+    this.removeBoardEventListeners();
+
     this.boardElement.innerHTML = '';
     
     for (let row = 0; row < 8; row++) {
@@ -1935,10 +1956,25 @@ class ChessUI {
         square.classList.add(isLight ? 'light-square' : 'dark-square');
         
         // Enhanced touch support for R1 device with optimized performance
-        square.addEventListener('click', async (e) => await this.handleSquareClick(e));
-        square.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: false });
-        square.addEventListener('touchend', async (e) => await this.handleTouchEnd(e), { passive: false });
-        square.addEventListener('touchcancel', (e) => this.handleTouchCancel(e), { passive: false });
+        // Create handlers and store them for cleanup
+        const clickHandler = async (e) => await this.handleSquareClick(e);
+        const touchStartHandler = (e) => this.handleTouchStart(e);
+        const touchEndHandler = async (e) => await this.handleTouchEnd(e);
+        const touchCancelHandler = (e) => this.handleTouchCancel(e);
+
+        // Add listeners
+        square.addEventListener('click', clickHandler);
+        square.addEventListener('touchstart', touchStartHandler, { passive: false });
+        square.addEventListener('touchend', touchEndHandler, { passive: false });
+        square.addEventListener('touchcancel', touchCancelHandler, { passive: false });
+
+        // Track listeners for cleanup
+        this.boardListeners.push(
+          { element: square, event: 'click', handler: clickHandler },
+          { element: square, event: 'touchstart', handler: touchStartHandler, options: { passive: false } },
+          { element: square, event: 'touchend', handler: touchEndHandler, options: { passive: false } },
+          { element: square, event: 'touchcancel', handler: touchCancelHandler, options: { passive: false } }
+        );
         
         this.boardElement.appendChild(square);
       }
