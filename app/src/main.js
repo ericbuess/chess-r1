@@ -1250,15 +1250,26 @@ class ChessGame {
     if (this.gameMode !== 'human-vs-bot') return null;
 
     const botName = this.getBotDifficultyText();
+    console.log(`[showBotDialogue] Called with category: ${category}, botName: ${botName}, forceShow: ${forceShow}`);
 
     // Check if we should show dialogue (unless forced for special events)
     if (!forceShow && !dialogueManager.shouldShowDialogue()) {
+      console.log(`[showBotDialogue] Skipping - dialogue manager says no`);
       return null;
     }
 
     const dialogue = getRandomDialogue(botName, category);
+    console.log(`[showBotDialogue] Got dialogue: "${dialogue}"`);
+
     if (dialogue && window.gameUI) {
+      console.log(`[showBotDialogue] Showing dialogue in instruction label`);
       window.gameUI.showInstructionLabel(dialogue);
+      // Mark that we're showing a bot dialogue
+      window.gameUI.showingBotDialogue = true;
+      // Clear the flag after the dialogue display duration
+      setTimeout(() => {
+        window.gameUI.showingBotDialogue = false;
+      }, 2500); // Slightly longer than default notification duration
     }
     return dialogue;
   }
@@ -2788,8 +2799,11 @@ class ChessUI {
       this.updatePlayerTurnIndicator(this.game.currentPlayer, gameMode);
 
     } else {
-      // Hide thinking indicator
-      this.hideInstructionLabel();
+      console.log(`[showBotThinking] Hiding thinking indicator, showingBotDialogue: ${this.showingBotDialogue}`);
+      // Don't hide instruction label if we're showing a bot dialogue
+      if (!this.showingBotDialogue) {
+        this.hideInstructionLabel();
+      }
 
       // Remove spinner
       const spinner = document.querySelector('.bot-thinking-spinner');
