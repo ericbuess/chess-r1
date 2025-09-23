@@ -4418,26 +4418,71 @@ class ChessUI {
     const dialogueArea = document.getElementById('bot-dialogue-area');
     if (!dialogueArea) return;
 
-    // Set the bot's dialogue text
-    dialogueArea.textContent = dialogue;
+    // Clear and rebuild content structure
+    dialogueArea.innerHTML = '';
     dialogueArea.className = `bot-dialogue-${botName.toLowerCase()}`;
     dialogueArea.classList.remove('hidden');
 
-    // Apply styling with semi-transparent black background and orange text
-    // Different from instruction label which uses orange background
-    dialogueArea.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-    dialogueArea.style.color = '#FE5F00';
-    dialogueArea.style.fontWeight = 'bold';
-    dialogueArea.style.fontSize = '11px';
-    dialogueArea.style.padding = '6px 10px';
-    dialogueArea.style.textAlign = 'center';
-    dialogueArea.style.position = 'fixed';  // Fixed positioning for consistency
-    dialogueArea.style.bottom = '5px';
-    dialogueArea.style.left = '5px';
-    dialogueArea.style.right = '5px';
-    dialogueArea.style.borderRadius = '6px';
-    dialogueArea.style.border = '1px solid #FE5F00';
-    dialogueArea.style.zIndex = '100';  // Higher z-index to ensure visibility
+    // Create layout structure
+    const botInfo = document.createElement('div');
+    botInfo.style.display = 'flex';
+    botInfo.style.flexDirection = 'column';
+    botInfo.style.alignItems = 'center';
+    botInfo.style.padding = '4px 8px';
+    botInfo.style.minWidth = '50px';
+
+    // Bot icon (using chess piece emoji based on bot)
+    const botIcon = document.createElement('div');
+    const icons = { 'Evy': '♟', 'Emmy': '♞', 'Asa': '♛' };
+    botIcon.textContent = icons[botName] || '♟';
+    botIcon.style.fontSize = '20px';
+    botIcon.style.color = '#FE5F00';
+    botInfo.appendChild(botIcon);
+
+    // Bot name
+    const botNameLabel = document.createElement('div');
+    botNameLabel.textContent = botName;
+    botNameLabel.style.fontSize = '9px';
+    botNameLabel.style.color = '#FE5F00';
+    botNameLabel.style.fontWeight = 'bold';
+    botNameLabel.style.marginTop = '2px';
+    botInfo.appendChild(botNameLabel);
+
+    // Vertical divider
+    const divider = document.createElement('div');
+    divider.style.width = '2px';
+    divider.style.backgroundColor = '#FE5F00';
+    divider.style.margin = '0 8px';
+
+    // Dialogue text
+    const dialogueText = document.createElement('div');
+    dialogueText.textContent = dialogue;
+    dialogueText.style.flex = '1';
+    dialogueText.style.color = '#FE5F00';
+    dialogueText.style.fontSize = '11px';
+    dialogueText.style.textAlign = 'left';
+    dialogueText.style.padding = '4px 0';
+    dialogueText.style.lineHeight = '1.4';
+
+    // Apply container styling
+    dialogueArea.style.display = 'flex';
+    dialogueArea.style.alignItems = 'stretch';
+    dialogueArea.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+    dialogueArea.style.position = 'absolute';
+    dialogueArea.style.bottom = '0';
+    dialogueArea.style.left = '0';
+    dialogueArea.style.right = '0';
+    dialogueArea.style.height = 'auto';
+    dialogueArea.style.minHeight = '45px';
+    dialogueArea.style.borderRadius = '0';  // No rounded corners
+    dialogueArea.style.border = 'none';
+    dialogueArea.style.borderTop = '1px solid #FE5F00';
+    dialogueArea.style.zIndex = '100';
+
+    // Add all elements
+    dialogueArea.appendChild(botInfo);
+    dialogueArea.appendChild(divider);
+    dialogueArea.appendChild(dialogueText);
 
     console.log(`[showBotDialoguePersistent] Displayed: "${dialogue}" for bot: ${botName}`);
   }
