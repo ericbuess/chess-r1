@@ -84,8 +84,8 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1.5vh; /* More space below the move info */
-    padding: 1vh 0; /* More vertical padding */
+    margin-bottom: 0.5vh;
+    padding: 0.3vh 0;
     max-width: 100%;
 }
 
@@ -100,7 +100,7 @@ html, body {
     align-items: center;
     gap: 0.05vw;
     padding-bottom: 0;
-    margin-top: 1vh; /* More space above captured pieces */
+    margin-top: -0.5vw;
 }
 
 .material-balance-bar {
@@ -108,7 +108,7 @@ html, body {
     height: 1vw;
     background: linear-gradient(90deg, #333 0%, #222 50%, #333 100%);
     border-radius: 0.3vw;
-    margin: 1.5vh 0 1vh 0; /* More space above and below the balance bar */
+    margin: 0.2vw 0 0 0;
     overflow: hidden;
     position: relative;
 }
