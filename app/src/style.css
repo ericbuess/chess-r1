@@ -935,14 +935,14 @@ html, body {
 /* Enhanced Instruction Label with bot thinking states */
 #instruction-label {
     position: fixed;
-    bottom: 5vh;
+    bottom: 1vh; /* Moved to very bottom of screen */
     left: 50%;
     transform: translateX(-50%);
     background: rgba(254, 95, 0, 0.9);
     color: #FE5F00;
-    padding: 2vw 4vw;
+    padding: 1.5vw 3vw; /* Slightly smaller padding */
     border-radius: 2vw;
-    font-size: 2.5vw;
+    font-size: 2.3vw; /* Slightly smaller font */
     text-align: center;
     border: 1px solid rgba(254, 95, 0, 0.3);
     backdrop-filter: blur(4px);
