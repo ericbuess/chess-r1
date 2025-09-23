@@ -4364,10 +4364,20 @@ class ChessUI {
     label.textContent = message;
     label.classList.remove('hidden');
 
-    // Apply styling - always use orange background for consistency
+    // Apply styling - orange background with white text for notifications
     label.style.backgroundColor = '#FE5F00';
     label.style.color = 'white';
     label.style.fontWeight = 'bold';
+    label.style.fontSize = '12px';
+    label.style.padding = '8px 12px';
+    label.style.textAlign = 'center';
+    label.style.position = 'fixed';
+    label.style.top = '50%';
+    label.style.left = '50%';
+    label.style.transform = 'translate(-50%, -50%)';
+    label.style.borderRadius = '8px';
+    label.style.boxShadow = '0 4px 6px rgba(0,0,0,0.3)';
+    label.style.zIndex = '200';  // Higher than bot dialogue to ensure visibility
 
     console.log(`[showNotification] Displayed: "${message}" with type: ${type}, duration: ${duration}ms`);
 
@@ -4413,19 +4423,21 @@ class ChessUI {
     dialogueArea.className = `bot-dialogue-${botName.toLowerCase()}`;
     dialogueArea.classList.remove('hidden');
 
-    // Apply consistent styling
-    dialogueArea.style.backgroundColor = '#FE5F00';
-    dialogueArea.style.color = 'white';
+    // Apply styling with semi-transparent black background and orange text
+    // Different from instruction label which uses orange background
+    dialogueArea.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    dialogueArea.style.color = '#FE5F00';
     dialogueArea.style.fontWeight = 'bold';
     dialogueArea.style.fontSize = '11px';
-    dialogueArea.style.padding = '4px 8px';
+    dialogueArea.style.padding = '6px 10px';
     dialogueArea.style.textAlign = 'center';
-    dialogueArea.style.position = 'absolute';
-    dialogueArea.style.bottom = '10px';
-    dialogueArea.style.left = '10px';
-    dialogueArea.style.right = '10px';
-    dialogueArea.style.borderRadius = '4px';
-    dialogueArea.style.zIndex = '10';
+    dialogueArea.style.position = 'fixed';  // Fixed positioning for consistency
+    dialogueArea.style.bottom = '5px';
+    dialogueArea.style.left = '5px';
+    dialogueArea.style.right = '5px';
+    dialogueArea.style.borderRadius = '6px';
+    dialogueArea.style.border = '1px solid #FE5F00';
+    dialogueArea.style.zIndex = '100';  // Higher z-index to ensure visibility
 
     console.log(`[showBotDialoguePersistent] Displayed: "${dialogue}" for bot: ${botName}`);
   }
