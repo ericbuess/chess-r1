@@ -107,10 +107,10 @@ html, body {
 
 .material-balance-bar {
     width: 100%;
-    height: 1vw;
+    height: 4px;
     background: linear-gradient(90deg, #333 0%, #222 50%, #333 100%);
-    border-radius: 0.3vw;
-    margin: 0.8vh 0 0.5vh 0; /* More space above the balance bar */
+    border-radius: 2px;
+    margin: 4px 0 2px 0; /* Small margin to separate from board */
     overflow: hidden;
     position: relative;
 }

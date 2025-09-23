@@ -3003,7 +3003,7 @@ class ChessUI {
   updateCapturedPiecesDisplay() {
     const capturedContainer = document.getElementById('captured-pieces');
     if (!capturedContainer) {
-      
+
       return;
     }
 
@@ -3014,10 +3014,9 @@ class ChessUI {
     // Clear existing content
     capturedContainer.innerHTML = '';
 
-    // Always add material balance bar
+    // Update the existing material balance bar (don't create a new one)
     const materialBalance = this.game.calculateMaterialBalance();
-    const balanceBar = this.createMaterialBalanceBar(materialBalance, gameMode, humanColor);
-    capturedContainer.appendChild(balanceBar);
+    this.updateMaterialBalanceBar(materialBalance, gameMode, humanColor);
 
     // Create left and right sections
     const leftSection = document.createElement('div');
@@ -3142,6 +3141,33 @@ class ChessUI {
 
     barContainer.appendChild(indicator);
     return barContainer;
+  }
+
+  // Update existing material balance bar in DOM
+  updateMaterialBalanceBar(balance, gameMode, humanColor) {
+    const indicator = document.getElementById('balance-indicator');
+    if (!indicator) {
+      return;
+    }
+
+    // Normalize balance to 0-100% scale (50% = balanced)
+    // Material balance ranges from -39 (black advantage) to +39 (white advantage)
+    const percentage = Math.max(0, Math.min(100, ((balance + 39) / 78) * 100));
+
+    // Set className with appropriate advantage class
+    let className = 'balance-indicator';
+    if (gameMode === 'human-vs-bot') {
+      const humanAdvantage = (humanColor === 'white' && balance > 0) ||
+                            (humanColor === 'black' && balance < 0);
+      if (humanAdvantage) {
+        className += ' human-advantage';
+      } else if (balance !== 0) {
+        className += ' bot-advantage';
+      }
+    }
+
+    indicator.className = className;
+    indicator.style.width = `${percentage}%`;
   }
 
   // Enhanced move history display
