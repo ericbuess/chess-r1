@@ -2,11 +2,43 @@
 
 ## 🎯 Priority Performance Fixes (Before R1 Deployment)
 
-### Critical Performance Issues to Fix:
-1. **Event Listener Memory Leak** - setupOptionsEventListeners adds 18 listeners per menu open, never removes them
-2. **Bot Thinking Timers** - 3 concurrent timers continue running when menu is open
-3. **CSS Performance** - Remove unnecessary will-change properties and 3D transforms
-4. **Notification Timer Cleanup** - Clear old timeout before setting new one
+### Phase 1: Critical Memory Leaks (HIGH PRIORITY)
+
+#### 1. Event Listener Memory Leak [CRITICAL]
+**Problem**: setupOptionsEventListeners() adds 18+ listeners per menu open, never removes them
+**Location**: app/src/main.js:3693-3896
+**Root Cause**: `dataset.listenersAdded` flag ineffective, no cleanup in hideOptionsMenu()
+**Solution**:
+- Store listener references in array
+- Add removeEventListener calls in hideOptionsMenu()
+- Properly reset dataset flag
+**Impact**: Fixes exponential performance degradation
+
+#### 2. Bot Thinking Timer Suspension [HIGH]
+**Problem**: 3 concurrent timers (thinkingInterval, thinkingMessageTimer, botTurnTimer) run during menu
+**Location**: app/src/main.js:2294-2333
+**Solution**:
+- Add `this.menuOpen` flag
+- Pause timers when menu opens
+- Resume when menu closes
+**Impact**: Saves 30-40% CPU during menu display
+
+### Phase 2: GPU & Render Optimizations (MEDIUM PRIORITY)
+
+#### 3. CSS GPU Layer Reduction [MEDIUM]
+**Problem**: Excessive will-change and transform-style:preserve-3d causing GPU strain
+**Location**: app/src/style.css:233-289
+**Properties to Remove**:
+- `will-change: transform` (except during actual animations)
+- `transform-style: preserve-3d` (not needed for 2D board)
+- `perspective: 1000px` (unused)
+**Impact**: Reduces GPU memory usage by ~50%
+
+#### 4. Notification Timer Consolidation [LOW]
+**Problem**: Timer overlap in edge cases
+**Location**: app/src/main.js:4017-4036
+**Solution**: Already mostly fixed, just needs edge case handling
+**Impact**: Minor improvement
 
 ### Ready to Test on R1:
 - **Handoff Orientation Issue** - Notification system implemented to diagnose touch coordinate problems
