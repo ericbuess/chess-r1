@@ -1273,27 +1273,35 @@ class ChessGame {
     const dialogue = getRandomDialogue(botName, category);
     console.log(`[showBotDialogue] Got dialogue: "${dialogue}"`);
 
-    if (dialogue && window.gameUI) {
-      console.log(`[showBotDialogue] Showing dialogue in instruction label`);
+    if (dialogue) {
+      console.log(`[showBotDialogue] Has dialogue, checking for window.gameUI...`);
 
-      // Clear any active thinking interval to allow dialogue to show
-      if (window.gameUI.thinkingInterval) {
-        console.log(`[showBotDialogue] Clearing thinking interval to show dialogue`);
-        clearInterval(window.gameUI.thinkingInterval);
-        window.gameUI.thinkingInterval = null;
+      if (window.gameUI) {
+        console.log(`[showBotDialogue] window.gameUI exists, showing dialogue in instruction label`);
+
+        // Clear any active thinking interval to allow dialogue to show
+        if (window.gameUI.thinkingInterval) {
+          console.log(`[showBotDialogue] Clearing thinking interval to show dialogue`);
+          clearInterval(window.gameUI.thinkingInterval);
+          window.gameUI.thinkingInterval = null;
+        }
+
+        // Mark that we're showing a bot dialogue BEFORE calling showInstructionLabel
+        window.gameUI.showingBotDialogue = true;
+        console.log(`[showBotDialogue] Set showingBotDialogue = true`);
+
+        window.gameUI.showInstructionLabel(dialogue);
+
+        // Clear the flag after the dialogue display duration
+        setTimeout(() => {
+          window.gameUI.showingBotDialogue = false;
+          console.log(`[showBotDialogue] Cleared showingBotDialogue = false`);
+        }, 2500); // Slightly longer than default notification duration
+      } else {
+        console.error(`[showBotDialogue] ERROR: window.gameUI is not available!`);
       }
-
-      // Mark that we're showing a bot dialogue BEFORE calling showInstructionLabel
-      window.gameUI.showingBotDialogue = true;
-      console.log(`[showBotDialogue] Set showingBotDialogue = true`);
-
-      window.gameUI.showInstructionLabel(dialogue);
-
-      // Clear the flag after the dialogue display duration
-      setTimeout(() => {
-        window.gameUI.showingBotDialogue = false;
-        console.log(`[showBotDialogue] Cleared showingBotDialogue = false`);
-      }, 2500); // Slightly longer than default notification duration
+    } else {
+      console.log(`[showBotDialogue] No dialogue returned from getRandomDialogue`);
     }
     return dialogue;
   }
