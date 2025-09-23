@@ -1,28 +1,28 @@
 # Chess R1 - Development Plan
 
-## ✅ Recently Completed R1 Plugin Fixes
+## 🎯 Priority Performance Fixes (Before R1 Deployment)
 
-### All Issues Resolved (9/22/2025)
-1. ✅ **Header Tap Zones** - Left edge triggers undo, right edge triggers redo, middle opens options
-2. ✅ **Asa Bot Failure** - Removed Web Worker dependency, all bots now work reliably
-3. ✅ **Bot System Simplified** - Reduced to 3 difficulties: Evy (Easy), Emmy (Normal), Asa (Hard)
-4. ✅ **Minimum Bot Delay** - Added 1-second minimum delay for all bot moves
-5. ✅ **CSS Grid Sizing** - Fixed cells changing size when pieces present
-6. ✅ **Undo Notifications** - Fixed notifications disappearing during bot thinking
-7. ✅ **Table Mode Selection** - Fixed black piece selection after board flip
-8. ✅ **Bot Difficulty Labels** - Updated to match new 3-level system
+### Critical Performance Issues to Fix:
+1. **Event Listener Memory Leak** - setupOptionsEventListeners adds 18 listeners per menu open, never removes them
+2. **Bot Thinking Timers** - 3 concurrent timers continue running when menu is open
+3. **CSS Performance** - Remove unnecessary will-change properties and 3D transforms
+4. **Notification Timer Cleanup** - Clear old timeout before setting new one
 
-### Status Indicator Enhancement (9/22/2025)
-1. ✅ **Show on Launch** - Status indicator appears on game startup with controls guide
-2. ✅ **Controls Section** - Explains all tap zones and R1-specific controls
-3. ✅ **Preference Checkbox** - "Don't show on startup" with localStorage persistence
-4. ✅ **Help Button** - Added to options menu to show status indicator on demand
-5. ✅ **Auto-dismiss** - Closes after 8 seconds or click outside
+### Ready to Test on R1:
+- **Handoff Orientation Issue** - Notification system implemented to diagnose touch coordinate problems
 
-### R1 Touch Coordinate Fix (9/22/2025)
-1. ✅ **R1 Device Detection** - Added method to detect R1 browser environment
-2. ✅ **Handoff Mode Fix** - Fixed black pieces not responding in handoff mode on R1
-3. ✅ **Coordinate Transformation** - Manual touch coordinate reversal when board is rotated
+## ✅ Recently Completed (9/22/2025)
+
+### Audio & Visual Fixes:
+1. ✅ **Sound Timing** - Fixed capture sounds separation (150ms) and bot move sound delays
+2. ✅ **Undo/Redo Audio** - Faithful sound replay from destination state
+3. ✅ **Captured Pawns Display** - Made pawns 75% size with proper baseline alignment
+
+### Core Functionality:
+1. ✅ **Header Tap Zones** - Left=undo, right=redo, middle=options
+2. ✅ **Bot System** - 3 difficulties working reliably without Web Workers
+3. ✅ **Table Mode Selection** - Fixed black piece selection after board flip
+4. ✅ **R1 Device Detection** - Touch coordinate fixes for handoff mode
 
 ## Current Status
 - **App Version**: v0.0.2
