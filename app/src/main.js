@@ -10,6 +10,8 @@
 import * as ChessEngine from 'js-chess-engine';
 // Import sound data directly to avoid 403 path issues on Rabbit device
 import { woodenSoundData } from './woodenSoundData.js';
+// Import bot dialogue system
+import { getRandomDialogue, dialogueManager } from './botDialogues.js';
 window.jsChessEngine = ChessEngine;
 
 // ChessConverter class to translate between our format and js-chess-engine format
@@ -267,6 +269,38 @@ class ChessGame {
 
       // Auto-save after successful move
       await this.autoSave();
+
+      // Show bot dialogue based on move type
+      // Determine who just moved (it's now the opponent's turn)
+      const justMovedPlayer = this.currentPlayer === 'white' ? 'black' : 'white';
+      const isHumanMove = (this.gameMode === 'human-vs-bot' && justMovedPlayer === this.humanColor);
+      const isBotMove = (this.gameMode === 'human-vs-bot' && justMovedPlayer !== this.humanColor);
+
+      // Show appropriate dialogue
+      setTimeout(() => {
+        if (enteredCheck) {
+          // Check dialogue
+          if (isHumanMove) {
+            this.showBotDialogue('humanCheck', true);
+          } else if (isBotMove) {
+            this.showBotDialogue('botCheck', true);
+          }
+        } else if (isCapture) {
+          // Capture dialogue
+          if (isHumanMove) {
+            this.showBotDialogue('humanCapture');
+          } else if (isBotMove) {
+            this.showBotDialogue('botCapture');
+          }
+        } else {
+          // Regular move dialogue
+          if (isHumanMove) {
+            this.showBotDialogue('humanMove');
+          } else if (isBotMove) {
+            this.showBotDialogue('botMove');
+          }
+        }
+      }, 300);
 
       return { success: true, enteredCheck };
     } catch (error) {
@@ -798,9 +832,15 @@ class ChessGame {
 
     // THEN determine board orientation based on correct currentPlayer
     this.boardFlipped = this.determineOrientation();
-    
+
 
     // Removed new game sound - only play sounds on moves/undo/redo
+
+    // Reset dialogue manager and show game start greeting
+    dialogueManager.reset();
+    setTimeout(() => {
+      this.showBotDialogue('gameStart', true); // Force show greeting
+    }, 500);
   }
   
   /**
@@ -1201,7 +1241,28 @@ class ChessGame {
     };
     return difficulties[this.botDifficulty] || 'Evy';
   }
-  
+
+  /**
+   * Show bot dialogue if appropriate
+   */
+  showBotDialogue(category, forceShow = false) {
+    // Only show dialogues in human vs bot mode
+    if (this.gameMode !== 'human-vs-bot') return null;
+
+    const botName = this.getBotDifficultyText();
+
+    // Check if we should show dialogue (unless forced for special events)
+    if (!forceShow && !dialogueManager.shouldShowDialogue()) {
+      return null;
+    }
+
+    const dialogue = getRandomDialogue(botName, category);
+    if (dialogue && window.gameUI) {
+      window.gameUI.showInstructionLabel(dialogue);
+    }
+    return dialogue;
+  }
+
   /**
    * Get color options for UI
    */
@@ -2692,6 +2753,14 @@ class ChessUI {
             (this.game.humanColor === 'black' && winner === 'Black')) {
           isVictory = true;
         }
+        // Show bot dialogue for game end
+        setTimeout(() => {
+          if (isVictory) {
+            this.game.showBotDialogue('humanWins', true);
+          } else {
+            this.game.showBotDialogue('botWins', true);
+          }
+        }, 1000);
       } else {
         // In human vs human, just play victory sound
         isVictory = true;
