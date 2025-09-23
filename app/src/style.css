@@ -27,8 +27,7 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0.5vw;
-    padding-top: 0;
+    padding: 0; /* Remove all padding for full screen usage */
     position: relative;
 }
 
@@ -44,9 +43,9 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0.3vh;
-    padding-top: 0.5vh;
-    padding-bottom: 0.2vh;
+    margin-bottom: 0.2vh; /* Reduced margin */
+    padding-top: 0.3vh; /* Reduced padding */
+    padding-bottom: 0.1vh; /* Reduced padding */
 }
 
 /* New simplified header display */
@@ -221,14 +220,14 @@ html, body {
 
 /* Chess Board - Responsive scaling for any viewport */
 #chess-board {
-    width: min(98vw, 75vh);
-    height: min(98vw, 75vh);
+    width: min(100vw, 75vh); /* Use full width of screen */
+    height: min(100vw, 75vh); /* Maintain square aspect ratio */
     aspect-ratio: 1 / 1;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     gap: 0; /* Prevent grid gaps that might cause lines */
-    border: 2px solid #FE5F00;
+    border: 1px solid #FE5F00; /* Thinner border to save space */
     margin: 0.5vh auto 0;
     /* Remove 3D transforms - not needed for 2D board */
     /* transform-style: preserve-3d; - REMOVED for performance */
