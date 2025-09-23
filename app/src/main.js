@@ -4436,7 +4436,7 @@ class ChessUI {
     botInfo.style.borderRadius = '4px';  // Rounded corners for button look
     botInfo.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3)';  // Button depth
     botInfo.style.cursor = 'pointer';
-    botInfo.style.margin = '4px 0 2px 3px';  // More top margin for better visibility
+    botInfo.style.margin = '6px 0 2px 3px';  // Even more top margin for clear separation
 
     // Bot icon (using chess piece emoji based on bot)
     const botIcon = document.createElement('div');
