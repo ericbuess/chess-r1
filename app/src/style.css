@@ -221,15 +221,15 @@ html, body {
 
 /* Chess Board - Responsive scaling for any viewport */
 #chess-board {
-    width: min(calc(100vw - 4px), calc(100vh - 15vh)); /* Account for border and header space */
-    height: min(calc(100vw - 4px), calc(100vh - 15vh)); /* Keep perfectly square */
+    width: min(calc(100vw - 4px), calc(100vh - 16vh)); /* Slightly smaller to prevent cropping */
+    height: min(calc(100vw - 4px), calc(100vh - 16vh)); /* Keep perfectly square */
     aspect-ratio: 1 / 1;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     gap: 0; /* Prevent grid gaps that might cause lines */
     border: 2px solid #FE5F00; /* Restore 2px border as requested */
-    margin: 1vh auto 0; /* Equal spacing above board */
+    margin: 0.5vh auto 0; /* Reduced top margin to move board up */
     /* Remove 3D transforms - not needed for 2D board */
     /* transform-style: preserve-3d; - REMOVED for performance */
     /* perspective: 1000px; - REMOVED for performance */
