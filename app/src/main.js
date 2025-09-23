@@ -4429,10 +4429,13 @@ class ChessUI {
     botInfo.style.flexDirection = 'column';
     botInfo.style.alignItems = 'center';
     botInfo.style.justifyContent = 'center';
-    botInfo.style.padding = '2px 5px';
-    botInfo.style.minWidth = '40px';
+    botInfo.style.padding = '3px 8px';
+    botInfo.style.minWidth = '45px';
     botInfo.style.textAlign = 'center';
     botInfo.style.backgroundColor = '#FE5F00';  // Orange button background
+    botInfo.style.borderRadius = '3px';  // Rounded corners for button look
+    botInfo.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.2)';  // Button depth
+    botInfo.style.cursor = 'pointer';
 
     // Bot icon (using chess piece emoji based on bot)
     const botIcon = document.createElement('div');

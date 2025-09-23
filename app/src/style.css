@@ -223,8 +223,8 @@ html, body {
 
 /* Chess Board - Responsive scaling for any viewport */
 #chess-board {
-    width: 100vw; /* Full width to edges */
-    height: 100vw; /* Keep perfectly square */
+    width: calc(100vw - 4px); /* Full width minus border */
+    height: calc(100vw - 4px); /* Keep perfectly square */
     max-width: calc(100vh - 16vh); /* Don't exceed vertical space */
     max-height: calc(100vh - 16vh); /* Don't exceed vertical space */
     aspect-ratio: 1 / 1;
@@ -232,10 +232,8 @@ html, body {
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     gap: 0; /* Prevent grid gaps that might cause lines */
-    border: 2px solid #FE5F00; /* Restore 2px border as requested */
-    border-left: none; /* No left border - goes to edge */
-    border-right: none; /* No right border - goes to edge */
-    margin: 0; /* No margins - fills width */
+    border: 2px solid #FE5F00; /* Full border on all sides */
+    margin: 0 auto; /* Center horizontally, no vertical margin */
     /* Remove 3D transforms - not needed for 2D board */
     /* transform-style: preserve-3d; - REMOVED for performance */
     /* perspective: 1000px; - REMOVED for performance */
