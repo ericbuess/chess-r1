@@ -85,8 +85,8 @@ html, body {
     align-items: center;
     justify-content: center;
     margin-top: 0.3vh; /* Small space above (at bottom now) */
-    margin-bottom: 0.5vh; /* Space at bottom */
-    padding: 0.5vh 0; /* Small padding */
+    margin-bottom: 0; /* No bottom margin */
+    padding: 0.5vh 0 0 0; /* Top padding only */
     max-width: 100%;
 }
 
@@ -99,7 +99,7 @@ html, body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 0.5vh; /* Small space above (below board) */
+    margin: 0; /* No margin */
     margin-bottom: 0; /* No space below */
     gap: 0.05vw;
     padding-bottom: 0;

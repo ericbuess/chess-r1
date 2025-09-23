@@ -4456,8 +4456,8 @@ class ChessUI {
     botInfo.style.alignItems = 'center';
     botInfo.style.justifyContent = 'center';
     botInfo.style.padding = '3px';
-    botInfo.style.minWidth = '32px';
-    botInfo.style.minHeight = '32px';
+    botInfo.style.minWidth = '28px';
+    botInfo.style.minHeight = '28px';
     botInfo.style.textAlign = 'center';
     botInfo.style.backgroundColor = '#FE5F00';  // Orange button background
     botInfo.style.borderRadius = '4px';  // Rounded corners for button look
