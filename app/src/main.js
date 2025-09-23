@@ -2102,11 +2102,6 @@ class ChessUI {
     let row = parseInt(event.target.dataset.row);
     let col = parseInt(event.target.dataset.col);
 
-    // Show what was clicked and what piece is there
-    const piece = this.game.board[row][col];
-    const pieceStr = piece ? this.game.getPieceSymbol(piece) : 'empty';
-    this.showNotification(`CLICK:${row},${col} [${pieceStr}] Mode:${this.game.orientationMode} Flip:${this.game.boardFlipped}`, 'info', 5000);
-
     // Clicks in Chrome work correctly - no fix needed
     await this.handleSquareSelection(row, col);
   }
@@ -2178,11 +2173,6 @@ class ChessUI {
           return;
         }
 
-        // Show debug info with piece information
-        const piece = this.game.board[row][col];
-        const pieceStr = piece ? this.game.getPieceSymbol(piece) : 'empty';
-        this.showNotification(`TOUCH:${row},${col} [${pieceStr}] Mode:${this.game.orientationMode} Flip:${this.game.boardFlipped}`, 'info', 5000);
-
         // Mark that we handled this via touch to prevent double-handling with click
         this.handledByTouch = true;
 
@@ -2216,7 +2206,9 @@ class ChessUI {
     // Allow testing R1 features in Chrome with ?r1test=true
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('r1test') === 'true') {
-      console.log('[R1 Test Mode] Simulating R1 device in Chrome');
+      if (this.shouldEnableR1Logging()) {
+        console.log('[R1 Test Mode] Simulating R1 device in Chrome');
+      }
       return true;
     }
 
@@ -2280,14 +2272,9 @@ class ChessUI {
 
   // Check if R1 debug logging is enabled
   shouldEnableR1Logging() {
-    // Always enable logging on R1 devices for debugging
-    if (this.isR1Device) {
-      return true;
-    }
-
-    // For non-R1, check URL params
+    // Only enable logging with explicit debug flag
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('r1debug') === 'true';
+    return urlParams.get('debug') === 'true' || urlParams.get('r1debug') === 'true';
   }
 
   // Convert display coordinates to logical coordinates based on board flip
@@ -3234,9 +3221,6 @@ class ChessUI {
   }
 
   async handleSquareSelection(row, col) {
-    // ALWAYS show selection info
-    this.showNotification(`SELECT:${row},${col} Turn:${this.game.currentPlayer} Mode:${this.game.orientationMode} Flip:${this.game.boardFlipped}`, 'warning', 5000);
-
     // Prevent interactions during board flip or when input is disabled
     if (this.isFlipping || this.inputEnabled === false) {
       this.showNotification('Input disabled!', 'error', 3000);
@@ -3311,14 +3295,6 @@ class ChessUI {
     const logicalRow = logical.row;
     const logicalCol = logical.col;
 
-    // Visual debug for coordinate transformation on R1
-    if (this.isR1Device) {
-      const piece = this.game.board[logicalRow][logicalCol];
-      const pieceStr = piece ? `${piece.color[0]}${piece.type[0].toUpperCase()}` : '--';
-      const coordInfo = `D:${row},${col}→L:${logical.row},${logical.col} [${pieceStr}]`;
-      this.showNotification(coordInfo, 'warning', 10000);
-    }
-    
     // Piece selection logic
 
     if (this.game.selectedSquare) {
