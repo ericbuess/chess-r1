@@ -4471,16 +4471,13 @@ class ChessUI {
     dialogueArea.style.display = 'flex';
     dialogueArea.style.alignItems = 'stretch';
     dialogueArea.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-    dialogueArea.style.position = 'absolute';
-    dialogueArea.style.bottom = '0';
-    dialogueArea.style.left = '0';
-    dialogueArea.style.right = '0';
+    dialogueArea.style.position = 'relative';  // In document flow
+    dialogueArea.style.width = '100%';
     dialogueArea.style.height = 'auto';
     dialogueArea.style.minHeight = '22px';  // Very compact height
     dialogueArea.style.borderRadius = '0';  // No rounded corners
-    dialogueArea.style.border = 'none';
-    dialogueArea.style.borderTop = '1px solid #FE5F00';
-    dialogueArea.style.zIndex = '100';
+    dialogueArea.style.border = 'none';  // No border
+    dialogueArea.style.marginTop = '0';  // No gap between board and dialogue
 
     // Add all elements
     dialogueArea.appendChild(botInfo);
