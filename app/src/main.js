@@ -4430,7 +4430,8 @@ class ChessUI {
     botInfo.style.alignItems = 'center';
     botInfo.style.justifyContent = 'center';
     botInfo.style.padding = '1px 3px';
-    botInfo.style.minWidth = '30px';
+    botInfo.style.minWidth = '35px';
+    botInfo.style.textAlign = 'center';
 
     // Bot icon (using chess piece emoji based on bot)
     const botIcon = document.createElement('div');
@@ -4456,6 +4457,7 @@ class ChessUI {
     divider.style.width = '1px';
     divider.style.backgroundColor = '#FE5F00';
     divider.style.margin = '0 4px';
+    divider.style.alignSelf = 'stretch';  // Extend full height
 
     // Dialogue text
     const dialogueText = document.createElement('div');
@@ -4473,7 +4475,7 @@ class ChessUI {
     dialogueArea.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
     dialogueArea.style.position = 'relative';  // In document flow
     dialogueArea.style.width = '100%';
-    dialogueArea.style.height = 'auto';
+    dialogueArea.style.flex = '1';  // Fill remaining vertical space
     dialogueArea.style.minHeight = '22px';  // Very compact height
     dialogueArea.style.borderRadius = '0';  // No rounded corners
     dialogueArea.style.border = 'none';  // No border
