@@ -84,9 +84,9 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 0.5vh; /* Space above move info (below board) */
-    margin-bottom: 0; /* No space below */
-    padding: 0.3vh 0; /* Minimal padding */
+    margin-top: 0; /* At very top */
+    margin-bottom: 0.3vh; /* Small space below */
+    padding: 0.5vh 0; /* Small padding */
     max-width: 100%;
 }
 
