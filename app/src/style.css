@@ -27,8 +27,9 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0; /* Remove all padding for full screen usage */
+    padding: 1vw 0; /* Equal vertical padding for breathing room */
     position: relative;
+    box-sizing: border-box;
 }
 
 
@@ -37,15 +38,15 @@ html, body {
 #game-header {
     width: 100%;
     height: auto;
-    min-height: 8vh;
-    max-height: 13vh;
+    min-height: 10vh;
+    max-height: 12vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0.2vh; /* Reduced margin */
-    padding-top: 0.3vh; /* Reduced padding */
-    padding-bottom: 0.1vh; /* Reduced padding */
+    margin-bottom: 0.5vh; /* Comfortable margin */
+    padding: 0.5vh 1vw; /* Better padding for header content */
+    flex-shrink: 0; /* Prevent header from shrinking */
 }
 
 /* New simplified header display */
@@ -220,15 +221,15 @@ html, body {
 
 /* Chess Board - Responsive scaling for any viewport */
 #chess-board {
-    width: min(100vw, 75vh); /* Use full width of screen */
-    height: min(100vw, 75vh); /* Maintain square aspect ratio */
+    width: min(calc(100vw - 4px), calc(100vh - 15vh)); /* Account for border and header space */
+    height: min(calc(100vw - 4px), calc(100vh - 15vh)); /* Keep perfectly square */
     aspect-ratio: 1 / 1;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     gap: 0; /* Prevent grid gaps that might cause lines */
-    border: 1px solid #FE5F00; /* Thinner border to save space */
-    margin: 0.5vh auto 0;
+    border: 2px solid #FE5F00; /* Restore 2px border as requested */
+    margin: 1vh auto 0; /* Equal spacing above board */
     /* Remove 3D transforms - not needed for 2D board */
     /* transform-style: preserve-3d; - REMOVED for performance */
     /* perspective: 1000px; - REMOVED for performance */
