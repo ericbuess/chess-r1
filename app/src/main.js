@@ -276,6 +276,11 @@ class ChessGame {
       const isHumanMove = (this.gameMode === 'human-vs-bot' && justMovedPlayer === this.humanColor);
       const isBotMove = (this.gameMode === 'human-vs-bot' && justMovedPlayer !== this.humanColor);
 
+      // Mark that we're about to show a bot dialogue (for timing coordination)
+      if (this.gameMode === 'human-vs-bot' && window.gameUI) {
+        window.gameUI.pendingBotDialogue = true;
+      }
+
       // Show appropriate dialogue
       setTimeout(() => {
         if (enteredCheck) {
@@ -299,6 +304,11 @@ class ChessGame {
           } else if (isBotMove) {
             this.showBotDialogue('botMove');
           }
+        }
+
+        // Clear the pending flag after showing dialogue
+        if (window.gameUI) {
+          window.gameUI.pendingBotDialogue = false;
         }
       }, 300);
 
@@ -1263,6 +1273,14 @@ class ChessGame {
 
     if (dialogue && window.gameUI) {
       console.log(`[showBotDialogue] Showing dialogue in instruction label`);
+
+      // Clear any active thinking interval to allow dialogue to show
+      if (window.gameUI.thinkingInterval) {
+        console.log(`[showBotDialogue] Clearing thinking interval to show dialogue`);
+        clearInterval(window.gameUI.thinkingInterval);
+        window.gameUI.thinkingInterval = null;
+      }
+
       window.gameUI.showInstructionLabel(dialogue);
       // Mark that we're showing a bot dialogue
       window.gameUI.showingBotDialogue = true;
@@ -2799,9 +2817,9 @@ class ChessUI {
       this.updatePlayerTurnIndicator(this.game.currentPlayer, gameMode);
 
     } else {
-      console.log(`[showBotThinking] Hiding thinking indicator, showingBotDialogue: ${this.showingBotDialogue}`);
-      // Don't hide instruction label if we're showing a bot dialogue
-      if (!this.showingBotDialogue) {
+      console.log(`[showBotThinking] Hiding thinking indicator, showingBotDialogue: ${this.showingBotDialogue}, pendingBotDialogue: ${this.pendingBotDialogue}`);
+      // Don't hide instruction label if we're showing or about to show a bot dialogue
+      if (!this.showingBotDialogue && !this.pendingBotDialogue) {
         this.hideInstructionLabel();
       }
 
@@ -4291,9 +4309,13 @@ class ChessUI {
     // Check if this is an undo/redo notification (move count display)
     const isUndoRedoNotification = message.includes('At move') || message.includes('At start of game');
 
-    // Don't interfere with rotating bot thinking messages UNLESS it's an undo/redo notification
-    if (this.thinkingInterval && !isUndoRedoNotification) {
-      // Skipping notification during bot thinking (except for undo/redo)
+    // Check if this is a bot dialogue (bot personality messages)
+    const isBotDialogue = this.showingBotDialogue || this.pendingBotDialogue;
+
+    // Don't interfere with rotating bot thinking messages UNLESS it's an undo/redo notification or bot dialogue
+    if (this.thinkingInterval && !isUndoRedoNotification && !isBotDialogue) {
+      console.log(`[showNotification] Skipping notification during bot thinking: "${message}"`);
+      // Skipping notification during bot thinking (except for undo/redo and bot dialogues)
       return;
     }
 
