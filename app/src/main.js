@@ -4479,7 +4479,8 @@ class ChessUI {
     dialogueArea.style.minHeight = '22px';  // Very compact height
     dialogueArea.style.borderRadius = '0';  // No rounded corners
     dialogueArea.style.borderBottom = '1px solid #FE5F00';  // Bottom border when at top
-    dialogueArea.style.marginBottom = '0.5vh';  // Small gap before game content
+    dialogueArea.style.marginTop = '0';  // No gap at top
+    dialogueArea.style.marginBottom = '0.3vh';  // Small gap before game content
 
     // Add all elements
     dialogueArea.appendChild(botInfo);

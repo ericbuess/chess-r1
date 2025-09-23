@@ -10,13 +10,7 @@
 <body>
     <div id="app">
         <div id="game-container">
-            <!-- Move info at very top -->
-            <div id="move-info">
-                <span id="move-display">Ready to play</span>
-                <span id="move-expand">...</span>
-            </div>
-
-            <!-- Bot dialogue area below move info -->
+            <!-- Bot dialogue area at very top -->
             <div id="bot-dialogue-area" class="hidden"></div>
 
             <div id="game-header">
@@ -27,8 +21,14 @@
                 <div id="chess-board"></div>
             </div>
 
-            <!-- Captured pieces below move info -->
+            <!-- Captured pieces below board -->
             <div id="captured-pieces"></div>
+
+            <!-- Move info at bottom -->
+            <div id="move-info">
+                <span id="move-display">Ready to play</span>
+                <span id="move-expand">...</span>
+            </div>
 
             <div id="instruction-label" class="hidden"></div>
         </div>
