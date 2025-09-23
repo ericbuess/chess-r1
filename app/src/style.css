@@ -505,8 +505,9 @@ html, body {
     /* Shadows now defined per color in .white and .black classes */
     transition: transform 0.03s ease;
     pointer-events: none;
-    -webkit-filter: drop-shadow(0.3px 0.3px 0.5px rgba(0, 0, 0, 0.3)); /* Sharper shadow */
-    filter: drop-shadow(0.3px 0.3px 0.5px rgba(0, 0, 0, 0.3));
+    /* Enhanced drop shadow for better piece separation on small screen */
+    -webkit-filter: drop-shadow(0.5px 0.5px 1px rgba(0, 0, 0, 0.6));
+    filter: drop-shadow(0.5px 0.5px 1px rgba(0, 0, 0, 0.6));
     position: relative;
     z-index: 2;
     /* iOS Safari fixes */
@@ -517,7 +518,8 @@ html, body {
     font-family: "Menlo", "Courier New", "SF Pro Text", system-ui, -apple-system, monospace, sans-serif;
     /* Prevent emoji rendering */
     font-variant-emoji: text;
-    text-rendering: optimizeSpeed;
+    /* Better rendering for clearer internal details */
+    text-rendering: geometricPrecision;
 }
 
 .chess-piece:hover {
@@ -527,13 +529,24 @@ html, body {
 /* White pieces - white fill with black outline (same solid symbols as black) */
 .chess-piece.white {
     color: #ffffff;  /* Pure white for better contrast on small screen */
+    /* Extra thick multi-layer text shadow for maximum visibility */
     text-shadow:
-        -0.3px -0.3px 0 #000000,
-        0.3px -0.3px 0 #000000,
-        -0.3px 0.3px 0 #000000,
-        0.3px 0.3px 0 #000000;
+        -0.6px -0.6px 0 #000000,
+        0.6px -0.6px 0 #000000,
+        -0.6px 0.6px 0 #000000,
+        0.6px 0.6px 0 #000000,
+        -0.9px 0 0 #000000,
+        0.9px 0 0 #000000,
+        0 -0.9px 0 #000000,
+        0 0.9px 0 #000000,
+        -1px -1px 0 #000000,
+        1px -1px 0 #000000,
+        -1px 1px 0 #000000,
+        1px 1px 0 #000000;
     background: none;
     font-weight: 900;
+    /* Ensure white fill is consistent */
+    -webkit-text-fill-color: #ffffff;
 }
 
 /* Make white pawns smaller on all browsers */
@@ -545,13 +558,24 @@ html, body {
 @supports (-webkit-touch-callout: none) {
     .chess-piece.white {
         color: #ffffff;
+        /* Extra thick multi-layer shadows for iOS Safari */
         text-shadow:
-            -0.5px -0.5px 0 #000000,
-            0.5px -0.5px 0 #000000,
-            -0.5px 0.5px 0 #000000,
-            0.5px 0.5px 0 #000000;
-        -webkit-text-stroke: 0.3px #000000; /* Thinner stroke for cleaner shapes */
+            -0.7px -0.7px 0 #000000,
+            0.7px -0.7px 0 #000000,
+            -0.7px 0.7px 0 #000000,
+            0.7px 0.7px 0 #000000,
+            -1px 0 0 #000000,
+            1px 0 0 #000000,
+            0 -1px 0 #000000,
+            0 1px 0 #000000,
+            -1.2px -1.2px 0 #000000,
+            1.2px -1.2px 0 #000000,
+            -1.2px 1.2px 0 #000000,
+            1.2px 1.2px 0 #000000;
+        /* Even thicker stroke for maximum internal line visibility */
+        -webkit-text-stroke: 1.2px #000000;
         font-weight: 900;
+        -webkit-text-fill-color: #ffffff;
     }
 
     /* Make pawns smaller and centered */
@@ -565,16 +589,27 @@ html, body {
     }
 }
 
-/* Black pieces - solid black appearance with minimal white outline for visibility */
+/* Black pieces - solid black appearance with enhanced white outline for visibility */
 .chess-piece.black {
     color: #000000;
+    /* Extra thick multi-layer text shadow for maximum visibility */
     text-shadow:
-        -0.3px -0.3px 0 #f0f0f0,
-        0.3px -0.3px 0 #f0f0f0,
-        -0.3px 0.3px 0 #f0f0f0,
-        0.3px 0.3px 0 #f0f0f0;
+        -0.6px -0.6px 0 #ffffff,
+        0.6px -0.6px 0 #ffffff,
+        -0.6px 0.6px 0 #ffffff,
+        0.6px 0.6px 0 #ffffff,
+        -0.9px 0 0 #ffffff,
+        0.9px 0 0 #ffffff,
+        0 -0.9px 0 #ffffff,
+        0 0.9px 0 #ffffff,
+        -1px -1px 0 #ffffff,
+        1px -1px 0 #ffffff,
+        -1px 1px 0 #ffffff,
+        1px 1px 0 #ffffff;
     background: none;
     font-weight: 900;
+    /* Ensure black fill is consistent */
+    -webkit-text-fill-color: #000000;
 }
 
 /* Make black pawns smaller on all browsers */
@@ -586,13 +621,24 @@ html, body {
 @supports (-webkit-touch-callout: none) {
     .chess-piece.black {
         color: #000000;
+        /* Extra thick multi-layer shadows for iOS Safari */
         text-shadow:
-            -0.3px -0.3px 0 #f0f0f0,
-            0.3px -0.3px 0 #f0f0f0,
-            -0.3px 0.3px 0 #f0f0f0,
-            0.3px 0.3px 0 #f0f0f0;
-        -webkit-text-stroke: 0.2px #f0f0f0; /* Thinner stroke for cleaner shapes */
+            -0.7px -0.7px 0 #ffffff,
+            0.7px -0.7px 0 #ffffff,
+            -0.7px 0.7px 0 #ffffff,
+            0.7px 0.7px 0 #ffffff,
+            -1px 0 0 #ffffff,
+            1px 0 0 #ffffff,
+            0 -1px 0 #ffffff,
+            0 1px 0 #ffffff,
+            -1.2px -1.2px 0 #ffffff,
+            1.2px -1.2px 0 #ffffff,
+            -1.2px 1.2px 0 #ffffff,
+            1.2px 1.2px 0 #ffffff;
+        /* Even thicker stroke for maximum internal line visibility */
+        -webkit-text-stroke: 1px #ffffff;
         font-weight: 900;
+        -webkit-text-fill-color: #000000;
     }
 
     /* Make pawns smaller and centered */

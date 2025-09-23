@@ -48,6 +48,7 @@ All memory leaks and performance issues have been resolved!
 1. ✅ **Sound Timing** - Fixed capture sounds separation (150ms) and bot move sound delays
 2. ✅ **Undo/Redo Audio** - Faithful sound replay from destination state
 3. ✅ **Captured Pawns Display** - Made pawns 75% size with proper baseline alignment
+4. ⚪ **Enhanced Piece Visibility** - Thicker strokes & shadows for R1 screen readability
 
 ### Core Functionality:
 1. ✅ **Header Tap Zones** - Left=undo, right=redo, middle=options
