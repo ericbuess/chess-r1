@@ -110,7 +110,7 @@ html, body {
     height: 4px;
     background: linear-gradient(90deg, #333 0%, #222 50%, #333 100%);
     border-radius: 2px;
-    margin: 4px 0 2px 0; /* Small margin to separate from board */
+    margin: 1px 0 2px 0; /* 1px top margin, 2px bottom */
     overflow: hidden;
     position: relative;
 }
