@@ -4433,9 +4433,10 @@ class ChessUI {
     botInfo.style.minWidth = '45px';
     botInfo.style.textAlign = 'center';
     botInfo.style.backgroundColor = '#FE5F00';  // Orange button background
-    botInfo.style.borderRadius = '3px';  // Rounded corners for button look
-    botInfo.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.2)';  // Button depth
+    botInfo.style.borderRadius = '4px';  // Rounded corners for button look
+    botInfo.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3)';  // Button depth
     botInfo.style.cursor = 'pointer';
+    botInfo.style.margin = '2px 0 2px 3px';  // Space around button to show style
 
     // Bot icon (using chess piece emoji based on bot)
     const botIcon = document.createElement('div');
@@ -4474,11 +4475,12 @@ class ChessUI {
     dialogueArea.style.position = 'relative';  // In document flow
     dialogueArea.style.width = '100%';
     dialogueArea.style.height = 'auto';  // Auto height at top
-    dialogueArea.style.minHeight = '26px';  // Compact height
+    dialogueArea.style.minHeight = '30px';  // Slightly taller to accommodate margin
     dialogueArea.style.borderRadius = '0';  // No rounded corners
     dialogueArea.style.border = 'none';
-    dialogueArea.style.margin = '0';  // No margin at all
+    dialogueArea.style.margin = '0';  // No margin
     dialogueArea.style.padding = '0';  // No padding
+    dialogueArea.style.paddingBottom = '2px';  // Small bottom padding to separate from board
     dialogueArea.style.cursor = 'pointer';  // Show it's clickable
     dialogueArea.style.transition = 'all 0.2s ease';  // Smooth hover effect
 
