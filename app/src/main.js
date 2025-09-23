@@ -2005,6 +2005,10 @@ class ChessUI {
 
     this.boardElement.innerHTML = '';
 
+    // Initialize touch tracking
+    this.activeTouchId = null;
+    this.lastTouchTime = 0;
+
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col++) {
         const square = document.createElement('div');
@@ -2032,18 +2036,36 @@ class ChessUI {
     // Use event delegation for touch handlers to fix R1 WebView issue with transformed elements
     // Attach touch handlers to board container instead of individual squares
     const delegatedTouchStartHandler = (e) => {
+      // Prevent event bubbling issues
+      e.stopPropagation();
+
       const square = e.target.closest('.chess-square');
       if (square) {
-        // Call the original handler with a modified event that has the square as target
-        this.handleTouchStart({ ...e, target: square });
+        // Validate coordinates before processing
+        const row = parseInt(square.dataset.row);
+        const col = parseInt(square.dataset.col);
+
+        if (row >= 0 && row <= 7 && col >= 0 && col <= 7) {
+          // Call the original handler with a modified event that has the square as target
+          this.handleTouchStart({ ...e, target: square });
+        }
       }
     };
 
     const delegatedTouchEndHandler = async (e) => {
+      // Prevent event bubbling issues
+      e.stopPropagation();
+
       const square = e.target.closest('.chess-square');
       if (square) {
-        // Call the original handler with a modified event that has the square as target
-        await this.handleTouchEnd({ ...e, target: square });
+        // Validate coordinates before processing
+        const row = parseInt(square.dataset.row);
+        const col = parseInt(square.dataset.col);
+
+        if (row >= 0 && row <= 7 && col >= 0 && col <= 7) {
+          // Call the original handler with a modified event that has the square as target
+          await this.handleTouchEnd({ ...e, target: square });
+        }
       }
     };
 
@@ -2094,6 +2116,14 @@ class ChessUI {
     if (event.target.classList.contains('chess-square')) {
       event.preventDefault();
     }
+
+    // Store touch identifier for multi-touch scenarios
+    this.activeTouchId = event.touches?.[0]?.identifier;
+    this.touchStartCoordinates = {
+      x: event.touches?.[0]?.clientX,
+      y: event.touches?.[0]?.clientY
+    };
+
     this.touchStartTime = Date.now();
     this.touchTarget = event.target;
 
@@ -2108,6 +2138,22 @@ class ChessUI {
     if (event.target.classList.contains('chess-square')) {
       event.preventDefault();
     }
+
+    // Validate this is the same touch that started
+    if (this.activeTouchId !== null && this.activeTouchId !== undefined) {
+      const endTouch = [...(event.changedTouches || [])].find(t => t.identifier === this.activeTouchId);
+      if (!endTouch) {
+        // Different touch, ignore
+        return;
+      }
+    }
+
+    // Prevent rapid-fire touches (debouncing)
+    const now = Date.now();
+    if (this.lastTouchTime && now - this.lastTouchTime < 100) {
+      return; // Debounce rapid touches
+    }
+    this.lastTouchTime = now;
 
     // Remove visual feedback immediately
     if (this.touchTarget && this.touchTarget.classList.contains('chess-square')) {
@@ -2125,6 +2171,12 @@ class ChessUI {
       if (square && square.dataset.row !== undefined) {
         let row = parseInt(square.dataset.row);
         let col = parseInt(square.dataset.col);
+
+        // Validate coordinates before processing
+        if (isNaN(row) || isNaN(col) || row < 0 || row > 7 || col < 0 || col > 7) {
+          console.warn('[Touch] Invalid coordinates detected:', { row, col });
+          return;
+        }
 
         // Show debug info with piece information
         const piece = this.game.board[row][col];
@@ -2181,6 +2233,18 @@ class ChessUI {
 
     // Simplified detection - just check viewport size as primary indicator
     const isR1 = isR1Viewport || hasFlutterChannel || hasR1UserAgent;
+
+    // Apply R1-specific touch optimizations
+    if (isR1) {
+      // Optimize touch handling for WebView
+      document.body.style.touchAction = 'manipulation';
+      document.body.style.webkitTouchCallout = 'none';
+      document.body.style.webkitUserSelect = 'none';
+      document.body.style.userSelect = 'none';
+
+      // Force hardware acceleration
+      this.boardElement.style.transform = 'translateZ(0)';
+    }
 
     // Log detection result
     if (this.shouldEnableR1Logging()) {
