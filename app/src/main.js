@@ -2004,43 +2004,69 @@ class ChessUI {
     this.removeBoardEventListeners();
 
     this.boardElement.innerHTML = '';
-    
+
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col++) {
         const square = document.createElement('div');
         square.className = 'chess-square';
         square.dataset.row = row;
         square.dataset.col = col;
-        
+
         // Add alternating colors based on position
         const isLight = (row + col) % 2 === 0;
         square.classList.add(isLight ? 'light-square' : 'dark-square');
-        
-        // Enhanced touch support for R1 device with optimized performance
-        // Create handlers and store them for cleanup
+
+        // Keep click handler on each square (works fine on desktop)
         const clickHandler = async (e) => await this.handleSquareClick(e);
-        const touchStartHandler = (e) => this.handleTouchStart(e);
-        const touchEndHandler = async (e) => await this.handleTouchEnd(e);
-        const touchCancelHandler = (e) => this.handleTouchCancel(e);
-
-        // Add listeners
         square.addEventListener('click', clickHandler);
-        square.addEventListener('touchstart', touchStartHandler, { passive: false });
-        square.addEventListener('touchend', touchEndHandler, { passive: false });
-        square.addEventListener('touchcancel', touchCancelHandler, { passive: false });
 
-        // Track listeners for cleanup
+        // Track click listener for cleanup
         this.boardListeners.push(
-          { element: square, event: 'click', handler: clickHandler },
-          { element: square, event: 'touchstart', handler: touchStartHandler, options: { passive: false } },
-          { element: square, event: 'touchend', handler: touchEndHandler, options: { passive: false } },
-          { element: square, event: 'touchcancel', handler: touchCancelHandler, options: { passive: false } }
+          { element: square, event: 'click', handler: clickHandler }
         );
-        
+
         this.boardElement.appendChild(square);
       }
     }
-    
+
+    // Use event delegation for touch handlers to fix R1 WebView issue with transformed elements
+    // Attach touch handlers to board container instead of individual squares
+    const delegatedTouchStartHandler = (e) => {
+      const square = e.target.closest('.chess-square');
+      if (square) {
+        // Call the original handler with a modified event that has the square as target
+        this.handleTouchStart({ ...e, target: square });
+      }
+    };
+
+    const delegatedTouchEndHandler = async (e) => {
+      const square = e.target.closest('.chess-square');
+      if (square) {
+        // Call the original handler with a modified event that has the square as target
+        await this.handleTouchEnd({ ...e, target: square });
+      }
+    };
+
+    const delegatedTouchCancelHandler = (e) => {
+      const square = e.target.closest('.chess-square');
+      if (square) {
+        // Call the original handler with a modified event that has the square as target
+        this.handleTouchCancel({ ...e, target: square });
+      }
+    };
+
+    // Add delegated touch handlers to board element
+    this.boardElement.addEventListener('touchstart', delegatedTouchStartHandler, { passive: false });
+    this.boardElement.addEventListener('touchend', delegatedTouchEndHandler, { passive: false });
+    this.boardElement.addEventListener('touchcancel', delegatedTouchCancelHandler, { passive: false });
+
+    // Track delegated listeners for cleanup
+    this.boardListeners.push(
+      { element: this.boardElement, event: 'touchstart', handler: delegatedTouchStartHandler, options: { passive: false } },
+      { element: this.boardElement, event: 'touchend', handler: delegatedTouchEndHandler, options: { passive: false } },
+      { element: this.boardElement, event: 'touchcancel', handler: delegatedTouchCancelHandler, options: { passive: false } }
+    );
+
     this.applyTheme();
   }
 
@@ -2204,17 +2230,17 @@ class ChessUI {
   getLogicalCoordinates(displayRow, displayCol) {
     // Apply coordinate reversal based on game mode:
     // - Bot games: Always use coordinate reversal when boardFlipped (black at bottom)
-    // - Table mode: Uses coordinate reversal when boardFlipped
-    // - Handoff mode: Uses coordinate reversal when boardFlipped (CSS rotates visually)
+    // - Table mode: ALSO uses coordinate reversal (different from CSS-only modes)
+    // - Handoff mode: NO coordinate reversal (CSS rotation only)
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
     const isTableMode = this.game.orientationMode === 'table';
 
     // Both bot games AND table mode need coordinate reversal when board is flipped
-    // Handoff mode ALSO needs coordinate reversal since CSS rotates the board
+    // EXCEPTION: Handoff mode uses CSS rotation only, never coordinate reversal
     const isHandoffMode = this.game.orientationMode === 'handoff';
     const needsCoordinateReversal = this.game.boardFlipped &&
-                                    (isBotGame || isTableMode || isHandoffMode);
+                                    (isBotGame || (isTableMode && !isHandoffMode));
 
     if (needsCoordinateReversal) {
       return {
@@ -2229,17 +2255,17 @@ class ChessUI {
   getDisplayCoordinates(logicalRow, logicalCol) {
     // Apply coordinate reversal based on game mode:
     // - Bot games: Always use coordinate reversal when boardFlipped (black at bottom)
-    // - Table mode: Uses coordinate reversal when boardFlipped
-    // - Handoff mode: Uses coordinate reversal when boardFlipped (CSS rotates visually)
+    // - Table mode: ALSO uses coordinate reversal (different from CSS-only modes)
+    // - Handoff mode: NO coordinate reversal (CSS rotation only)
     // - None mode in human-vs-human: No reversal
     const isBotGame = this.game.gameMode === 'human-vs-bot';
     const isTableMode = this.game.orientationMode === 'table';
 
     // Both bot games AND table mode need coordinate reversal when board is flipped
-    // Handoff mode ALSO needs coordinate reversal since CSS rotates the board
+    // EXCEPTION: Handoff mode uses CSS rotation only, never coordinate reversal
     const isHandoffMode = this.game.orientationMode === 'handoff';
     const needsCoordinateReversal = this.game.boardFlipped &&
-                                    (isBotGame || isTableMode || isHandoffMode);
+                                    (isBotGame || (isTableMode && !isHandoffMode));
 
     if (needsCoordinateReversal) {
       return {
