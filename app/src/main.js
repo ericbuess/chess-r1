@@ -421,8 +421,10 @@ class ChessGame {
           }
         }
 
-        // Force dialogue for checks, otherwise use standard logic
-        const forceShow = enteredCheck || moveContext.special;
+        // Force dialogue for checks, captures (especially queens), and special moves
+        const isCapture = moveContext.captured !== null;
+        const isQueenCapture = moveContext.captured && moveContext.captured.type === 'queen';
+        const forceShow = enteredCheck || isCapture || moveContext.special;
 
         // Show dialogue with rich context
         this.showBotDialogue(baseCategory, forceShow, moveContext);
@@ -2938,6 +2940,34 @@ class ChessUI {
           // After bot moves, currentPlayer is now humanColor (it's human's turn)
           // So we should highlight the human's king who is in check
           this.highlightKing(this.game.humanColor);
+        }
+
+        // Show bot dialogue after move - force show for captures and checks
+        if (this.game.pendingBotSounds) {
+          const { capturedPiece } = this.game.pendingBotSounds;
+
+          // Determine dialogue category
+          let category = 'botMove';
+          if (botResult.enteredCheck) {
+            category = 'botCheck';
+          } else if (capturedPiece) {
+            // Specific capture categories based on piece type
+            if (capturedPiece.type === 'queen') {
+              category = 'capturedQueen';
+            } else if (capturedPiece.type === 'rook') {
+              category = 'capturedRook';
+            } else if (capturedPiece.type === 'bishop' || capturedPiece.type === 'knight') {
+              category = capturedPiece.type === 'bishop' ? 'capturedBishop' : 'capturedKnight';
+            } else {
+              category = 'botCapture';
+            }
+          }
+
+          // Force show dialogue for captures and checks
+          const forceShow = botResult.enteredCheck || capturedPiece !== null;
+
+          // Show the dialogue
+          this.game.showBotDialogue(category, forceShow);
         }
 
         // Play bot sounds after display update with a small delay to sync with visual
