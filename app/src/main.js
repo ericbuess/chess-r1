@@ -4831,7 +4831,13 @@ class ChessUI {
     // Icon (using chess piece emoji based on mode)
     const botIcon = document.createElement('div');
     if (isHumanMode) {
-      botIcon.textContent = '👥';  // Human icon for human vs human
+      // Dynamic king icons for human vs human - show current player's king larger
+      const isWhiteTurn = this.game?.cachedState?.currentPlayer === 'white';
+      if (isWhiteTurn) {
+        botIcon.innerHTML = '<span style="font-size: 16px;">♔</span><span style="font-size: 11px; opacity: 0.7;">♚</span>';
+      } else {
+        botIcon.innerHTML = '<span style="font-size: 16px;">♚</span><span style="font-size: 11px; opacity: 0.7;">♔</span>';
+      }
     } else {
       const icons = { 'Evy': '♟', 'Emmy': '♞', 'Asa': '♛' };
       botIcon.textContent = icons[botName] || '♟';
@@ -4839,12 +4845,21 @@ class ChessUI {
     botIcon.style.fontSize = '14px';
     botIcon.style.color = '#000';  // Black icon on orange background
     botIcon.style.lineHeight = '1';
+    botIcon.style.display = 'flex';
+    botIcon.style.alignItems = 'center';
+    botIcon.style.justifyContent = 'center';
+    botIcon.style.gap = '1px';
     botInfo.appendChild(botIcon);
 
     // Label
     const botNameLabel = document.createElement('div');
-    botNameLabel.textContent = isHumanMode ? 'Human' : botName;
-    botNameLabel.style.fontSize = '8px';
+    if (isHumanMode) {
+      const isWhiteTurn = this.game?.cachedState?.currentPlayer === 'white';
+      botNameLabel.textContent = isWhiteTurn ? "W's turn" : "B's turn";
+    } else {
+      botNameLabel.textContent = botName;
+    }
+    botNameLabel.style.fontSize = '7px';  // Slightly smaller for turn indicator
     botNameLabel.style.color = '#000';  // Black text on orange background
     botNameLabel.style.fontWeight = 'bold';
     botNameLabel.style.marginTop = '1px';
@@ -4865,11 +4880,14 @@ class ChessUI {
     }
     dialogueText.style.flex = '1';
     dialogueText.style.color = '#FE5F00';
-    dialogueText.style.fontSize = '9px';
+    dialogueText.style.fontSize = '8px';  // Reduced from 9px
     dialogueText.style.textAlign = 'left';
-    dialogueText.style.padding = '4px 6px';
-    dialogueText.style.lineHeight = '1.3';
+    dialogueText.style.padding = '3px 6px';  // Reduced vertical padding
+    dialogueText.style.lineHeight = '1.15';  // Tighter line height for 3 lines
     dialogueText.style.fontWeight = '400';
+    dialogueText.style.maxHeight = '27px';  // Limit to 3 lines (8px * 1.15 * 3 ≈ 27px)
+    dialogueText.style.overflow = 'hidden';  // Hide overflow text
+    dialogueText.style.textOverflow = 'ellipsis';  // Add ellipsis for long text
 
     // Apply container styling - button-like appearance
     dialogueArea.style.display = 'flex';
