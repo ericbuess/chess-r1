@@ -3824,6 +3824,24 @@ class ChessUI {
       this.updateDisplay();
     }
 
+    // Restore the bot/human dialogue area when returning to game
+    const dialogueArea = document.getElementById('bot-dialogue-area');
+    if (dialogueArea && dialogueArea.classList.contains('hidden')) {
+      // Check if there's a game in progress (has moves)
+      const hasGameInProgress = this.game.stateHistory && this.game.stateHistory.length > 1;
+
+      if (hasGameInProgress || this.game.gameStatus === 'playing') {
+        if (this.game.gameMode === 'human-vs-bot') {
+          // Show the bot dialogue area with current bot
+          const botName = this.game.getBotDifficultyText();
+          this.showBotDialoguePersistent("", botName);
+        } else if (this.game.gameMode === 'human-vs-human') {
+          // Show the human dialogue area
+          this.showBotDialoguePersistent("", 'Human');
+        }
+      }
+    }
+
     // Check if bot should make initial move after returning from options
     // This handles the case where user changed color and clicked "Back to game"
     if (this.game.gameMode === 'human-vs-bot' && this.game.moveHistory.length === 0) {
@@ -4536,7 +4554,16 @@ class ChessUI {
 
     // Dialogue text (no divider needed)
     const dialogueText = document.createElement('div');
-    dialogueText.textContent = dialogue;
+    // If dialogue is empty, show a default message
+    if (!dialogue || dialogue.trim() === '') {
+      if (isHumanMode) {
+        dialogueText.textContent = 'Human vs Human mode';
+      } else {
+        dialogueText.textContent = `Playing against ${botName}`;
+      }
+    } else {
+      dialogueText.textContent = dialogue;
+    }
     dialogueText.style.flex = '1';
     dialogueText.style.color = '#FE5F00';
     dialogueText.style.fontSize = '9px';
