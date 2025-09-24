@@ -138,12 +138,16 @@ class ChessGame {
     // Initialize moveHistory (for backward compatibility)
     this.moveHistory = [];
 
+    // Track current dialogue for persistence
+    this.currentDialogue = { text: '', botName: '' };
+
     // Store initial state as first entry
     const initialState = this.engine.exportJson();
     this.stateHistory.push({
       engineState: JSON.parse(JSON.stringify(initialState)),
       move: null, // No move for initial state
       notation: null,
+      dialogue: { text: '', botName: '' }, // No dialogue initially
       timestamp: Date.now()
     });
 
@@ -325,6 +329,8 @@ class ChessGame {
           const dialogue = getRandomDialogue(randomBot, dialogueType);
           if (dialogue && window.gameUI) {
             window.gameUI.showBotDialoguePersistent(dialogue, 'Human');
+            // Store dialogue for persistence
+            this.currentDialogue = { text: dialogue, botName: 'Human' };
           }
         }
 
@@ -667,6 +673,7 @@ class ChessGame {
       },
       notation: moveData.notation,
       commentary: moveData.commentary,
+      dialogue: { ...this.currentDialogue }, // Store current dialogue state
       sounds: moveData.sounds || null, // Store sound metadata for faithful replay
       timestamp: Date.now()
     };
@@ -853,7 +860,8 @@ class ChessGame {
       move: null, // No move for initial state
       captured: null,
       notation: null,
-      commentary: null
+      commentary: null,
+      dialogue: { text: '', botName: '' } // No dialogue initially
     });
 
     // Update cached state FIRST (this sets currentPlayer correctly)
@@ -883,7 +891,10 @@ class ChessGame {
           const commentators = ['Evy', 'Emmy', 'Asa'];
           const randomBot = commentators[Math.floor(Math.random() * commentators.length)];
           const dialogue = getRandomDialogue(randomBot, 'gameStart');
-          window.gameUI.showBotDialoguePersistent(dialogue || "Let the games begin!", 'Human');
+          const finalDialogue = dialogue || "Let the games begin!";
+          window.gameUI.showBotDialoguePersistent(finalDialogue, 'Human');
+          // Store dialogue for persistence
+          this.currentDialogue = { text: finalDialogue, botName: 'Human' };
         }, 500);
       }
     }
@@ -1032,6 +1043,7 @@ class ChessGame {
       castlingRights: this.castlingRights,
       enPassantTarget: this.enPassantTarget,
       soundEnabled: this.soundEnabled, // Store sound preference
+      currentDialogue: this.currentDialogue, // Store current dialogue for persistence
       engineState: engineState // Store engine state for perfect restoration
     };
   }
@@ -1103,6 +1115,7 @@ class ChessGame {
     // Temporarily set boardFlipped to saved value or false
     this.boardFlipped = false; // Will be recalculated after updateCachedState()
     this.soundEnabled = state.soundEnabled !== undefined ? state.soundEnabled : true; // Restore sound preference
+    this.currentDialogue = state.currentDialogue || { text: '', botName: '' }; // Restore dialogue
     this.moveHistory = state.moveHistory || [];
 
     // R1 Memory Management: Apply same limit to moveHistory
@@ -1181,6 +1194,7 @@ class ChessGame {
         engineState: JSON.parse(JSON.stringify(freshGame.exportJson())),
         move: null,
         notation: null,
+        dialogue: { text: '', botName: '' }, // No dialogue initially
         timestamp: Date.now()
       });
 
@@ -1205,6 +1219,7 @@ class ChessGame {
               engineState: JSON.parse(JSON.stringify(replayEngine.exportJson())),
               move: move,
               notation: move.notation || `${from}-${to}`,
+              dialogue: move.dialogue || { text: '', botName: '' }, // Preserve dialogue if available
               timestamp: Date.now()
             });
             this.currentStateIndex++;
@@ -1322,6 +1337,9 @@ class ChessGame {
 
         // Show persistent bot dialogue at bottom of screen
         window.gameUI.showBotDialoguePersistent(dialogue, botName);
+
+        // Store dialogue in game state for persistence
+        this.currentDialogue = { text: dialogue, botName: botName };
       } else {
         console.error(`[showBotDialogue] ERROR: window.gameUI is not available!`);
       }
@@ -1740,6 +1758,15 @@ class ChessGame {
     this.selectedSquare = null;
     this.possibleMoves = [];
 
+    // Restore dialogue from target state
+    if (targetState.dialogue) {
+      this.currentDialogue = { ...targetState.dialogue };
+      // Display the restored dialogue
+      if (window.gameUI && this.currentDialogue.text) {
+        window.gameUI.showBotDialoguePersistent(this.currentDialogue.text, this.currentDialogue.botName);
+      }
+    }
+
     // Set flag to indicate we're in undo/redo state
     this.isInUndoRedoState = true;
 
@@ -1810,6 +1837,15 @@ class ChessGame {
     // Clear selection
     this.selectedSquare = null;
     this.possibleMoves = [];
+
+    // Restore dialogue from target state
+    if (targetState.dialogue) {
+      this.currentDialogue = { ...targetState.dialogue };
+      // Display the restored dialogue
+      if (window.gameUI && this.currentDialogue.text) {
+        window.gameUI.showBotDialoguePersistent(this.currentDialogue.text, this.currentDialogue.botName);
+      }
+    }
 
     // Set flag to indicate we're in undo/redo state
     this.isInUndoRedoState = true;
@@ -2918,6 +2954,8 @@ class ChessUI {
           const dialogue = getRandomDialogue(randomBot, 'humanWins');
           if (dialogue && window.gameUI) {
             window.gameUI.showBotDialoguePersistent(dialogue, 'Human');
+            // Store dialogue for persistence
+            this.currentDialogue = { text: dialogue, botName: 'Human' };
           }
         }, 1000);
       }
@@ -3831,13 +3869,16 @@ class ChessUI {
       const hasGameInProgress = this.game.stateHistory && this.game.stateHistory.length > 1;
 
       if (hasGameInProgress || this.game.gameStatus === 'playing') {
+        // Restore the actual dialogue text from currentDialogue
+        const dialogueText = this.game.currentDialogue?.text || "";
+
         if (this.game.gameMode === 'human-vs-bot') {
-          // Show the bot dialogue area with current bot
+          // Show the bot dialogue area with current bot and saved text
           const botName = this.game.getBotDifficultyText();
-          this.showBotDialoguePersistent("", botName);
+          this.showBotDialoguePersistent(dialogueText, botName);
         } else if (this.game.gameMode === 'human-vs-human') {
-          // Show the human dialogue area
-          this.showBotDialoguePersistent("", 'Human');
+          // Show the human dialogue area with saved text
+          this.showBotDialoguePersistent(dialogueText, 'Human');
         }
       }
     }
@@ -4906,6 +4947,11 @@ class ChessUI {
         this.game.loadGameState(state);
         this.applyTheme();
         this.updateDisplay();
+
+        // Restore dialogue if present
+        if (this.game.currentDialogue && this.game.currentDialogue.text) {
+          this.showBotDialoguePersistent(this.game.currentDialogue.text, this.game.currentDialogue.botName);
+        }
 
         // Update menu visibility based on loaded game mode
         this.updateMenuVisibility();
