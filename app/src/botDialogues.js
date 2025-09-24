@@ -531,7 +531,7 @@ export const botDialogues = {
             "That's a wrap! Director's cut: I win!",
             "VITTORIA! I'm literally unstoppable today!",
             "Won! Your chess career? Finito! Arrivederci!"
-        ]
+        ],
         // Filler reactions for regular moves
         filler: [
             "Oh?", "Ah!", "I see...", "Mhm", "Interesting...", "Hmm...", "Oooh", "Well well...",
