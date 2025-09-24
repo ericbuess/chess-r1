@@ -4635,7 +4635,7 @@ class ChessUI {
     if (helpBtn) {
       const handler = () => {
         // Don't hide the menu - just show help on top
-        showHelpDialog(false, true); // Pass fromMenu = true
+        showHelpDialog(true); // Pass fromMenu = true
       };
       helpBtn.addEventListener('click', handler);
       this.optionListeners.push({ element: helpBtn, event: 'click', handler });
@@ -5657,14 +5657,8 @@ window.addEventListener('sideClick', () => {
 });
 
 // Function to show enhanced help dialog
-function showHelpDialog(fromStartup = false, fromMenu = false) {
+function showHelpDialog(fromMenu = false) {
   if (!gameUI) return;
-
-  // Check if we should show on startup
-  if (fromStartup) {
-    const hideOnStartup = localStorage.getItem('chess-r1-hide-help-on-startup') === 'true';
-    if (hideOnStartup) return;
-  }
 
   let helpContent = '<div class="help-dialog-content">';
   helpContent += '<div class="help-header">Chess R1 by Eric Buess v0.0.2</div>';
@@ -5705,12 +5699,6 @@ function showHelpDialog(fromStartup = false, fromMenu = false) {
   helpContent += '<div class="control-item">  (Scroll wheel on R1)</div>';
   helpContent += '</div>';
 
-  // Add checkbox for "Don't show on startup"
-  const hideOnStartup = localStorage.getItem('chess-r1-hide-help-on-startup') === 'true';
-  helpContent += '<div class="help-checkbox">';
-  helpContent += `<label><input type="checkbox" id="hide-help-checkbox" ${hideOnStartup ? 'checked' : ''}> Don't show on startup</label>`;
-  helpContent += '</div>';
-
   // Add dismiss button
   helpContent += '<div class="help-button-container">';
   helpContent += '<button class="help-dismiss-btn">Dismiss</button>';
@@ -5728,14 +5716,6 @@ function showHelpDialog(fromStartup = false, fromMenu = false) {
   dialog.innerHTML = helpContent;
   document.body.appendChild(dialog);
 
-  // Add checkbox event listener
-  const checkbox = dialog.querySelector('#hide-help-checkbox');
-  if (checkbox) {
-    checkbox.addEventListener('change', (e) => {
-      localStorage.setItem('chess-r1-hide-help-on-startup', e.target.checked ? 'true' : 'false');
-    });
-  }
-
   // Add dismiss button event listener
   const dismissBtn = dialog.querySelector('.help-dismiss-btn');
   if (dismissBtn) {
@@ -5748,9 +5728,8 @@ function showHelpDialog(fromStartup = false, fromMenu = false) {
     });
   }
 
-  // Click outside to close - but ONLY for menu-opened dialog, never for startup
-  // This prevents the startup dialog from consuming the first game tap
-  if (!fromStartup && fromMenu) {
+  // Click outside to close - but ONLY for menu-opened dialog
+  if (fromMenu) {
     setTimeout(() => {
       const closeHandler = (e) => {
         if (!dialog.contains(e.target)) {
@@ -6014,11 +5993,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.gameUI = gameUI;
   window.chessGame = chessGame;
 
-  // Show help dialog on startup after a brief delay (AFTER gameUI is ready)
-  // Pass fromStartup=true to avoid click-outside handler that consumes first tap
-  setTimeout(() => {
-    showHelpDialog(true); // fromStartup=true prevents click-to-close
-  }, 500);
+  // Help dialog no longer shows on startup - available through menu instead
 
   // Setup header tap zones for status indicator, menu, and undo/redo
   const gameHeader = document.getElementById('game-header');
