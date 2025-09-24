@@ -12,6 +12,9 @@ import * as ChessEngine from 'js-chess-engine';
 import { woodenSoundData } from './woodenSoundData.js';
 // Import bot dialogue system
 import { getRandomDialogue, dialogueManager } from './botDialogues.js';
+// Import king dialogues for Human vs Human mode
+import { getWhiteKingDialogue } from './whiteKingDialogues.js';
+import { getBlackKingDialogue } from './blackKingDialogues.js';
 window.jsChessEngine = ChessEngine;
 
 // ChessConverter class to translate between our format and js-chess-engine format
@@ -87,6 +90,77 @@ const debugLogger = {
   info: () => {},
   warn: () => {},
   error: () => {}
+};
+
+// Game State Tracker - Enhanced dialogue and context system
+const gameStateTracker = {
+  lastMove: null,
+  gamePhase: 'opening', // opening, middlegame, endgame
+  materialBalance: 0, // positive favors white, negative favors black
+  lastBalance: 0,
+  checkHistory: [],
+  specialMoves: [],
+  recentlyUsedDialogues: new Set(),
+  maxRecentDialogues: 10,
+  movesSinceLastDialogue: 0,
+  currentPlayer: 'white',
+  lastPlayer: 'black',
+
+  // Track last move details
+  updateLastMove(fromRow, fromCol, toRow, toCol, piece, capturedPiece, special) {
+    this.lastMove = {
+      from: { row: fromRow, col: fromCol },
+      to: { row: toRow, col: toCol },
+      piece: piece,
+      captured: capturedPiece,
+      special: special || null,
+      timestamp: Date.now()
+    };
+  },
+
+  // Update material balance
+  updateMaterialBalance(newBalance) {
+    this.lastBalance = this.materialBalance;
+    this.materialBalance = newBalance;
+  },
+
+  // Check if momentum shifted
+  detectMomentumShift() {
+    const balanceChange = Math.abs(this.materialBalance - this.lastBalance);
+    // Significant shift if balance changed by 3+ points (minor piece)
+    return balanceChange >= 3;
+  },
+
+  // Track recently used dialogues to avoid repetition
+  trackUsedDialogue(category, botName) {
+    const key = `${botName}:${category}`;
+    if (this.recentlyUsedDialogues.size >= this.maxRecentDialogues) {
+      // Remove oldest entries
+      const oldestKey = this.recentlyUsedDialogues.values().next().value;
+      this.recentlyUsedDialogues.delete(oldestKey);
+    }
+    this.recentlyUsedDialogues.add(key);
+  },
+
+  // Check if dialogue was recently used
+  isDialogueRecentlyUsed(category, botName) {
+    const key = `${botName}:${category}`;
+    return this.recentlyUsedDialogues.has(key);
+  },
+
+  // Reset for new game
+  reset() {
+    this.lastMove = null;
+    this.gamePhase = 'opening';
+    this.materialBalance = 0;
+    this.lastBalance = 0;
+    this.checkHistory = [];
+    this.specialMoves = [];
+    this.recentlyUsedDialogues.clear();
+    this.movesSinceLastDialogue = 0;
+    this.currentPlayer = 'white';
+    this.lastPlayer = 'black';
+  }
 };
 
 // Chess Game State
@@ -280,59 +354,78 @@ class ChessGame {
       const isHumanMove = (this.gameMode === 'human-vs-bot' && justMovedPlayer === this.humanColor);
       const isBotMove = (this.gameMode === 'human-vs-bot' && justMovedPlayer !== this.humanColor);
 
+      // Update game state tracker for enhanced dialogue context
+      gameStateTracker.lastPlayer = gameStateTracker.currentPlayer;
+      gameStateTracker.currentPlayer = this.currentPlayer;
+      gameStateTracker.updateLastMove(fromRow, fromCol, toRow, toCol, movedPiece, targetPiece,
+        this.generateSpecialMoveDescription(fromRow, fromCol, toRow, toCol, movedPiece, targetPiece));
+
+      // Create rich move context for enhanced dialogue selection
+      const moveContext = {
+        piece: movedPiece,
+        captured: targetPiece,
+        isCheck: enteredCheck,
+        special: gameStateTracker.lastMove ? gameStateTracker.lastMove.special : null,
+        from: { row: fromRow, col: fromCol },
+        to: { row: toRow, col: toCol },
+        player: justMovedPlayer,
+        gamePhase: this.detectGamePhase(),
+        materialBalance: this.calculateMaterialBalance()
+      };
+
       // Mark that we're about to show a dialogue (for timing coordination)
       if ((this.gameMode === 'human-vs-bot' || this.gameMode === 'human-vs-human') && window.gameUI) {
         window.gameUI.pendingBotDialogue = true;
         console.log(`[makeMove] Set pendingBotDialogue = true`);
       }
 
-      // Show appropriate dialogue
+      // Show enhanced context-aware dialogue
       setTimeout(() => {
-        if (this.gameMode === 'human-vs-bot') {
-          // Bot mode dialogues
-          if (enteredCheck) {
-            // Check dialogue
-            if (isHumanMove) {
-              this.showBotDialogue('humanCheck', true);
-            } else if (isBotMove) {
-              this.showBotDialogue('botCheck', true);
-            }
-          } else if (isCapture) {
-            // Capture dialogue
-            if (isHumanMove) {
-              this.showBotDialogue('humanCapture');
-            } else if (isBotMove) {
-              this.showBotDialogue('botCapture');
-            }
-          } else {
-            // Regular move dialogue
-            if (isHumanMove) {
-              this.showBotDialogue('humanMove');
-            } else if (isBotMove) {
-              this.showBotDialogue('botMove');
-            }
-          }
-        } else if (this.gameMode === 'human-vs-human' && dialogueManager.shouldShowDialogue()) {
-          // Human vs human mode - show random bot commentary
-          const commentators = ['Evy', 'Emmy', 'Asa'];
-          const randomBot = commentators[Math.floor(Math.random() * commentators.length)];
-          let dialogueType;
+        // Determine base dialogue category
+        let baseCategory = 'humanMove';
 
-          if (enteredCheck) {
-            dialogueType = 'humanCheck';  // Use human check dialogue for commentary
-          } else if (isCapture) {
-            dialogueType = 'humanCapture';  // Use capture dialogue for commentary
+        if (enteredCheck) {
+          // Check dialogue takes priority
+          if (this.gameMode === 'human-vs-bot') {
+            baseCategory = isHumanMove ? 'humanCheck' : 'botCheck';
           } else {
-            dialogueType = 'humanMove';  // Use regular move dialogue
+            // Human vs Human - use appropriate check dialogue
+            baseCategory = gameStateTracker.currentPlayer === 'white' ? 'inCheck' : 'inCheck';
           }
-
-          const dialogue = getRandomDialogue(randomBot, dialogueType);
-          if (dialogue && window.gameUI) {
-            window.gameUI.showBotDialoguePersistent(dialogue, 'Human');
-            // Store dialogue for persistence
-            this.currentDialogue = { text: dialogue, botName: 'Human' };
+        } else if (moveContext.captured) {
+          // Capture dialogue
+          if (this.gameMode === 'human-vs-bot') {
+            baseCategory = isHumanMove ? 'humanCapture' : 'botCapture';
+          } else {
+            // Human vs Human - use specific capture dialogue
+            const capturedType = moveContext.captured.type;
+            baseCategory = `captured${capturedType.charAt(0).toUpperCase() + capturedType.slice(1)}`;
+          }
+        } else if (moveContext.special) {
+          // Special move dialogue
+          if (moveContext.special.includes('castling')) {
+            baseCategory = 'castling';
+          } else if (moveContext.special.includes('promotion')) {
+            baseCategory = 'promotion';
+          } else if (moveContext.special.includes('enPassant')) {
+            baseCategory = 'enPassant';
+          }
+        } else {
+          // Regular move dialogue - use piece-specific categories
+          if (this.gameMode === 'human-vs-bot') {
+            baseCategory = isHumanMove ? 'humanMove' : 'botMove';
+          } else {
+            // Human vs Human - use piece-specific dialogue
+            const pieceType = moveContext.piece ? moveContext.piece.type : 'pawn';
+            baseCategory = `${pieceType}Move`;
           }
         }
+
+        // Force dialogue for checks, otherwise use standard logic
+        const forceShow = enteredCheck || moveContext.special;
+
+        // Show dialogue with rich context
+        this.showBotDialogue(baseCategory, forceShow, moveContext);
 
         // Clear the pending flag after showing dialogue
         if (window.gameUI) {
@@ -839,6 +932,9 @@ class ChessGame {
     this.currentMoveIndex = -1;
     this.initialEngineState = JSON.parse(JSON.stringify(this.engine.exportJson())); // Deep clone
 
+    // Reset game state tracker for enhanced dialogue system
+    gameStateTracker.reset();
+
     // Reset tracking flags for current mode
     if (this.gameMode === 'human-vs-bot' && this.modeSettings['human-vs-bot']) {
       this.modeSettings['human-vs-bot'].colorChangedMidGame = false;
@@ -884,19 +980,10 @@ class ChessGame {
         this.showBotDialogue('gameStart', true); // Force show greeting
       }, 500);
     } else {
-      // Show human vs human interface with random bot commentary
-      if (window.gameUI) {
-        setTimeout(() => {
-          // Pick a random bot to provide commentary
-          const commentators = ['Evy', 'Emmy', 'Asa'];
-          const randomBot = commentators[Math.floor(Math.random() * commentators.length)];
-          const dialogue = getRandomDialogue(randomBot, 'gameStart');
-          const finalDialogue = dialogue || "Let the games begin!";
-          window.gameUI.showBotDialoguePersistent(finalDialogue, 'Human');
-          // Store dialogue for persistence
-          this.currentDialogue = { text: finalDialogue, botName: 'Human' };
-        }, 500);
-      }
+      // Show human vs human greeting with king dialogues
+      setTimeout(() => {
+        this.showBotDialogue('gameStart', true); // Force show greeting for Human vs Human too
+      }, 500);
     }
   }
   
@@ -1304,23 +1391,200 @@ class ChessGame {
   }
 
   /**
-   * Show bot dialogue if appropriate
+   * Detect current game phase based on move count and remaining pieces
    */
-  showBotDialogue(category, forceShow = false) {
-    // Only show dialogues in human vs bot mode
-    if (this.gameMode !== 'human-vs-bot') return null;
+  detectGamePhase() {
+    const moveCount = this.moveHistory.length;
+    const pieceCount = this.countPieces();
 
-    const botName = this.getBotDifficultyText();
-    console.log(`[showBotDialogue] Called with category: ${category}, botName: ${botName}, forceShow: ${forceShow}`);
-
-    // Check if we should show dialogue (unless forced for special events)
-    if (!forceShow && !dialogueManager.shouldShowDialogue()) {
-      console.log(`[showBotDialogue] Skipping - dialogue manager says no`);
-      return null;
+    // Opening: First 10-15 moves or many pieces remain
+    if (moveCount <= 10 || pieceCount.total >= 28) {
+      return 'opening';
     }
 
-    const dialogue = getRandomDialogue(botName, category);
-    console.log(`[showBotDialogue] Got dialogue: "${dialogue}"`);
+    // Endgame: Few pieces remain (typically 12 or fewer)
+    if (pieceCount.total <= 12) {
+      return 'endgame';
+    }
+
+    // Middle game: Everything else
+    return 'middlegame';
+  }
+
+  /**
+   * Detect momentum shift based on material balance changes
+   */
+  detectMomentumShift() {
+    return gameStateTracker.detectMomentumShift();
+  }
+
+  /**
+   * Categorize move by piece type and special characteristics
+   */
+  categorizeMove(piece, captured, special) {
+    // Special moves take priority
+    if (special) {
+      if (special.includes('castling')) return 'castling';
+      if (special.includes('promotion')) return 'promotion';
+      if (special.includes('enPassant')) return 'enPassant';
+    }
+
+    // Capture moves
+    if (captured) {
+      return captured.type === 'queen' ? 'capturedQueen' :
+             captured.type === 'rook' ? 'capturedRook' :
+             captured.type === 'bishop' ? 'capturedBishop' :
+             captured.type === 'knight' ? 'capturedKnight' :
+             'capturedPawn';
+    }
+
+    // Regular piece moves
+    if (piece) {
+      return piece.type === 'queen' ? 'queenMove' :
+             piece.type === 'rook' ? 'rookMove' :
+             piece.type === 'bishop' ? 'bishopMove' :
+             piece.type === 'knight' ? 'knightMove' :
+             piece.type === 'king' ? 'kingMove' :
+             'pawnMove';
+    }
+
+    return 'humanMove'; // fallback
+  }
+
+  /**
+   * Get contextual dialogue category based on game state
+   */
+  getContextualDialogueCategory(baseCategory, isCheck, gamePhase, momentum) {
+    // Check takes highest priority
+    if (isCheck) {
+      return this.gameMode === 'human-vs-bot' ?
+        (gameStateTracker.currentPlayer === this.humanColor ? 'humanCheck' : 'botCheck') :
+        'inCheck';
+    }
+
+    // Special game state categories
+    if (momentum) {
+      return 'tidesTurning';
+    }
+
+    // Phase-specific categories
+    if (gamePhase) {
+      const phaseCategories = {
+        'opening': 'opening',
+        'middlegame': 'middleGame',
+        'endgame': 'endgame'
+      };
+      if (phaseCategories[gamePhase] !== phaseCategories[gameStateTracker.gamePhase]) {
+        return phaseCategories[gamePhase];
+      }
+    }
+
+    return baseCategory;
+  }
+
+  /**
+   * Generate description of special moves (castling, promotion, en passant)
+   */
+  generateSpecialMoveDescription(fromRow, fromCol, toRow, toCol, piece, capturedPiece) {
+    if (!piece) return null;
+
+    // Check for castling
+    if (piece.type === 'king' && Math.abs(toCol - fromCol) > 1) {
+      return toCol > fromCol ? 'castlingKingside' : 'castlingQueenside';
+    }
+
+    // Check for pawn promotion (pawn reaching opposite end)
+    if (piece.type === 'pawn') {
+      if ((piece.color === 'white' && toRow === 0) || (piece.color === 'black' && toRow === 7)) {
+        return 'promotion';
+      }
+
+      // Check for en passant (pawn captures diagonally with no piece at destination)
+      if (Math.abs(toCol - fromCol) === 1 && !capturedPiece) {
+        return 'enPassant';
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Show bot dialogue if appropriate
+   */
+  showBotDialogue(category, forceShow = false, moveContext = null) {
+    console.log(`[showBotDialogue] Called with category: ${category}, forceShow: ${forceShow}, gameMode: ${this.gameMode}`);
+
+    // Enhanced dialogue selection for different game modes
+    let dialogue = null;
+    let displayName = '';
+
+    if (this.gameMode === 'human-vs-bot') {
+      // Bot mode dialogues with enhanced context awareness
+      const botName = this.getBotDifficultyText();
+
+      // Check if we should show dialogue (unless forced for special events)
+      if (!forceShow && !dialogueManager.shouldShowDialogue()) {
+        console.log(`[showBotDialogue] Skipping - dialogue manager says no`);
+        return null;
+      }
+
+      // Update game state tracker
+      const currentPhase = this.detectGamePhase();
+      const hasMomentumShift = this.detectMomentumShift();
+
+      // Get enhanced category based on context
+      let enhancedCategory = category;
+      if (moveContext) {
+        const materialBalance = this.calculateMaterialBalance();
+        gameStateTracker.updateMaterialBalance(materialBalance);
+        gameStateTracker.gamePhase = currentPhase;
+
+        // Use move context to get more specific category
+        if (!forceShow) { // Don't override forced categories like gameStart
+          enhancedCategory = this.getContextualDialogueCategory(
+            this.categorizeMove(moveContext.piece, moveContext.captured, moveContext.special),
+            moveContext.isCheck,
+            currentPhase,
+            hasMomentumShift
+          );
+        }
+      }
+
+      dialogue = getRandomDialogue(botName, enhancedCategory);
+      displayName = botName;
+
+      // Track used dialogue to prevent repetition
+      if (dialogue) {
+        gameStateTracker.trackUsedDialogue(enhancedCategory, botName);
+      }
+
+    } else if (this.gameMode === 'human-vs-human') {
+      // Human vs Human mode with contextual king dialogues
+      if (!forceShow && !dialogueManager.shouldShowDialogue()) {
+        console.log(`[showBotDialogue] Skipping H vs H - dialogue manager says no`);
+        return null;
+      }
+
+      // Determine which king should speak based on current player
+      const isWhitePlayer = gameStateTracker.currentPlayer === 'white';
+      displayName = 'Human';
+
+      // Use appropriate king dialogue based on current player
+      if (isWhitePlayer) {
+        dialogue = getWhiteKingDialogue(category);
+      } else {
+        dialogue = getBlackKingDialogue(category);
+      }
+
+      // Fallback to bot commentary if no king dialogue available
+      if (!dialogue) {
+        const commentators = ['Evy', 'Emmy', 'Asa'];
+        const randomBot = commentators[Math.floor(Math.random() * commentators.length)];
+        dialogue = getRandomDialogue(randomBot, category);
+      }
+    }
+
+    console.log(`[showBotDialogue] Got dialogue: "${dialogue}" for display name: ${displayName}`);
 
     if (dialogue) {
       console.log(`[showBotDialogue] Has dialogue, checking for window.gameUI...`);
@@ -1335,17 +1599,18 @@ class ChessGame {
           window.gameUI.thinkingInterval = null;
         }
 
-        // Show persistent bot dialogue at bottom of screen
-        window.gameUI.showBotDialoguePersistent(dialogue, botName);
+        // Show persistent dialogue at bottom of screen
+        window.gameUI.showBotDialoguePersistent(dialogue, displayName);
 
         // Store dialogue in game state for persistence
-        this.currentDialogue = { text: dialogue, botName: botName };
+        this.currentDialogue = { text: dialogue, botName: displayName };
       } else {
         console.error(`[showBotDialogue] ERROR: window.gameUI is not available!`);
       }
     } else {
-      console.log(`[showBotDialogue] No dialogue returned from getRandomDialogue`);
+      console.log(`[showBotDialogue] No dialogue returned`);
     }
+
     return dialogue;
   }
 
@@ -2946,17 +3211,10 @@ class ChessUI {
           }
         }, 1000);
       } else {
-        // In human vs human, show random bot commentary and play victory sound
+        // In human vs human, show king victory dialogue
         isVictory = true;
         setTimeout(() => {
-          const commentators = ['Evy', 'Emmy', 'Asa'];
-          const randomBot = commentators[Math.floor(Math.random() * commentators.length)];
-          const dialogue = getRandomDialogue(randomBot, 'humanWins');
-          if (dialogue && window.gameUI) {
-            window.gameUI.showBotDialoguePersistent(dialogue, 'Human');
-            // Store dialogue for persistence
-            this.currentDialogue = { text: dialogue, botName: 'Human' };
-          }
+          this.game.showBotDialogue('humanWins', true); // Use enhanced showBotDialogue for consistency
         }, 1000);
       }
     }
