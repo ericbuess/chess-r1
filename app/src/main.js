@@ -501,7 +501,15 @@ class ChessGame {
     // Update current player
     const oldPlayer = this.currentPlayer;
     this.currentPlayer = state.turn;
-    
+
+    // Refresh dialogue button in Human vs Human mode to update turn indicator
+    if (this.gameMode === 'human-vs-human' && window.gameUI) {
+      // Use a small timeout to ensure UI has settled
+      setTimeout(() => {
+        window.gameUI.refreshDialogueButton();
+      }, 50);
+    }
+
     // DON'T update game status here - let updateGameStatus() be the single source
     // This prevents duplicate/conflicting status updates
     
@@ -4832,7 +4840,7 @@ class ChessUI {
     const botIcon = document.createElement('div');
     if (isHumanMode) {
       // Dynamic king icons for human vs human - show current player's king larger
-      const isWhiteTurn = this.game?.cachedState?.currentPlayer === 'white';
+      const isWhiteTurn = this.game?.currentPlayer === 'white';
       if (isWhiteTurn) {
         botIcon.innerHTML = '<span style="font-size: 16px;">♔</span><span style="font-size: 11px; opacity: 0.7;">♚</span>';
       } else {
@@ -4854,7 +4862,7 @@ class ChessUI {
     // Label
     const botNameLabel = document.createElement('div');
     if (isHumanMode) {
-      const isWhiteTurn = this.game?.cachedState?.currentPlayer === 'white';
+      const isWhiteTurn = this.game?.currentPlayer === 'white';
       botNameLabel.textContent = isWhiteTurn ? "W's turn" : "B's turn";
     } else {
       botNameLabel.textContent = botName;
@@ -4910,6 +4918,16 @@ class ChessUI {
     dialogueArea.appendChild(dialogueText);
 
     console.log(`[showBotDialoguePersistent] Displayed: "${dialogue}" for bot: ${botName}`);
+  }
+
+  /**
+   * Refresh the dialogue button to update turn indicator in Human vs Human mode
+   */
+  refreshDialogueButton() {
+    // Only refresh if we have a current dialogue to display
+    if (this.game?.currentDialogue && this.game.gameMode === 'human-vs-human') {
+      this.showBotDialoguePersistent(this.game.currentDialogue.text, 'Human');
+    }
   }
 
   /**
