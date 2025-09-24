@@ -4839,40 +4839,40 @@ class ChessUI {
     // Icon (using chess piece emoji based on mode)
     const botIcon = document.createElement('div');
     if (isHumanMode) {
-      // Dynamic king icons for human vs human - show current player's king larger
+      // Fixed position kings - white always on left, black always on right
+      // Current player's king is larger
       const isWhiteTurn = this.game?.currentPlayer === 'white';
       if (isWhiteTurn) {
-        botIcon.innerHTML = '<span style="font-size: 16px;">♔</span><span style="font-size: 11px; opacity: 0.7;">♚</span>';
+        // White's turn - white king large, black king small
+        botIcon.innerHTML = '<span style="font-size: 20px;">♔</span><span style="font-size: 14px; opacity: 0.6;">♚</span>';
       } else {
-        botIcon.innerHTML = '<span style="font-size: 16px;">♚</span><span style="font-size: 11px; opacity: 0.7;">♔</span>';
+        // Black's turn - white king small, black king large
+        botIcon.innerHTML = '<span style="font-size: 14px; opacity: 0.6;">♔</span><span style="font-size: 20px;">♚</span>';
       }
     } else {
       const icons = { 'Evy': '♟', 'Emmy': '♞', 'Asa': '♛' };
       botIcon.textContent = icons[botName] || '♟';
+      botIcon.style.fontSize = '14px';
     }
-    botIcon.style.fontSize = '14px';
     botIcon.style.color = '#000';  // Black icon on orange background
     botIcon.style.lineHeight = '1';
     botIcon.style.display = 'flex';
     botIcon.style.alignItems = 'center';
     botIcon.style.justifyContent = 'center';
-    botIcon.style.gap = '1px';
+    botIcon.style.gap = '2px';
     botInfo.appendChild(botIcon);
 
-    // Label
-    const botNameLabel = document.createElement('div');
-    if (isHumanMode) {
-      const isWhiteTurn = this.game?.currentPlayer === 'white';
-      botNameLabel.textContent = isWhiteTurn ? "W's turn" : "B's turn";
-    } else {
+    // Label - only show for bot mode
+    if (!isHumanMode) {
+      const botNameLabel = document.createElement('div');
       botNameLabel.textContent = botName;
+      botNameLabel.style.fontSize = '7px';  // Slightly smaller for turn indicator
+      botNameLabel.style.color = '#000';  // Black text on orange background
+      botNameLabel.style.fontWeight = 'bold';
+      botNameLabel.style.marginTop = '1px';
+      botNameLabel.style.lineHeight = '1';
+      botInfo.appendChild(botNameLabel);
     }
-    botNameLabel.style.fontSize = '7px';  // Slightly smaller for turn indicator
-    botNameLabel.style.color = '#000';  // Black text on orange background
-    botNameLabel.style.fontWeight = 'bold';
-    botNameLabel.style.marginTop = '1px';
-    botNameLabel.style.lineHeight = '1';
-    botInfo.appendChild(botNameLabel);
 
     // Dialogue text (no divider needed)
     const dialogueText = document.createElement('div');
