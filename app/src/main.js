@@ -421,10 +421,10 @@ class ChessGame {
           }
         }
 
-        // Force dialogue for checks, captures (especially queens), and special moves
+        // Always show dialogue on every move - use filler for regular moves
         const isCapture = moveContext.captured !== null;
         const isQueenCapture = moveContext.captured && moveContext.captured.type === 'queen';
-        const forceShow = enteredCheck || isCapture || moveContext.special;
+        const forceShow = true; // Always show dialogue on every move
 
         // Show dialogue with rich context
         this.showBotDialogue(baseCategory, forceShow, moveContext);
@@ -1561,6 +1561,12 @@ class ChessGame {
       }
 
       dialogue = getRandomDialogue(botName, enhancedCategory);
+
+      // If no dialogue for the category, use filler
+      if (!dialogue && forceShow) {
+        dialogue = getRandomDialogue(botName, 'filler');
+      }
+
       displayName = botName;
 
       // Track used dialogue to prevent repetition
@@ -1582,8 +1588,16 @@ class ChessGame {
       // Use appropriate king dialogue based on current player
       if (isWhitePlayer) {
         dialogue = getWhiteKingDialogue(category);
+        // If no dialogue for the category, use filler
+        if (!dialogue && forceShow) {
+          dialogue = getWhiteKingDialogue('filler');
+        }
       } else {
         dialogue = getBlackKingDialogue(category);
+        // If no dialogue for the category, use filler
+        if (!dialogue && forceShow) {
+          dialogue = getBlackKingDialogue('filler');
+        }
       }
 
       // Fallback to bot commentary if no king dialogue available
@@ -1591,6 +1605,10 @@ class ChessGame {
         const commentators = ['Evy', 'Emmy', 'Asa'];
         const randomBot = commentators[Math.floor(Math.random() * commentators.length)];
         dialogue = getRandomDialogue(randomBot, category);
+        // If still no dialogue and forced, use bot filler
+        if (!dialogue && forceShow) {
+          dialogue = getRandomDialogue(randomBot, 'filler');
+        }
       }
     }
 
@@ -2963,8 +2981,8 @@ class ChessUI {
             }
           }
 
-          // Force show dialogue for captures and checks
-          const forceShow = botResult.enteredCheck || capturedPiece !== null;
+          // Always show dialogue on bot moves too
+          const forceShow = true; // Always show dialogue on every move
 
           // Show the dialogue
           this.game.showBotDialogue(category, forceShow);

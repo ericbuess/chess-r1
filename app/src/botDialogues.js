@@ -532,6 +532,27 @@ export const botDialogues = {
             "VITTORIA! I'm literally unstoppable today!",
             "Won! Your chess career? Finito! Arrivederci!"
         ]
+        // Filler reactions for regular moves
+        filler: [
+            "Oh?", "Ah!", "I see...", "Mhm", "Interesting...", "Hmm...", "Oooh", "Well well...",
+            "*adjusts sunglasses*", "Bet", "No cap", "Fr fr", "Periodt", "Slay", "Vibe check",
+            "*sips espresso*", "Bellissimo!", "Madonna!", "Che cosa?", "*twirls pasta*",
+            "Sheesh", "Bussin", "It's giving...", "Sus", "That's tea", "Facts", "Lowkey...",
+            "Highkey though", "*checks phone*", "Bruh moment", "Living for this", "We stan",
+            "*dramatic gasp*", "The audacity", "Iconic", "Not me thinking...", "Anyways...",
+            "*files nails*", "Chile anyway...", "As you should", "Go off", "We love to see it",
+            "That part", "Say less", "On god", "No thoughts head empty", "*vibing*",
+            "Mmm yeah", "Okay bestie", "I'm seated", "The way I gasped", "*takes selfie*",
+            "Living my best life", "Main character energy", "*chef's kiss*", "That's amore",
+            "Perfetto", "*counts on fingers*", "One moment...", "Let me think...",
+            "*taps forehead*", "Brain loading...", "Error 404", "*Windows startup sound*",
+            "Calculating...", "Processing...", "*dial-up internet noises*", "Buffering...",
+            "*elevator music*", "Stand by...", "*thinking emoji*", "Big brain time",
+            "*galaxy brain*", "200 IQ play incoming", "Watch this", "Check it",
+            "*cracks knuckles*", "*stretches*", "*yawns*", "*adjusts crown*",
+            "Your move, bestie", "Go ahead", "I'm waiting", "*taps foot*", "*checks watch*",
+            "Take your time", "No rush", "*scrolls TikTok*", "*applies lip gloss*"
+        ]
     },
 
     // Emmy - Silly witty off-the-wall sayings and idioms
@@ -1053,6 +1074,31 @@ export const botDialogues = {
             "Victory! I'm more impressed than a stamp collection",
             "You won! Fair and square as a box of squares",
             "GG! You played like a champion chip!"
+        ],
+
+        // Filler reactions for regular moves
+        filler: [
+            "Hmm", "Ah", "Oh!", "I see", "Interesting", "Well well", "Aha!", "Ooh",
+            "*twiddles thumbs*", "*whistles*", "*hums tune*", "*drums fingers*",
+            "Thinking...", "Let's see...", "Now then...", "Alrighty", "Okie dokie",
+            "*adjusts glasses*", "*scratches head*", "*strokes chin*", "*nods*",
+            "Fascinating", "Curious", "Intriguing", "Most peculiar", "How odd",
+            "*chuckles*", "*giggles*", "*snorts*", "*coughs*", "*clears throat*",
+            "Well butter my biscuit", "Holy guacamole", "Cheese and crackers",
+            "By golly", "Gee whiz", "Jiminy cricket", "Great Scott", "Zoinks",
+            "*checks notes*", "*consults manual*", "*reads tea leaves*",
+            "Computing...", "Calculating...", "Processing...", "*loading*",
+            "One sec", "Hang on", "Just a moment", "Bear with me", "Almost there",
+            "*counts on fingers*", "*uses abacus*", "*consults crystal ball*",
+            "Righty-o", "Roger that", "Copy that", "10-4", "Affirmative",
+            "*does quick math*", "*carries the one*", "*shows work*",
+            "Neat!", "Keen!", "Swell!", "Nifty!", "Groovy!", "Rad!",
+            "*jazz hands*", "*finger guns*", "*thumbs up*", "*peace sign*",
+            "Your turn", "Over to you", "Ball's in your court", "Tag, you're it",
+            "*waiting patiently*", "*taps foot*", "*checks watch*", "*yawns*",
+            "No pressure", "Take your time", "Whenever you're ready",
+            "*makes thinking face*", "*furrows brow*", "*squints*",
+            "This is fun", "Having a blast", "Good times", "Living the dream"
         ],
         botWins: [
             "WINNER WINNER CHICKEN DINNER!",
@@ -1629,6 +1675,35 @@ export const botDialogues = {
             "Success achieved with aerospace-level precision!",
             "Mission accomplished! Execution efficiency: maximum!",
             "Victory confirmed! All parameters within specifications!"
+        ],
+
+        // Filler reactions for regular moves
+        filler: [
+            "Analyzing...", "Computing...", "Processing...", "Calculating...",
+            "Systems check", "Roger", "Acknowledged", "Confirmed", "Noted",
+            "*adjusts antenna*", "*calibrating*", "*runs diagnostics*", "*scans board*",
+            "Interesting data", "Fascinating", "Remarkable", "Intriguing pattern",
+            "Fun fact incoming...", "Did you know...", "According to my database...",
+            "*checks blueprints*", "*consults schematics*", "*reviews specs*",
+            "Trajectory calculated", "Vector confirmed", "Coordinates locked",
+            "Hmm, like a V8 engine", "Smooth as aerodynamics", "Precision engineering",
+            "*rocket sounds*", "*engine revving*", "*turbine spinning*", "*gears turning*",
+            "Stand by", "Holding pattern", "Maintaining orbit", "Cruising altitude",
+            "*beep boop*", "*whirring*", "*clicking*", "*mechanical sounds*",
+            "Structural integrity: stable", "All systems nominal", "Green across the board",
+            "Like the Golden Gate Bridge", "Sturdy as steel beams", "Built to last",
+            "Mach 1 thinking", "Supersonic strategy", "Breaking barriers",
+            "*draws blueprint*", "*sketches design*", "*plots course*",
+            "Efficiency: 87%", "Performance: optimal", "Status: operational",
+            "Torque applied", "Thrust engaged", "Momentum building",
+            "Your input received", "Data logged", "Information stored",
+            "*satellite uplink*", "*radio static*", "*morse code*",
+            "Like a Tesla coil", "Electromagnetic!", "High voltage thinking",
+            "Architecture reviewed", "Foundation solid", "Framework intact",
+            "*hydraulics hissing*", "*pistons pumping*", "*valves opening*",
+            "Altitude check", "Speed maintained", "Course steady",
+            "Loading...", "Buffering...", "Syncing...", "Updating...",
+            "Copy that", "10-4", "Wilco", "Over and out"
         ]
     }
 };

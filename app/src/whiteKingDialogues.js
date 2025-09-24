@@ -665,6 +665,33 @@ export const whiteKingDialogues = {
     "Strategic immobilization! Like putting someone in checkmate timeout, but more immediate!",
     "Pin executed with precision! Enemy piece becomes a very expensive wooden decoration!",
     "Tactical freezing completed! Rather like winter arriving early for that particular piece!"
+  ],
+
+  // Filler reactions for regular moves
+  filler: [
+    "Hm", "Indeed", "Quite", "I see", "Ah", "Oh my", "Well then", "Splendid",
+    "*adjusts crown*", "*strokes beard*", "*polishes scepter*", "*straightens cape*",
+    "By Jove", "Capital", "Brilliant", "Rather", "Jolly good", "Righto",
+    "*checks royal timepiece*", "*consults advisors*", "*reviews scrolls*",
+    "One mustn't...", "One does wonder...", "One observes...", "One notes...",
+    "*royal wave*", "*nods regally*", "*taps throne*", "*royal gesture*",
+    "Fascinating", "Most intriguing", "How curious", "Remarkable",
+    "'Tis but a scratch", "Ni!", "I fart in your general direction", "*coconut sounds*",
+    "Your mother was a hamster", "Fetchez la vache", "None shall pass", "Tis but a flesh wound",
+    "*draws Excalibur*", "*summons knights*", "*royal fanfare*", "*trumpet sounds*",
+    "Verily", "Forsooth", "Prithee", "Hark", "Methinks", "Mayhaps",
+    "*paces throne room*", "*gazes from battlements*", "*surveys kingdom*",
+    "To be or not to be", "Alas", "What light through yonder window breaks",
+    "*aside to audience*", "*soliloquy brewing*", "*dramatic pause*",
+    "Onwards!", "Forward!", "Advance!", "March on!", "Press ahead!",
+    "*royal decree*", "*signs charter*", "*stamps seal*", "*rings bell*",
+    "God save the Queen", "Rule Britannia", "For England!", "Huzzah!",
+    "*sips tea*", "*nibbles crumpet*", "*butters scone*", "*stirs Earl Grey*",
+    "Elementary", "Indubitably", "Undoubtedly", "Precisely", "Exactly",
+    "*royal thinking*", "*contemplates realm*", "*ponders strategy*",
+    "The game's afoot", "Once more unto the breach", "Cry havoc",
+    "*adjusts monocle*", "*twirls mustache*", "*tips hat*", "*bows slightly*",
+    "Carry on", "Pip pip", "Cheerio", "Tally ho", "What what"
   ]
 };
 

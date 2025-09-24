@@ -665,6 +665,37 @@ export const blackKingDialogues = {
     "Darkness pins light's piece with surgical precision!",
     "A shadow pin! Night's strategy creates perfect paralysis!",
     "The dark realm's pin shows tactical mastery at its finest!"
+  ],
+
+  // Filler reactions for regular moves
+  filler: [
+    "...", "Mmm", "Yes...", "Darkness stirs", "The shadows whisper", "Interesting...",
+    "*adjusts dark crown*", "*shadows swirl*", "*eyes glow*", "*cape billows*",
+    "The void watches", "Night observes", "Shadows gather", "Darkness notes",
+    "*dark laughter*", "*sinister chuckle*", "*evil grin*", "*menacing smile*",
+    "How delightful", "Most amusing", "Fascinating move", "The plot thickens",
+    "*consults dark tome*", "*reads ancient scroll*", "*checks necronomicon*",
+    "The shadows approve", "Night is pleased", "Darkness appreciates", "Well played",
+    "*thunder rumbles*", "*lightning flashes*", "*wind howls*", "*ravens caw*",
+    "From the depths", "Rising darkness", "Shadow ascending", "Night awakening",
+    "*dark energy pulses*", "*shadows dance*", "*darkness swirls*", "*void opens*",
+    "Yessss", "Excellent", "Perfect", "Marvelous", "Delicious", "Exquisite",
+    "*plotting intensifies*", "*scheming continues*", "*plans unfold*",
+    "The dark side beckons", "Join the shadows", "Embrace the night", "Feel the darkness",
+    "*summons minions*", "*calls forth shadows*", "*awakens darkness*",
+    "Inevitable", "Destiny awaits", "Fate approaches", "The end nears",
+    "*dark throne creaks*", "*obsidian gleams*", "*shadows deepen*",
+    "Soon...", "In time...", "Eventually...", "Patience...", "Wait for it...",
+    "*evil plan brewing*", "*darkness gathering*", "*power building*",
+    "The void calls", "Shadows whisper secrets", "Night reveals truth",
+    "*dark magic swirls*", "*necromancy activates*", "*curse forms*",
+    "Curious", "Intriguing", "Noteworthy", "Observed", "Recorded",
+    "*taps dark scepter*", "*adjusts shadow crown*", "*polishes dark armor*",
+    "Darkness eternal", "Night everlasting", "Shadows forever", "Void infinite",
+    "*meditation in darkness*", "*communion with shadows*", "*void gazing*",
+    "As foretold", "As prophesied", "As darkness willed", "As shadows decreed",
+    "*dark portal opens*", "*shadow realm beckons*", "*void gateway appears*",
+    "Continue...", "Proceed...", "Go on...", "Your move...", "I'm waiting..."
   ]
 };
 
