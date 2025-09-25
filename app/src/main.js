@@ -4866,19 +4866,19 @@ class ChessUI {
     botInfo.style.flexDirection = 'column';
     botInfo.style.alignItems = 'center';
     botInfo.style.justifyContent = 'center';
-    botInfo.style.padding = 'calc(max(3px, 0.8vh))';
-    botInfo.style.minWidth = '28px';
-    botInfo.style.width = 'calc(max(28px, 8vh))';
-    botInfo.style.maxWidth = 'calc(max(28px, 8vh))';  // Add max-width to prevent growth
-    botInfo.style.minHeight = '28px';
-    botInfo.style.height = 'calc(max(28px, 8vh))';
-    botInfo.style.maxHeight = 'calc(max(28px, 8vh))';  // Add max-height to prevent growth
+    botInfo.style.padding = '2px';
+    botInfo.style.minWidth = '24px';
+    botInfo.style.width = '24px';
+    botInfo.style.maxWidth = '24px';  // Fixed size
+    botInfo.style.minHeight = '24px';
+    botInfo.style.height = '24px';
+    botInfo.style.maxHeight = '24px';  // Fixed size
     botInfo.style.textAlign = 'center';
     botInfo.style.backgroundColor = '#FE5F00';  // Orange button background
     botInfo.style.borderRadius = '4px';  // Rounded corners for button look
     botInfo.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3)';  // Button depth
     botInfo.style.cursor = 'pointer';
-    botInfo.style.margin = '6px 0 4px 0';  // Original spacing, no left margin for alignment
+    botInfo.style.margin = '2px 0 2px 0';  // Minimal vertical spacing
 
     // Add click handler to open menu
     botInfo.addEventListener('click', (e) => {
@@ -4896,15 +4896,15 @@ class ChessUI {
       const isWhiteTurn = this.game?.currentPlayer === 'white';
       if (isWhiteTurn) {
         // White's turn - white king large, black king small
-        botIcon.innerHTML = '<span style="font-size: calc(max(20px, 5vh));">♔</span><span style="font-size: calc(max(14px, 3.5vh)); opacity: 0.6;">♚</span>';
+        botIcon.innerHTML = '<span style="font-size: 14px;">♔</span><span style="font-size: 10px; opacity: 0.6;">♚</span>';
       } else {
         // Black's turn - white king small, black king large
-        botIcon.innerHTML = '<span style="font-size: calc(max(14px, 3.5vh)); opacity: 0.6;">♔</span><span style="font-size: calc(max(20px, 5vh));">♚</span>';
+        botIcon.innerHTML = '<span style="font-size: 10px; opacity: 0.6;">♔</span><span style="font-size: 14px;">♚</span>';
       }
     } else {
       const icons = { 'Evy': '♟', 'Emmy': '♞', 'Asa': '♛' };
       botIcon.textContent = icons[botName] || '♟';
-      botIcon.style.fontSize = 'calc(max(14px, 3.5vh))';
+      botIcon.style.fontSize = '12px';
     }
     botIcon.style.color = '#000';  // Black icon on orange background
     botIcon.style.lineHeight = '1';
@@ -4918,7 +4918,7 @@ class ChessUI {
     if (!isHumanMode) {
       const botNameLabel = document.createElement('div');
       botNameLabel.textContent = botName;
-      botNameLabel.style.fontSize = 'calc(max(7px, 1.8vh))';  // Responsive font size
+      botNameLabel.style.fontSize = '6px';  // Small fixed size
       botNameLabel.style.color = '#000';  // Black text on orange background
       botNameLabel.style.fontWeight = 'bold';
       botNameLabel.style.marginTop = '1px';
@@ -4940,12 +4940,12 @@ class ChessUI {
     }
     dialogueText.style.flex = '1';
     dialogueText.style.color = '#FE5F00';
-    dialogueText.style.fontSize = 'calc(max(8px, 2vh))';  // Start with default size
+    dialogueText.style.fontSize = '8px';  // Small fixed size
     dialogueText.style.textAlign = 'left';
-    dialogueText.style.padding = 'calc(max(3px, 0.8vh)) 6px';  // Responsive vertical padding
+    dialogueText.style.padding = '2px 4px';  // Minimal padding
     dialogueText.style.lineHeight = '1.2';  // Slightly taller for readability
     dialogueText.style.fontWeight = '400';
-    dialogueText.style.maxHeight = 'calc(max(30px, 8vh))';  // Responsive max height
+    dialogueText.style.maxHeight = '24px';  // Fixed max height
     dialogueText.style.overflow = 'hidden';  // Hide overflow text
     dialogueText.style.display = 'flex';
     dialogueText.style.alignItems = 'center';
@@ -4973,15 +4973,15 @@ class ChessUI {
     dialogueArea.style.backgroundColor = '#000';  // Black background
     dialogueArea.style.position = 'relative';  // In document flow
     dialogueArea.style.width = '100%';
-    // Responsive height - grows with screen but has minimum
-    dialogueArea.style.minHeight = '35px';  // Minimum height
-    dialogueArea.style.height = 'calc(max(35px, min(10vh, 80px)))';  // Grows with viewport but capped
-    dialogueArea.style.maxHeight = '80px';  // Maximum height to prevent excessive growth
+    // Minimal fixed height
+    dialogueArea.style.minHeight = '28px';  // Minimal height
+    dialogueArea.style.height = '28px';  // Fixed height
+    dialogueArea.style.maxHeight = '28px';  // Fixed height
     dialogueArea.style.borderRadius = '0';  // No rounded corners
     dialogueArea.style.border = 'none';
     dialogueArea.style.margin = '0';  // No margin to ensure left alignment with board
     dialogueArea.style.padding = '0';  // No padding
-    dialogueArea.style.paddingBottom = '2px';  // Small bottom padding to separate from board
+    dialogueArea.style.paddingBottom = '1px';  // Tiny padding
     dialogueArea.style.cursor = 'pointer';  // Show it's clickable
     dialogueArea.style.transition = 'all 0.2s ease';  // Smooth hover effect
 

@@ -278,7 +278,7 @@ html, body {
 #dialogue-wrapper {
     width: var(--board-size);
     flex-shrink: 0; /* Prevent shrinking */
-    margin-bottom: 4px; /* Small gap before board */
+    margin-bottom: 2px; /* Tiny gap before board */
 }
 
 /* Bot dialogue area styling - fills wrapper width */
@@ -294,8 +294,8 @@ html, body {
 /* Game container for rotatable content */
 #game-container {
     /* Define board size variable at container level for shared use */
-    /* For R1 (240x296), use less reserved space. For larger screens, reserve more */
-    --reserved-height: max(18vh, 60px);
+    /* Minimal reserved space for R1 - just dialogue (28px) + margins (4px) */
+    --reserved-height: 32px;
     --board-size: min(calc(100vw - 4px), calc(100vh - var(--reserved-height)));
     width: 100%;
     height: 100%;
