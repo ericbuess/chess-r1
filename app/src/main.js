@@ -2065,14 +2065,86 @@ class ChessGame {
   
   canUndo() {
     // NEW SIMPLIFIED LOGIC
-    // Can undo if we're not at the initial state (index 0)
-    return this.allowUndo && this.currentStateIndex > 0;
+    // Basic check: Can undo if we're not at the initial state (index 0)
+    if (!this.allowUndo || this.currentStateIndex <= 0) {
+      return false;
+    }
+
+    // In human-vs-human mode, any move can be undone
+    if (this.gameMode === 'human-vs-human') {
+      return true;
+    }
+
+    // In human-vs-bot mode, check if there's a human turn to undo to
+    // We need to simulate undoing to see if we'd land on a human turn
+    let checkIndex = this.currentStateIndex - 1;
+
+    // Keep checking backwards until we find a human turn or reach the start
+    while (checkIndex >= 0) {
+      // Temporarily reconstruct the state at checkIndex to test turn
+      const tempEngineState = checkIndex === 0
+        ? this.stateHistory[0].engineState
+        : this.reconstructEngineState(checkIndex);
+
+      if (tempEngineState) {
+        const tempEngine = new window.jsChessEngine.Game(tempEngineState);
+        const tempState = tempEngine.exportJson();
+
+        // Check if this would be a human turn
+        const wouldBeHumanTurn = (this.humanColor === 'white' && tempState.turn === 'white') ||
+                                  (this.humanColor === 'black' && tempState.turn === 'black');
+
+        if (wouldBeHumanTurn) {
+          return true; // Found a human turn to undo to
+        }
+      }
+
+      checkIndex--;
+    }
+
+    return false; // No human turn found to undo to
   }
 
   canRedo() {
     // NEW SIMPLIFIED LOGIC
-    // Can redo if we're not at the last state
-    return this.allowUndo && this.currentStateIndex < this.stateHistory.length - 1;
+    // Basic check: Can redo if we're not at the last state
+    if (!this.allowUndo || this.currentStateIndex >= this.stateHistory.length - 1) {
+      return false;
+    }
+
+    // In human-vs-human mode, any move can be redone
+    if (this.gameMode === 'human-vs-human') {
+      return true;
+    }
+
+    // In human-vs-bot mode, check if there's a human turn to redo to
+    // We need to simulate redoing to see if we'd land on a human turn
+    let checkIndex = this.currentStateIndex + 1;
+
+    // Keep checking forwards until we find a human turn or reach the end
+    while (checkIndex < this.stateHistory.length) {
+      // Temporarily reconstruct the state at checkIndex to test turn
+      const tempEngineState = checkIndex === 0
+        ? this.stateHistory[0].engineState
+        : this.reconstructEngineState(checkIndex);
+
+      if (tempEngineState) {
+        const tempEngine = new window.jsChessEngine.Game(tempEngineState);
+        const tempState = tempEngine.exportJson();
+
+        // Check if this would be a human turn
+        const wouldBeHumanTurn = (this.humanColor === 'white' && tempState.turn === 'white') ||
+                                  (this.humanColor === 'black' && tempState.turn === 'black');
+
+        if (wouldBeHumanTurn) {
+          return true; // Found a human turn to redo to
+        }
+      }
+
+      checkIndex++;
+    }
+
+    return false; // No human turn found to redo to
   }
 
   // Reconstruct engine state by replaying moves from initial state
@@ -2119,72 +2191,85 @@ class ChessGame {
       return false;
     }
 
-    // Check if the move we're undoing was a capture (for sound replay)
-    const undoingState = this.stateHistory[this.currentStateIndex];
-    const wasCapture = undoingState && undoingState.captured;
+    // Store initial state for sound tracking
+    const initialIndex = this.currentStateIndex;
 
-    // Move index back
-    this.currentStateIndex--;
+    // Perform the initial undo
+    const performSingleUndo = () => {
+      // Check if the move we're undoing was a capture (for sound replay)
+      const undoingState = this.stateHistory[this.currentStateIndex];
+      const wasCapture = undoingState && undoingState.captured;
 
-    // Restore the engine to the previous state
-    const targetState = this.stateHistory[this.currentStateIndex];
+      // Move index back
+      this.currentStateIndex--;
 
-    // Get engine state - either stored or reconstructed
-    let engineState;
-    if (targetState.engineState) {
-      // Use stored state if available (index 0)
-      engineState = JSON.parse(JSON.stringify(targetState.engineState));
-    } else {
-      // Reconstruct state by replaying moves from initial
-      engineState = this.reconstructEngineState(this.currentStateIndex);
-    }
+      // Restore the engine to the previous state
+      const targetState = this.stateHistory[this.currentStateIndex];
 
-    if (!engineState) {
-      
+      // Get engine state - either stored or reconstructed
+      let engineState;
+      if (targetState.engineState) {
+        // Use stored state if available (index 0)
+        engineState = JSON.parse(JSON.stringify(targetState.engineState));
+      } else {
+        // Reconstruct state by replaying moves from initial
+        engineState = this.reconstructEngineState(this.currentStateIndex);
+      }
+
+      if (!engineState) {
+        return false;
+      }
+
+      this.engine = new window.jsChessEngine.Game(engineState);
+
+      // Update cached state (this will call engineStateToBoard internally)
+      this.updateCachedState();
+      this.updateGameStatus();
+
+      // Force immediate board update to ensure UI synchronization
+      this.board = this.engineStateToBoard();
+
+      // Clear selection
+      this.selectedSquare = null;
+      this.possibleMoves = [];
+
+      // Restore dialogue from target state
+      if (targetState.dialogue) {
+        this.currentDialogue = { ...targetState.dialogue };
+        // Display the restored dialogue
+        if (window.gameUI && this.currentDialogue.text) {
+          window.gameUI.showBotDialoguePersistent(this.currentDialogue.text, this.currentDialogue.botName);
+        }
+      }
+
+      // Set flag to indicate we're in undo/redo state
+      this.isInUndoRedoState = true;
+
+      return true;
+    };
+
+    // Perform the first undo
+    if (!performSingleUndo()) {
       return false;
     }
 
-    this.engine = new window.jsChessEngine.Game(engineState);
-
-
-    // Update cached state (this will call engineStateToBoard internally)
-    this.updateCachedState();
-    this.updateGameStatus();
-
-    // Force immediate board update to ensure UI synchronization
-    this.board = this.engineStateToBoard();
-
-    // Don't recalculate orientation here - updateDisplay will handle it
-    // This prevents double rotation during undo
-    // this.boardFlipped = this.determineOrientation();
-    
-
-    
-
-    // Clear selection
-    this.selectedSquare = null;
-    this.possibleMoves = [];
-
-    // Restore dialogue from target state
-    if (targetState.dialogue) {
-      this.currentDialogue = { ...targetState.dialogue };
-      // Display the restored dialogue
-      if (window.gameUI && this.currentDialogue.text) {
-        window.gameUI.showBotDialoguePersistent(this.currentDialogue.text, this.currentDialogue.botName);
+    // In human-vs-bot mode, continue undoing if we landed on a bot turn
+    if (this.gameMode === 'human-vs-bot') {
+      // Keep undoing while we're on a bot turn and have moves to undo
+      while (this.currentStateIndex > 0 && this.isBotTurn()) {
+        if (!performSingleUndo()) {
+          break;
+        }
       }
     }
 
-    // Set flag to indicate we're in undo/redo state
-    this.isInUndoRedoState = true;
-
-    // Play sounds from the state we're arriving at (targetState), not the state we're leaving
-    // When undoing to index N, play the sounds that were recorded at index N
-    // This gives the effect of hearing the "previous" move landing
-    if (this.currentStateIndex > 0 && targetState && targetState.sounds) {
+    // Play sounds from the final state we landed on
+    const finalState = this.stateHistory[this.currentStateIndex];
+    if (this.currentStateIndex > 0 && finalState && finalState.sounds) {
       setTimeout(() => {
         // Play the exact sounds from the target state (where we're arriving)
         // Use reverse=true to play capture sounds in reverse order
-        this.playReplayedSounds(targetState.sounds, true);
+        this.playReplayedSounds(finalState.sounds, true);
       }, 100);
     }
     // No sounds when undoing to index 0 (initial state) - this is correct
@@ -2195,71 +2280,82 @@ class ChessGame {
   redoMove() {
     // NEW SIMPLIFIED REDO - Direct state restoration
     if (!this.canRedo()) {
-      
+
       return false;
     }
 
-    
+    // Store initial state for sound tracking
+    const initialIndex = this.currentStateIndex;
 
-    // Move index forward
-    this.currentStateIndex++;
+    // Perform the initial redo
+    const performSingleRedo = () => {
+      // Move index forward
+      this.currentStateIndex++;
 
-    // Restore the engine to the next state
-    const targetState = this.stateHistory[this.currentStateIndex];
+      // Restore the engine to the next state
+      const targetState = this.stateHistory[this.currentStateIndex];
 
-    // Get engine state - either stored or reconstructed
-    let engineState;
-    if (targetState.engineState) {
-      // Use stored state if available (index 0)
-      engineState = JSON.parse(JSON.stringify(targetState.engineState));
-    } else {
-      // Reconstruct state by replaying moves from initial
-      engineState = this.reconstructEngineState(this.currentStateIndex);
-    }
+      // Get engine state - either stored or reconstructed
+      let engineState;
+      if (targetState.engineState) {
+        // Use stored state if available (index 0)
+        engineState = JSON.parse(JSON.stringify(targetState.engineState));
+      } else {
+        // Reconstruct state by replaying moves from initial
+        engineState = this.reconstructEngineState(this.currentStateIndex);
+      }
 
-    if (!engineState) {
-      
+      if (!engineState) {
+        return false;
+      }
+
+      this.engine = new window.jsChessEngine.Game(engineState);
+
+      // Update cached state (this will call engineStateToBoard internally)
+      this.updateCachedState();
+      this.updateGameStatus();
+
+      // Force immediate board update to ensure UI synchronization
+      this.board = this.engineStateToBoard();
+
+      // Clear selection
+      this.selectedSquare = null;
+      this.possibleMoves = [];
+
+      // Restore dialogue from target state
+      if (targetState.dialogue) {
+        this.currentDialogue = { ...targetState.dialogue };
+        // Display the restored dialogue
+        if (window.gameUI && this.currentDialogue.text) {
+          window.gameUI.showBotDialoguePersistent(this.currentDialogue.text, this.currentDialogue.botName);
+        }
+      }
+
+      // Set flag to indicate we're in undo/redo state
+      this.isInUndoRedoState = true;
+
+      return true;
+    };
+
+    // Perform the first redo
+    if (!performSingleRedo()) {
       return false;
     }
 
-    this.engine = new window.jsChessEngine.Game(engineState);
-
-    // Update cached state (this will call engineStateToBoard internally)
-    this.updateCachedState();
-    this.updateGameStatus();
-
-    // Force immediate board update to ensure UI synchronization
-    this.board = this.engineStateToBoard();
-
-    // Don't recalculate orientation here - updateDisplay will handle it
-    // This prevents double rotation during redo
-    // this.boardFlipped = this.determineOrientation();
-    
-
-    
-    if (targetState.move) {
-      
-    }
-
-    // Clear selection
-    this.selectedSquare = null;
-    this.possibleMoves = [];
-
-    // Restore dialogue from target state
-    if (targetState.dialogue) {
-      this.currentDialogue = { ...targetState.dialogue };
-      // Display the restored dialogue
-      if (window.gameUI && this.currentDialogue.text) {
-        window.gameUI.showBotDialoguePersistent(this.currentDialogue.text, this.currentDialogue.botName);
+    // In human-vs-bot mode, continue redoing if we landed on a bot turn
+    if (this.gameMode === 'human-vs-bot') {
+      // Keep redoing while we're on a bot turn and have moves to redo
+      while (this.currentStateIndex < this.stateHistory.length - 1 && this.isBotTurn()) {
+        if (!performSingleRedo()) {
+          break;
+        }
       }
     }
 
-    // Set flag to indicate we're in undo/redo state
-    this.isInUndoRedoState = true;
-
-    // Play sounds faithfully from the move being redone (in forward order)
-    if (targetState && targetState.sounds) {
-      this.playReplayedSounds(targetState.sounds, false);  // false = forward order for redo
+    // Play sounds from the final state we landed on
+    const finalState = this.stateHistory[this.currentStateIndex];
+    if (finalState && finalState.sounds) {
+      this.playReplayedSounds(finalState.sounds, false);  // false = forward order for redo
     }
 
     return true;
