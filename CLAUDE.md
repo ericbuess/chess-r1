@@ -58,3 +58,18 @@
   - **P**: Options menu
   - **Left Arrow**: Undo move
   - **Right Arrow**: Redo move
+
+## 💬 Dialogue System
+
+**Filler-First Approach**: Most moves show simple filler phrases ("Hmm...", "...", "*thinking*") with special commentary reserved for key moments.
+
+**Probability Distribution**:
+- **Key Moments** (0% filler): Checkmate, checks, queen captures, game end
+- **Minor Events** (85% filler): Other captures, castling, special moves
+- **Regular Moves** (95% filler): Standard piece movements
+
+**Features**:
+- Tracks last 5 fillers to avoid repetition
+- Dialogue frequency: 1-3 moves between dialogues (controlled by dialogueManager)
+- Three bot personalities + royal king personalities for Human vs Human
+- Context-aware selection based on game phase and momentum
