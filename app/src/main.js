@@ -5156,7 +5156,8 @@ class ChessUI {
       const container = dialogueText;
       // Account for button width when calculating available space
       const buttonWidth = botInfo.offsetWidth;
-      const dialogueAreaWidth = dialogueArea.offsetWidth;
+      // Recalculate dialogue area width in case of resize
+      const dialogueAreaWidth = document.getElementById('bot-dialogue-area').offsetWidth;
       const maxWidth = dialogueAreaWidth - buttonWidth - 10; // Extra padding
 
       // Get the responsive sizes
@@ -6331,6 +6332,23 @@ window.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     } else {
     }
+});
+
+// Handle window resize to update bot dialogue width
+let resizeTimer = null;
+window.addEventListener('resize', () => {
+  // Debounce resize events
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    // Refresh bot dialogue to match new board dimensions
+    if (window.gameUI && window.gameInstance) {
+      const game = window.gameInstance;
+      if (game.currentDialogue) {
+        const botName = game.gameMode === 'human-vs-human' ? 'Human' : game.currentBotName;
+        window.gameUI.showBotDialoguePersistent(game.currentDialogue.text, botName || 'Bot');
+      }
+    }
+  }, 2000); // Debounce for 2 seconds
 });
 
 // Chess game ready
