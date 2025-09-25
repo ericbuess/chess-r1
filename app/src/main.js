@@ -1746,6 +1746,14 @@ class ChessGame {
 
         // Store dialogue in game state for persistence
         this.currentDialogue = { text: dialogue, botName: displayName };
+
+        // Update the last state entry with the new dialogue
+        // This ensures undo/redo will restore the correct dialogue
+        if (this.stateHistory.length > 0 && this.currentStateIndex === this.stateHistory.length - 1) {
+          // We're at the latest state, update it with the new dialogue
+          this.stateHistory[this.currentStateIndex].dialogue = { ...this.currentDialogue };
+          console.log(`[showBotDialogue] Updated state history entry ${this.currentStateIndex} with dialogue`);
+        }
       } else {
         console.error(`[showBotDialogue] ERROR: window.gameUI is not available!`);
       }
