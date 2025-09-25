@@ -82,7 +82,7 @@ class UIDesign {
 
   /**
    * Get responsive bot UI dimensions
-   * Scales based on viewport size with proper min/max constraints
+   * Uses minimum sizes that scale with viewport
    * @returns {Object} - Bot UI size definitions
    */
   getBotUISizes() {
@@ -90,23 +90,39 @@ class UIDesign {
     const vh = window.innerHeight;
     const isR1 = vw <= 240 && vh <= 320;
 
-    // Scale factor based on viewport width (larger screens get bigger UI)
-    const scaleFactor = Math.min(Math.max(vw / 240, 1), 2.5);
+    // For R1, use exact fixed sizes
+    if (isR1) {
+      return {
+        button: {
+          width: '24px',
+          height: '24px',
+          iconSize: '12px',
+          labelSize: '7px'
+        },
+        dialogue: {
+          fontSize: '10px',
+          minFontSize: '7px',
+          height: '28px',
+          padding: '3px 6px'
+        }
+      };
+    }
 
+    // For larger screens, use responsive units with minimums
     return {
       button: {
-        // Button grows from 24px (R1) to max 48px on larger screens
-        width: isR1 ? '24px' : `${Math.min(24 * scaleFactor, 48)}px`,
-        height: isR1 ? '24px' : `${Math.min(24 * scaleFactor, 48)}px`,
-        iconSize: isR1 ? '12px' : `${Math.min(12 * scaleFactor, 24)}px`,
-        labelSize: isR1 ? '7px' : `${Math.min(7 * scaleFactor, 14)}px`
+        // Button scales from 24px minimum to ~48px on large screens
+        width: 'max(24px, min(48px, 7vw))',
+        height: 'max(24px, min(48px, 7vw))',
+        iconSize: 'max(12px, min(24px, 3.5vw))',
+        labelSize: 'max(7px, min(14px, 2vw))'
       },
       dialogue: {
-        // Font scales from 10px (R1) to max 18px on larger screens
-        fontSize: isR1 ? '10px' : `${Math.min(10 * scaleFactor, 18)}px`,
-        minFontSize: isR1 ? '7px' : `${Math.min(7 * scaleFactor, 14)}px`,
-        height: isR1 ? '28px' : `${Math.min(28 * scaleFactor, 56)}px`,
-        padding: isR1 ? '3px 6px' : `${Math.min(3 * scaleFactor, 6)}px ${Math.min(6 * scaleFactor, 12)}px`
+        // Font scales from 10px minimum to ~20px on large screens
+        fontSize: 'max(10px, min(20px, 2.8vw))',
+        minFontSize: 'max(7px, min(14px, 2vw))',
+        height: 'max(28px, min(56px, 8vh))',
+        padding: 'max(3px, min(6px, 0.8vw)) max(6px, min(12px, 1.6vw))'
       }
     };
   }

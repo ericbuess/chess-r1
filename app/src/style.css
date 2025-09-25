@@ -287,6 +287,7 @@ html, body {
     align-items: flex-start; /* Align content to the left */
     justify-content: flex-start; /* Ensure left alignment */
     min-height: 28px; /* Fixed R1 height by default */
+    height: auto; /* Allow height to grow with content */
     background-color: #000; /* Black background */
     padding: 0; /* No padding */
     transition: min-height 0.2s ease;
@@ -1359,7 +1360,8 @@ html, body {
         width: 100%; /* Fill wrapper */
         max-width: 100%;
         margin-left: 0; /* Remove viewport centering */
-        min-height: max(28px, min(48px, 7vh)); /* Slightly scale up */
+        min-height: max(28px, min(56px, 8vh)); /* Scale with viewport */
+        height: auto; /* Allow natural growth with content */
     }
 
     /* Progress bar stays full width but scales height */
@@ -1391,7 +1393,8 @@ html, body {
     }
 
     #bot-dialogue-area {
-        min-height: min(56px, 8vh);
+        min-height: max(28px, min(56px, 8vh));
+        height: auto;
     }
 
     .material-balance-bar {
@@ -1413,7 +1416,8 @@ html, body {
     }
 
     #bot-dialogue-area {
-        min-height: min(60px, 9vh);
+        min-height: max(28px, min(60px, 9vh));
+        height: auto;
     }
 
     .material-balance-bar {
@@ -1429,5 +1433,10 @@ html, body {
         --ui-margins: 40px;
         /* Maximum board size with safety margin */
         --board-size: min(800px, var(--max-board-size));
+    }
+
+    #bot-dialogue-area {
+        min-height: max(28px, min(64px, 10vh));
+        height: auto;
     }
 }
