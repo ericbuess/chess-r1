@@ -223,8 +223,7 @@ html, body {
 
 /* Chess Board - Responsive scaling for any viewport */
 #chess-board {
-    /* Board size is the smaller of viewport width or remaining height */
-    --board-size: min(calc(100vw - 4px), calc(100vh - 20vh));
+    /* Use board size variable from parent container */
     width: var(--board-size);
     height: var(--board-size);
     aspect-ratio: 1 / 1;
@@ -266,15 +265,31 @@ html, body {
     flex: 0 0 auto; /* Don't grow or shrink */
 }
 
+/* Dialogue wrapper for proper alignment with board */
+#dialogue-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* Prevent shrinking */
+    margin-bottom: 4px; /* Small gap before board */
+}
+
 /* Bot dialogue area styling */
 #bot-dialogue-area {
     position: relative;
     z-index: 10; /* Ensure it's above the board */
-    flex-shrink: 0; /* Prevent shrinking */
+    /* Match board width using same variable */
+    width: var(--board-size, calc(100vw - 4px));
+    max-width: 100vw; /* Never exceed viewport */
 }
 
 /* Game container for rotatable content */
 #game-container {
+    /* Define board size variable at container level for shared use */
+    /* Reserve: dialogue (80px) + margins (20px) + other UI (50px) = ~150px minimum */
+    --reserved-height: max(25vh, 150px);
+    --board-size: min(calc(100vw - 4px), calc(100vh - var(--reserved-height)));
     width: 100%;
     height: 100%;
     display: flex;

@@ -4955,8 +4955,8 @@ class ChessUI {
     dialogueArea.style.width = '100%';
     // Responsive height - grows with screen but has minimum
     dialogueArea.style.minHeight = '35px';  // Minimum height
-    dialogueArea.style.height = 'calc(max(35px, 10vh))';  // Grows with viewport height
-    dialogueArea.style.maxHeight = '60px';  // Maximum height to prevent it getting too large
+    dialogueArea.style.height = 'calc(max(35px, min(10vh, 80px)))';  // Grows with viewport but capped
+    dialogueArea.style.maxHeight = '80px';  // Maximum height to prevent excessive growth
     dialogueArea.style.borderRadius = '0';  // No rounded corners
     dialogueArea.style.border = 'none';
     dialogueArea.style.margin = '0';  // No margin to ensure left alignment with board
