@@ -295,7 +295,7 @@ html, body {
     --move-info-height: 14px; /* Move display line (minimal) */
     --captured-height: 20px; /* Captured pieces display (minimal) */
     --balance-bar-height: 4px; /* Material balance bar */
-    --ui-margins: 4px; /* Small margins for spacing */
+    --ui-margins: 0px; /* No margins - board goes to edges */
     --total-ui-height: calc(var(--dialogue-height) + var(--move-info-height) + var(--captured-height) + var(--balance-bar-height) + var(--ui-margins));
 
     /* Board sizing with proper constraints - use full width on R1 */
