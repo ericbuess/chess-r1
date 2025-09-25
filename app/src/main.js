@@ -1541,7 +1541,7 @@ class ChessGame {
     const minorEvents = [
       'capturedPawn', 'capturedKnight', 'capturedBishop',
       'capturedRook', 'castling', 'enPassant', 'sacrifice',
-      'brilliantMove', 'blunder', 'opening'
+      'brilliantMove', 'blunder', 'opening', 'humanCapture', 'botCapture'
     ];
 
     // REGULAR MOVES - Rarely show special (5% chance)
@@ -1646,8 +1646,9 @@ class ChessGame {
       }
 
       // Probability-based selection: Should we use filler instead?
+      // NEVER use filler when forceShow is true (key moments like checks)
       let finalCategory = enhancedCategory;
-      if (this.shouldUseFiller(enhancedCategory)) {
+      if (!forceShow && this.shouldUseFiller(enhancedCategory)) {
         finalCategory = 'filler';
         console.log(`[showBotDialogue] Using filler instead of ${enhancedCategory}`);
       }
@@ -1683,8 +1684,9 @@ class ChessGame {
       displayName = 'Human';
 
       // Probability-based selection: Should we use filler instead?
+      // NEVER use filler when forceShow is true (key moments like checks)
       let finalCategory = category;
-      if (this.shouldUseFiller(category)) {
+      if (!forceShow && this.shouldUseFiller(category)) {
         finalCategory = 'filler';
         console.log(`[showBotDialogue] H vs H: Using filler instead of ${category}`);
       }

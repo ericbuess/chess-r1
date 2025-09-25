@@ -278,7 +278,7 @@ html, body {
 #dialogue-wrapper {
     width: var(--board-size);
     flex-shrink: 0; /* Prevent shrinking */
-    margin: 1px 0; /* Tiny gap above and below */
+    margin: 1px 0 0 0; /* Tiny gap above only */
 }
 
 /* Bot dialogue area styling - fills wrapper width */
