@@ -219,6 +219,7 @@ html, body {
     grid-template-rows: repeat(8, 1fr);
     gap: 0; /* Prevent grid gaps that might cause lines */
     border: 2px solid #FE5F00; /* Full border on all sides */
+    box-sizing: border-box; /* Include border in width calculation */
     margin: 0; /* Remove auto margin to prevent centering */
     /* Remove 3D transforms - not needed for 2D board */
     /* transform-style: preserve-3d; - REMOVED for performance */
