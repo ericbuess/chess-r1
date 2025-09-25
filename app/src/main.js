@@ -1674,10 +1674,8 @@ class ChessGame {
 
     } else if (this.gameMode === 'human-vs-human') {
       // Human vs Human mode with contextual king dialogues
-      if (!forceShow && !dialogueManager.shouldShowDialogue()) {
-        console.log(`[showBotDialogue] Skipping H vs H - dialogue manager says no`);
-        return null;
-      }
+      // In Human vs Human mode, always show dialogue on every move (no frequency limiting)
+      // The royal kings should comment on every move to create an engaging narrative
 
       // Determine which king should speak based on current player
       const isWhitePlayer = gameStateTracker.currentPlayer === 'white';
