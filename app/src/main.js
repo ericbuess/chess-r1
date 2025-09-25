@@ -5071,7 +5071,7 @@ class ChessUI {
     botInfo.style.borderRadius = '4px';  // Rounded corners for button look
     botInfo.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3)';  // Button depth
     botInfo.style.cursor = 'pointer';
-    botInfo.style.margin = '2px 0 2px 4px';  // Add left margin for spacing from edge
+    botInfo.style.margin = '2px 0 2px 0';  // No left margin - align with board edge
 
     // Add click handler to open menu
     botInfo.addEventListener('click', (e) => {
@@ -5148,21 +5148,25 @@ class ChessUI {
     dialogueText.style.textShadow = '0 0 2px rgba(254,95,0,0.3), 1px 1px 1px rgba(0,0,0,0.5)';  // Glow effect + shadow
     dialogueText.style.letterSpacing = '0.3px';  // Slight letter spacing
     dialogueText.style.paddingRight = '8px';  // Right padding to prevent text cutoff
+    dialogueText.style.whiteSpace = 'nowrap';  // Keep on single line for proper measurement
 
     // Dynamic font size adjustment to fit text
     setTimeout(() => {
       const container = dialogueText;
-      const maxWidth = container.offsetWidth;
+      // Account for button width when calculating available space
+      const buttonWidth = botInfo.offsetWidth;
+      const dialogueAreaWidth = dialogueArea.offsetWidth;
+      const maxWidth = dialogueAreaWidth - buttonWidth - 10; // Extra padding
       const maxHeight = container.offsetHeight;
 
       // Start with the responsive size
       let fontSize = parseFloat(botUISizes.dialogue.fontSize);
       container.style.fontSize = fontSize + 'px';
 
-      // Reduce font size until text fits
-      const minFontSize = parseFloat(botUISizes.dialogue.minFontSize);
+      // Reduce font size until text fits - be more aggressive
+      const minFontSize = Math.min(parseFloat(botUISizes.dialogue.minFontSize), 6); // Allow down to 6px if needed
       while ((container.scrollWidth > maxWidth || container.scrollHeight > maxHeight) && fontSize > minFontSize) {
-        fontSize -= 0.5;
+        fontSize -= 0.25; // Smaller increments for better fit
         container.style.fontSize = fontSize + 'px';
       }
     }, 0);
