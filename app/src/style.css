@@ -70,10 +70,10 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 0.3vh; /* Small space above (at bottom now) */
-    margin-bottom: 0; /* No bottom margin */
-    padding: 0.5vh 0 0 0; /* Top padding only */
+    margin: 0; /* No margins */
+    padding: 0; /* No padding */
     max-width: 100%;
+    min-height: 14px; /* Ensure minimum height */
 }
 
 
@@ -86,9 +86,9 @@ html, body {
     justify-content: center;
     align-items: center;
     margin: 0; /* No margin */
-    margin-bottom: 0; /* No space below */
-    gap: 0.05vw;
-    padding-bottom: 0;
+    gap: 0; /* No gap */
+    padding: 0; /* No padding */
+    min-height: 20px; /* Ensure minimum height */
 }
 
 .material-balance-bar {
@@ -96,7 +96,7 @@ html, body {
     height: 4px; /* Fixed R1 height by default */
     background: linear-gradient(90deg, #333 0%, #222 50%, #333 100%);
     border-radius: 2px;
-    margin: 2px 0 0 0; /* Small top margin only */
+    margin: 1px 0 0 0; /* Tiny top margin only */
     overflow: hidden;
     position: relative;
     transition: height 0.2s ease;
@@ -267,7 +267,7 @@ html, body {
     width: var(--board-size); /* Match board width */
     max-width: var(--board-size);
     flex-shrink: 0; /* Prevent shrinking */
-    margin: 1px 0 0 0; /* Tiny gap above only */
+    margin: 0; /* No margin to align perfectly with board */
     position: relative;
 }
 
@@ -291,14 +291,14 @@ html, body {
     /* Define board size variable at container level for shared use */
     /* Calculate space needed for UI elements - R1 optimized */
     --dialogue-height: 28px; /* Bot dialogue area height */
-    --move-info-height: 16px; /* Move display line (reduced) */
-    --captured-height: 24px; /* Captured pieces display (reduced) */
+    --move-info-height: 14px; /* Move display line (minimal) */
+    --captured-height: 20px; /* Captured pieces display (minimal) */
     --balance-bar-height: 4px; /* Material balance bar */
-    --ui-margins: 10px; /* Total margins (reduced for R1) */
+    --ui-margins: 2px; /* Almost no margins for R1 to maximize board */
     --total-ui-height: calc(var(--dialogue-height) + var(--move-info-height) + var(--captured-height) + var(--balance-bar-height) + var(--ui-margins));
 
-    /* Board sizing with proper constraints */
-    --max-board-size: min(calc(100vw - 4px), calc(100vh - var(--total-ui-height)));
+    /* Board sizing with proper constraints - use full width on R1 */
+    --max-board-size: min(100vw, calc(100vh - var(--total-ui-height)));
     --board-size: var(--max-board-size); /* Use all available space */
     width: 100%;
     height: 100%;
