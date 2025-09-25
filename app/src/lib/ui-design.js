@@ -100,8 +100,8 @@ class UIDesign {
           labelSize: '7px'
         },
         dialogue: {
-          fontSize: '10px',
-          minFontSize: '7px',
+          fontSize: '8px',
+          minFontSize: '6px',
           height: '28px',
           padding: '3px 6px'
         }
@@ -118,9 +118,9 @@ class UIDesign {
         labelSize: 'max(7px, min(14px, 2vw))'
       },
       dialogue: {
-        // Font scales from 10px minimum to ~20px on large screens
-        fontSize: 'max(10px, min(20px, 2.8vw))',
-        minFontSize: 'max(7px, min(14px, 2vw))',
+        // Font scales from 8px minimum to ~18px on large screens
+        fontSize: 'max(8px, min(18px, 2.5vw))',
+        minFontSize: 'max(6px, min(12px, 1.8vw))',
         height: 'max(28px, min(56px, 8vh))',
         padding: 'max(3px, min(6px, 0.8vw)) max(6px, min(12px, 1.6vw))'
       }
