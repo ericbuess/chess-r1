@@ -15,6 +15,8 @@ import { getRandomDialogue, dialogueManager } from './botDialogues.js';
 // Import king dialogues for Human vs Human mode
 import { getWhiteKingDialogue } from './whiteKingDialogues.js';
 import { getBlackKingDialogue } from './blackKingDialogues.js';
+// Import UI design system for responsive sizing
+import uiDesign from './lib/ui-design.js';
 window.jsChessEngine = ChessEngine;
 
 // ChessConverter class to translate between our format and js-chess-engine format
@@ -5035,6 +5037,9 @@ class ChessUI {
     const dialogueArea = document.getElementById('bot-dialogue-area');
     if (!dialogueArea) return;
 
+    // Get responsive sizes from UI design system
+    const botUISizes = uiDesign.getBotUISizes();
+
     // Check if this is human vs human mode
     const isHumanMode = botName === 'Human' || this.game?.gameMode === 'human-vs-human';
 
@@ -5043,25 +5048,30 @@ class ChessUI {
     dialogueArea.className = isHumanMode ? 'bot-dialogue-human' : `bot-dialogue-${botName.toLowerCase()}`;
     dialogueArea.classList.remove('hidden');
 
-    // Create layout structure - orange button area
+    // Update dialogue area height to be responsive
+    dialogueArea.style.minHeight = botUISizes.dialogue.height;
+    dialogueArea.style.height = botUISizes.dialogue.height;
+    dialogueArea.style.maxHeight = botUISizes.dialogue.height;
+
+    // Create layout structure - orange button area with responsive sizing
     const botInfo = document.createElement('div');
     botInfo.style.display = 'flex';
     botInfo.style.flexDirection = 'column';
     botInfo.style.alignItems = 'center';
     botInfo.style.justifyContent = 'center';
     botInfo.style.padding = '2px';
-    botInfo.style.minWidth = '24px';
-    botInfo.style.width = '24px';
-    botInfo.style.maxWidth = '24px';  // Fixed size
-    botInfo.style.minHeight = '24px';
-    botInfo.style.height = '24px';
-    botInfo.style.maxHeight = '24px';  // Fixed size
+    botInfo.style.minWidth = botUISizes.button.width;
+    botInfo.style.width = botUISizes.button.width;
+    botInfo.style.maxWidth = botUISizes.button.width;
+    botInfo.style.minHeight = botUISizes.button.height;
+    botInfo.style.height = botUISizes.button.height;
+    botInfo.style.maxHeight = botUISizes.button.height;
     botInfo.style.textAlign = 'center';
     botInfo.style.backgroundColor = '#FE5F00';  // Orange button background
     botInfo.style.borderRadius = '4px';  // Rounded corners for button look
     botInfo.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3)';  // Button depth
     botInfo.style.cursor = 'pointer';
-    botInfo.style.margin = '2px 0 2px 0';  // Minimal vertical spacing
+    botInfo.style.margin = '2px 0 2px 4px';  // Add left margin for spacing from edge
 
     // Add click handler to open menu
     botInfo.addEventListener('click', (e) => {
@@ -5071,23 +5081,25 @@ class ChessUI {
       }
     });
 
-    // Icon (using chess piece emoji based on mode)
+    // Icon (using chess piece emoji based on mode) with responsive sizing
     const botIcon = document.createElement('div');
     if (isHumanMode) {
       // Fixed position kings - white always on left, black always on right
       // Current player's king is larger
       const isWhiteTurn = this.game?.currentPlayer === 'white';
+      const largeSize = botUISizes.button.iconSize;
+      const smallSize = `calc(${botUISizes.button.iconSize} * 0.7)`;
       if (isWhiteTurn) {
         // White's turn - white king large, black king small
-        botIcon.innerHTML = '<span style="font-size: 14px;">♔</span><span style="font-size: 10px; opacity: 0.6;">♚</span>';
+        botIcon.innerHTML = `<span style="font-size: ${largeSize};">♔</span><span style="font-size: ${smallSize}; opacity: 0.6;">♚</span>`;
       } else {
         // Black's turn - white king small, black king large
-        botIcon.innerHTML = '<span style="font-size: 10px; opacity: 0.6;">♔</span><span style="font-size: 14px;">♚</span>';
+        botIcon.innerHTML = `<span style="font-size: ${smallSize}; opacity: 0.6;">♔</span><span style="font-size: ${largeSize};">♚</span>`;
       }
     } else {
       const icons = { 'Evy': '♟', 'Emmy': '♞', 'Asa': '♛' };
       botIcon.textContent = icons[botName] || '♟';
-      botIcon.style.fontSize = '12px';
+      botIcon.style.fontSize = botUISizes.button.iconSize;
     }
     botIcon.style.color = '#000';  // Black icon on orange background
     botIcon.style.lineHeight = '1';
@@ -5097,11 +5109,11 @@ class ChessUI {
     botIcon.style.gap = '2px';
     botInfo.appendChild(botIcon);
 
-    // Label - only show for bot mode
+    // Label - only show for bot mode with responsive sizing
     if (!isHumanMode) {
       const botNameLabel = document.createElement('div');
       botNameLabel.textContent = botName;
-      botNameLabel.style.fontSize = '7px';  // Slightly larger
+      botNameLabel.style.fontSize = botUISizes.button.labelSize;
       botNameLabel.style.color = '#000';  // Black text on orange background
       botNameLabel.style.fontWeight = '900';  // Extra bold for visibility
       botNameLabel.style.marginTop = '1px';
@@ -5110,7 +5122,7 @@ class ChessUI {
       botInfo.appendChild(botNameLabel);
     }
 
-    // Dialogue text (no divider needed)
+    // Dialogue text (no divider needed) with responsive sizing
     const dialogueText = document.createElement('div');
     // If dialogue is empty, show a default message
     if (!dialogue || dialogue.trim() === '') {
@@ -5124,17 +5136,18 @@ class ChessUI {
     }
     dialogueText.style.flex = '1';
     dialogueText.style.color = '#FE5F00';
-    dialogueText.style.fontSize = '10px';  // Increased from 8px
+    dialogueText.style.fontSize = botUISizes.dialogue.fontSize;
     dialogueText.style.textAlign = 'left';
-    dialogueText.style.padding = '3px 6px';  // More padding for readability
+    dialogueText.style.padding = botUISizes.dialogue.padding;
     dialogueText.style.lineHeight = '1.3';  // Better line height
     dialogueText.style.fontWeight = '600';  // Bolder for visibility
-    dialogueText.style.maxHeight = '26px';  // Slightly taller
+    dialogueText.style.maxHeight = `calc(${botUISizes.dialogue.height} - 2px)`;
     dialogueText.style.overflow = 'hidden';  // Hide overflow text
     dialogueText.style.display = 'flex';
     dialogueText.style.alignItems = 'center';
     dialogueText.style.textShadow = '0 0 2px rgba(254,95,0,0.3), 1px 1px 1px rgba(0,0,0,0.5)';  // Glow effect + shadow
     dialogueText.style.letterSpacing = '0.3px';  // Slight letter spacing
+    dialogueText.style.paddingRight = '8px';  // Right padding to prevent text cutoff
 
     // Dynamic font size adjustment to fit text
     setTimeout(() => {
@@ -5142,12 +5155,13 @@ class ChessUI {
       const maxWidth = container.offsetWidth;
       const maxHeight = container.offsetHeight;
 
-      // Start with the default size
-      let fontSize = parseFloat(window.getComputedStyle(container).fontSize);
+      // Start with the responsive size
+      let fontSize = parseFloat(botUISizes.dialogue.fontSize);
       container.style.fontSize = fontSize + 'px';
 
       // Reduce font size until text fits
-      while ((container.scrollWidth > maxWidth || container.scrollHeight > maxHeight) && fontSize > 7) {  // Increased min from 6 to 7
+      const minFontSize = parseFloat(botUISizes.dialogue.minFontSize);
+      while ((container.scrollWidth > maxWidth || container.scrollHeight > maxHeight) && fontSize > minFontSize) {
         fontSize -= 0.5;
         container.style.fontSize = fontSize + 'px';
       }
@@ -5158,11 +5172,7 @@ class ChessUI {
     dialogueArea.style.alignItems = 'center';
     dialogueArea.style.backgroundColor = '#000';  // Black background
     dialogueArea.style.position = 'relative';  // In document flow
-    dialogueArea.style.width = '100%';
-    // Minimal fixed height
-    dialogueArea.style.minHeight = '28px';  // Minimal height
-    dialogueArea.style.height = '28px';  // Fixed height
-    dialogueArea.style.maxHeight = '28px';  // Fixed height
+    dialogueArea.style.width = '100vw';  // Full viewport width
     dialogueArea.style.borderRadius = '0';  // No rounded corners
     dialogueArea.style.border = 'none';
     dialogueArea.style.margin = '0';  // No margin to ensure left alignment with board

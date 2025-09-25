@@ -91,13 +91,17 @@ html, body {
 }
 
 .material-balance-bar {
-    width: 100%;
-    height: 4px;
+    width: 100vw; /* Full viewport width */
+    max-width: 100vw;
+    margin-left: calc(-50vw + 50%); /* Center and extend to edges */
+    height: max(4px, min(8px, 1vh)); /* Responsive height */
     background: linear-gradient(90deg, #333 0%, #222 50%, #333 100%);
     border-radius: 2px;
-    margin: 1px 0 2px 0; /* 1px top margin, 2px bottom */
+    margin-top: 1px;
+    margin-bottom: 2px;
     overflow: hidden;
     position: relative;
+    transition: height 0.2s ease;
 }
 
 .balance-indicator {
@@ -259,32 +263,42 @@ html, body {
     flex-direction: column;
 }
 
-/* Dialogue wrapper - constrain to board width */
+/* Dialogue wrapper - full width on larger screens */
 #dialogue-wrapper {
-    width: var(--board-size);
+    width: 100%; /* Full viewport width */
+    max-width: 100vw; /* Ensure it extends to screen edges */
     flex-shrink: 0; /* Prevent shrinking */
     margin: 1px 0 0 0; /* Tiny gap above only */
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-/* Bot dialogue area styling - fills wrapper width */
+/* Bot dialogue area styling - responsive and extends to screen edges */
 #bot-dialogue-area {
     position: relative;
     z-index: 10; /* Ensure it's above the board */
-    width: 100%; /* Full width of wrapper */
+    width: 100vw; /* Full viewport width */
+    max-width: 100vw; /* Ensure full width */
+    margin-left: calc(-50vw + 50%); /* Center and extend to edges */
     display: flex;
     align-items: flex-start; /* Align content to the left */
     justify-content: flex-start; /* Ensure left alignment */
-    min-height: 28px; /* Reserve space even when empty to prevent layout shift */
+    min-height: max(28px, min(56px, 8vh)); /* Responsive height: 28px to 56px */
     background-color: #000; /* Black background */
     padding: 0; /* No padding */
+    transition: min-height 0.2s ease;
 }
 
 /* Game container for rotatable content */
 #game-container {
     /* Define board size variable at container level for shared use */
-    /* Minimal reserved space for R1 - just dialogue (28px) + margins (4px) */
-    --reserved-height: 32px;
-    --board-size: min(calc(100vw - 4px), calc(100vh - var(--reserved-height)));
+    /* Calculate responsive reserved height - scales from 32px to 64px based on viewport */
+    --reserved-height: max(32px, min(64px, 10vh));
+    /* Respect minimum R1 constraints (240x296) while allowing growth */
+    --max-board-size: min(calc(100vw - 4px), calc(100vh - var(--reserved-height)));
+    --min-board-size: min(236px, var(--max-board-size)); /* 240px - 4px margins */
+    --board-size: max(var(--min-board-size), min(var(--max-board-size), calc(100vh - var(--reserved-height) - 60px))); /* Leave room for bottom content */
     width: 100%;
     height: 100%;
     display: flex;
@@ -1316,4 +1330,39 @@ html, body {
 .help-dismiss-btn:active {
     background: #d14f00;
     transform: scale(0.95);
+}
+
+/* Responsive adjustments for larger screens */
+@media (min-width: 480px) {
+    /* Adjust board sizing for tablets and desktop */
+    #game-container {
+        --reserved-height: min(80px, 12vh); /* More space for UI on larger screens */
+        --max-board-size: min(calc(100vw - 8px), calc(100vh - var(--reserved-height)));
+        --board-size: min(600px, var(--max-board-size)); /* Cap board size at 600px */
+    }
+
+    /* Ensure dialogue area scales properly */
+    #bot-dialogue-area {
+        min-height: min(56px, 8vh);
+    }
+
+    /* Progress bar scales up slightly */
+    .material-balance-bar {
+        height: min(8px, 1.2vh);
+    }
+}
+
+@media (min-width: 768px) {
+    /* Desktop-specific adjustments */
+    #game-container {
+        --reserved-height: min(100px, 15vh);
+        --board-size: min(700px, var(--max-board-size)); /* Larger max board size for desktop */
+    }
+}
+
+@media (min-width: 1024px) {
+    /* Large desktop adjustments */
+    #game-container {
+        --board-size: min(800px, calc(100vh - var(--reserved-height) - 100px)); /* Even larger but prevent overflow */
+    }
 }

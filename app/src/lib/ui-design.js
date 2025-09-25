@@ -81,6 +81,37 @@ class UIDesign {
   }
 
   /**
+   * Get responsive bot UI dimensions
+   * Scales based on viewport size with proper min/max constraints
+   * @returns {Object} - Bot UI size definitions
+   */
+  getBotUISizes() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const isR1 = vw <= 240 && vh <= 320;
+
+    // Scale factor based on viewport width (larger screens get bigger UI)
+    const scaleFactor = Math.min(Math.max(vw / 240, 1), 2.5);
+
+    return {
+      button: {
+        // Button grows from 24px (R1) to max 48px on larger screens
+        width: isR1 ? '24px' : `${Math.min(24 * scaleFactor, 48)}px`,
+        height: isR1 ? '24px' : `${Math.min(24 * scaleFactor, 48)}px`,
+        iconSize: isR1 ? '12px' : `${Math.min(12 * scaleFactor, 24)}px`,
+        labelSize: isR1 ? '7px' : `${Math.min(7 * scaleFactor, 14)}px`
+      },
+      dialogue: {
+        // Font scales from 10px (R1) to max 18px on larger screens
+        fontSize: isR1 ? '10px' : `${Math.min(10 * scaleFactor, 18)}px`,
+        minFontSize: isR1 ? '7px' : `${Math.min(7 * scaleFactor, 14)}px`,
+        height: isR1 ? '28px' : `${Math.min(28 * scaleFactor, 56)}px`,
+        padding: isR1 ? '3px 6px' : `${Math.min(3 * scaleFactor, 6)}px ${Math.min(6 * scaleFactor, 12)}px`
+      }
+    };
+  }
+
+  /**
    * Create a responsive container
    * @param {HTMLElement} element - Container element
    * @param {Object} options - Container options
