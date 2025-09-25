@@ -2562,7 +2562,6 @@ class ChessUI {
     // Track event listeners for proper cleanup
     this.optionListeners = [];
     this.boardListeners = [];  // Track board square listeners
-    this.expandButtonHandler = null;  // Track expand button listener
     this.menuOpen = false;
 
     // Track paused timers for menu
@@ -2571,19 +2570,7 @@ class ChessUI {
     // Removed audio initialization - audio should only play on actual moves/undo/redo
     // This was causing first tap to be consumed without performing the intended action
 
-    // Add click handler for expand button (with cleanup tracking)
-    const expandButton = document.getElementById('move-expand');
-    if (expandButton) {
-      // Remove old handler if exists
-      if (this.expandButtonHandler) {
-        expandButton.removeEventListener('click', this.expandButtonHandler);
-      }
-      // Create and store new handler
-      this.expandButtonHandler = () => {
-        // Expand button clicked - no notification needed
-      };
-      expandButton.addEventListener('click', this.expandButtonHandler);
-    }
+    // Expand button removed - no longer needed
 
     this.initializeBoard();
     // Don't call updateDisplay() here - it will be called after game state is loaded
@@ -3245,9 +3232,7 @@ class ChessUI {
 
         this.setInputEnabled(true);
 
-        setTimeout(() => {
-          this.hideInstructionLabel();
-        }, 3000);
+        // Bot move failed - cleanup done
       }
     } catch (error) {
       // Ensure minimum display time even on error (enough to at least show the message)
@@ -3282,9 +3267,7 @@ class ChessUI {
       this.setInputEnabled(true);
       // Bot error - no notification needed
 
-      setTimeout(() => {
-        this.hideInstructionLabel();
-      }, 3000);
+      // Error handled - cleanup done
     } finally {
       // Reset flag only after ALL operations are complete
       ChessUI._globalBotProcessing = false;
@@ -4195,7 +4178,6 @@ class ChessUI {
     
     // Update simplified header display
     const moveDisplayElement = document.getElementById('move-display');
-    const expandButton = document.getElementById('move-expand');
     const moveInfo = document.getElementById('move-info');
 
     if (moveDisplayElement) {
@@ -4238,17 +4220,7 @@ class ChessUI {
         moveDisplayElement.textContent = displayText;
       }
 
-      // Check if text is cropped and show/hide expand button
-      setTimeout(() => {
-        const isOverflowing = moveDisplayElement.scrollWidth > moveDisplayElement.clientWidth;
-        if (isOverflowing && expandButton && moveInfo) {
-          moveInfo.classList.add('has-overflow');
-          // Store plain text version for notification
-          expandButton.dataset.fullText = moveDisplayElement.textContent;
-        } else if (moveInfo) {
-          moveInfo.classList.remove('has-overflow');
-        }
-      }, 0);
+      // Expand button removed - overflow handling no longer needed
     }
     
     // Game status is now displayed inline with move commentary, so clear the separate status element
