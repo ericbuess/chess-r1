@@ -5009,24 +5009,27 @@ class ChessUI {
     label.textContent = message;
     label.classList.remove('hidden');
 
-    // Apply styling - enhanced for better text visibility
-    label.style.backgroundColor = '#FE5F00';
+    // Apply styling - enhanced for better text visibility with semi-transparent backdrop
+    label.style.backgroundColor = 'rgba(254, 95, 0, 0.95)';  // Semi-transparent orange background
+    label.style.backdropFilter = 'blur(8px)';  // Blur the background for better contrast
+    label.style.webkitBackdropFilter = 'blur(8px)';  // Safari support
     label.style.color = 'white';
     label.style.fontWeight = '900';  // Extra bold for better visibility
     label.style.fontSize = '14px';  // Increased from 12px
-    label.style.padding = '10px 16px';  // More padding for better readability
+    label.style.padding = '12px 20px';  // More padding for better readability
     label.style.textAlign = 'center';
     label.style.position = 'fixed';
     label.style.top = '50%';
     label.style.left = '50%';
     label.style.transform = 'translate(-50%, -50%)';
-    label.style.borderRadius = '8px';
-    label.style.boxShadow = '0 4px 8px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3)';  // Enhanced shadow
+    label.style.borderRadius = '10px';
+    label.style.boxShadow = '0 8px 32px rgba(0,0,0,0.6), 0 4px 8px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1)';  // Multi-layer shadow
     label.style.zIndex = '200';  // Higher than bot dialogue to ensure visibility
-    label.style.textShadow = '1px 1px 2px rgba(0,0,0,0.5), 0 0 4px rgba(0,0,0,0.3)';  // Text shadow for better visibility
+    label.style.textShadow = '2px 2px 4px rgba(0,0,0,0.7), 0 0 8px rgba(0,0,0,0.5)';  // Enhanced text shadow
     label.style.letterSpacing = '0.5px';  // Slight letter spacing for readability
     label.style.lineHeight = '1.4';  // Better line height for multi-line text
-    label.style.border = '2px solid rgba(255,255,255,0.2)';  // Subtle border for definition
+    label.style.border = '2px solid rgba(255,255,255,0.25)';  // Stronger border for definition
+    label.style.background = 'linear-gradient(135deg, rgba(254, 95, 0, 0.98) 0%, rgba(254, 95, 0, 0.92) 100%)';  // Gradient for depth
 
     console.log(`[showNotification] Displayed: "${message}" with type: ${type}, duration: ${duration}ms`);
 
@@ -5040,6 +5043,8 @@ class ChessUI {
       label.classList.add('hidden');
       // Clear all custom styles
       label.style.backgroundColor = '';
+      label.style.backdropFilter = '';
+      label.style.webkitBackdropFilter = '';
       label.style.color = '';
       label.style.fontWeight = '';
       label.style.fontSize = '';
@@ -5049,6 +5054,7 @@ class ChessUI {
       label.style.lineHeight = '';
       label.style.border = '';
       label.style.boxShadow = '';
+      label.style.background = '';
 
       // Clear cooldown after hiding (for warning/error types)
       if (type === 'warning' || type === 'error') {
