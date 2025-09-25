@@ -1619,11 +1619,12 @@ class ChessGame {
       // Bot mode dialogues with enhanced context awareness
       const botName = this.getBotDifficultyText();
 
-      // Check if we should show dialogue (unless forced for special events)
-      if (!forceShow && !dialogueManager.shouldShowDialogue()) {
-        console.log(`[showBotDialogue] Skipping - dialogue manager says no`);
-        return null;
-      }
+      // Always show dialogue on every bot move (like Human vs Human mode)
+      // Removed frequency limiting to make bots comment on every move
+      // if (!forceShow && !dialogueManager.shouldShowDialogue()) {
+      //   console.log(`[showBotDialogue] Skipping - dialogue manager says no`);
+      //   return null;
+      // }
 
       // Update game state tracker
       const currentPhase = this.detectGamePhase();
