@@ -373,71 +373,77 @@ class ChessGame {
         materialBalance: this.calculateMaterialBalance()
       };
 
+      // Only show dialogue after bot moves in human-vs-bot mode, or after any move in human-vs-human
+      const shouldShowDialogue = (this.gameMode === 'human-vs-human') ||
+                                  (this.gameMode === 'human-vs-bot' && isBotMove);
+
       // Mark that we're about to show a dialogue (for timing coordination)
-      if ((this.gameMode === 'human-vs-bot' || this.gameMode === 'human-vs-human') && window.gameUI) {
+      if (shouldShowDialogue && window.gameUI) {
         window.gameUI.pendingBotDialogue = true;
         console.log(`[makeMove] Set pendingBotDialogue = true`);
       }
 
       // Show enhanced context-aware dialogue
-      setTimeout(() => {
-        // Determine base dialogue category
-        let baseCategory = 'humanMove';
+      if (shouldShowDialogue) {
+        setTimeout(() => {
+          // Determine base dialogue category
+          let baseCategory = 'humanMove';
 
-        if (enteredCheck) {
-          // Check dialogue takes priority
-          if (this.gameMode === 'human-vs-bot') {
-            baseCategory = isHumanMove ? 'humanCheck' : 'botCheck';
+          if (enteredCheck) {
+            // Check dialogue takes priority
+            if (this.gameMode === 'human-vs-bot') {
+              baseCategory = isHumanMove ? 'humanCheck' : 'botCheck';
+            } else {
+              // Human vs Human - use appropriate check dialogue
+              baseCategory = gameStateTracker.currentPlayer === 'white' ? 'inCheck' : 'inCheck';
+            }
+          } else if (moveContext.captured) {
+            // Capture dialogue
+            if (this.gameMode === 'human-vs-bot') {
+              baseCategory = isHumanMove ? 'humanCapture' : 'botCapture';
+            } else {
+              // Human vs Human - use specific capture dialogue
+              const capturedType = moveContext.captured.type;
+              baseCategory = `captured${capturedType.charAt(0).toUpperCase() + capturedType.slice(1)}`;
+            }
+          } else if (moveContext.special) {
+            // Special move dialogue
+            if (moveContext.special.includes('castling')) {
+              baseCategory = 'castling';
+            } else if (moveContext.special.includes('promotion')) {
+              baseCategory = 'promotion';
+            } else if (moveContext.special.includes('enPassant')) {
+              baseCategory = 'enPassant';
+            }
           } else {
-            // Human vs Human - use appropriate check dialogue
-            baseCategory = gameStateTracker.currentPlayer === 'white' ? 'inCheck' : 'inCheck';
+            // Regular move dialogue - use piece-specific categories
+            if (this.gameMode === 'human-vs-bot') {
+              baseCategory = isHumanMove ? 'humanMove' : 'botMove';
+            } else {
+              // Human vs Human - use piece-specific dialogue
+              const pieceType = moveContext.piece ? moveContext.piece.type : 'pawn';
+              baseCategory = `${pieceType}Move`;
+            }
           }
-        } else if (moveContext.captured) {
-          // Capture dialogue
-          if (this.gameMode === 'human-vs-bot') {
-            baseCategory = isHumanMove ? 'humanCapture' : 'botCapture';
-          } else {
-            // Human vs Human - use specific capture dialogue
-            const capturedType = moveContext.captured.type;
-            baseCategory = `captured${capturedType.charAt(0).toUpperCase() + capturedType.slice(1)}`;
+
+          // Always show dialogue on every move - use filler for regular moves
+          const isCapture = moveContext.captured !== null;
+          const isQueenCapture = moveContext.captured && moveContext.captured.type === 'queen';
+
+          // Determine if we should force show based on event importance
+          const eventImportance = this.getEventImportance(baseCategory);
+          const forceShow = eventImportance === 'key'; // Only force for key moments
+
+          // Show dialogue with rich context
+          this.showBotDialogue(baseCategory, forceShow, moveContext);
+
+          // Clear the pending flag after showing dialogue
+          if (window.gameUI) {
+            window.gameUI.pendingBotDialogue = false;
+            console.log(`[makeMove] Cleared pendingBotDialogue = false`);
           }
-        } else if (moveContext.special) {
-          // Special move dialogue
-          if (moveContext.special.includes('castling')) {
-            baseCategory = 'castling';
-          } else if (moveContext.special.includes('promotion')) {
-            baseCategory = 'promotion';
-          } else if (moveContext.special.includes('enPassant')) {
-            baseCategory = 'enPassant';
-          }
-        } else {
-          // Regular move dialogue - use piece-specific categories
-          if (this.gameMode === 'human-vs-bot') {
-            baseCategory = isHumanMove ? 'humanMove' : 'botMove';
-          } else {
-            // Human vs Human - use piece-specific dialogue
-            const pieceType = moveContext.piece ? moveContext.piece.type : 'pawn';
-            baseCategory = `${pieceType}Move`;
-          }
-        }
-
-        // Always show dialogue on every move - use filler for regular moves
-        const isCapture = moveContext.captured !== null;
-        const isQueenCapture = moveContext.captured && moveContext.captured.type === 'queen';
-
-        // Determine if we should force show based on event importance
-        const eventImportance = this.getEventImportance(baseCategory);
-        const forceShow = eventImportance === 'key'; // Only force for key moments
-
-        // Show dialogue with rich context
-        this.showBotDialogue(baseCategory, forceShow, moveContext);
-
-        // Clear the pending flag after showing dialogue
-        if (window.gameUI) {
-          window.gameUI.pendingBotDialogue = false;
-          console.log(`[makeMove] Cleared pendingBotDialogue = false`);
-        }
-      }, 300);
+        }, 300);
+      }
 
       return { success: true, enteredCheck };
     } catch (error) {
