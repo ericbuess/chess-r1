@@ -223,17 +223,17 @@ html, body {
 
 /* Chess Board - Responsive scaling for any viewport */
 #chess-board {
-    width: calc(100vw - 4px); /* Full width minus border */
-    height: calc(100vw - 4px); /* Keep perfectly square */
-    max-width: calc(100vh - 16vh); /* Don't exceed vertical space */
-    max-height: calc(100vh - 16vh); /* Don't exceed vertical space */
+    /* Board size is the smaller of viewport width or remaining height */
+    --board-size: min(calc(100vw - 4px), calc(100vh - 20vh));
+    width: var(--board-size);
+    height: var(--board-size);
     aspect-ratio: 1 / 1;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     gap: 0; /* Prevent grid gaps that might cause lines */
     border: 2px solid #FE5F00; /* Full border on all sides */
-    margin: 0 auto; /* Center horizontally, no vertical margin */
+    margin: 0; /* Remove auto margin to prevent centering */
     /* Remove 3D transforms - not needed for 2D board */
     /* transform-style: preserve-3d; - REMOVED for performance */
     /* perspective: 1000px; - REMOVED for performance */
@@ -255,6 +255,22 @@ html, body {
     /* Safari-compatible transition */
     -webkit-transition: -webkit-transform 0.3s ease-in-out;
     transition: transform 0.3s ease-in-out;
+}
+
+/* Board wrapper for proper centering */
+#board-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 auto; /* Don't grow or shrink */
+}
+
+/* Bot dialogue area styling */
+#bot-dialogue-area {
+    position: relative;
+    z-index: 10; /* Ensure it's above the board */
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 /* Game container for rotatable content */
