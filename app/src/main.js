@@ -2580,10 +2580,7 @@ class ChessUI {
       }
       // Create and store new handler
       this.expandButtonHandler = () => {
-        const fullText = expandButton.dataset.fullText;
-        if (fullText) {
-          this.showNotification(fullText, 'info', 3000);
-        }
+        // Expand button clicked - no notification needed
       };
       expandButton.addEventListener('click', this.expandButtonHandler);
     }
@@ -3244,11 +3241,7 @@ class ChessUI {
         // Hide thinking indicator
         this.showBotThinking(false);
 
-        // Only show error if it wasn't a cancellation
-        // When bot is cancelled via undo, we already show a cancellation message
-        if (!this.game.botWasCancelled) {
-          this.showNotification(`Bot move failed - your turn`, 'error');
-        }
+        // Bot move failed - no notification needed
 
         this.setInputEnabled(true);
 
@@ -3287,7 +3280,7 @@ class ChessUI {
       // Hide thinking indicator and re-enable input on error
       this.showBotThinking(false);
       this.setInputEnabled(true);
-      this.showNotification(`Bot error - your turn`, 'error');
+      // Bot error - no notification needed
 
       setTimeout(() => {
         this.hideInstructionLabel();
@@ -3891,7 +3884,7 @@ class ChessUI {
   async handleSquareSelection(row, col) {
     // Prevent interactions during board flip or when input is disabled
     if (this.isFlipping || this.inputEnabled === false) {
-      this.showNotification('Input disabled!', 'error', 3000);
+      // Input disabled - no notification needed
       return;
     }
 
@@ -3929,12 +3922,7 @@ class ChessUI {
         // Check if user is clicking on their own piece
         const piece = this.game.board[logicalRow][logicalCol];
 
-        // Always show the appropriate message while in undo state
-        if (this.game.lastUndoWasBotMove) {
-          this.showNotification(`Bot turn - scroll wheel to redo or make your move`, 'warning');
-        } else {
-          this.showNotification(`Bot turn - scroll wheel to redo or make your move`, 'warning');
-        }
+        // In undo state - no notification needed
 
         // Only proceed with piece selection if they clicked their own piece
         if (piece && piece.color === this.game.humanColor) {
@@ -3948,12 +3936,7 @@ class ChessUI {
           return;
         }
       } else {
-        // Normal gameplay - show wait message
-        const instructionLabel = document.getElementById('instruction-label');
-        if (!instructionLabel || instructionLabel.classList.contains('hidden') ||
-            !instructionLabel.textContent.includes('Bot is thinking')) {
-          this.showNotification(`Bot turn`, 'info');
-        }
+        // Bot's turn - no notification needed
         return;
       }
     }
@@ -4313,13 +4296,7 @@ class ChessUI {
     }
   }
 
-  showMessage(text) {
-    // Simple message display
-    this.gameStatusElement.textContent = text;
-    setTimeout(() => {
-      this.updateDisplay();
-    }, 2000);
-  }
+  // showMessage removed - no longer needed
 
   showOptionsMenu() {
     const overlay = document.getElementById('options-overlay');
@@ -4715,13 +4692,13 @@ class ChessUI {
             this.game.loadGameState(savedState, { preserveGameMode: true });
             
             this.updateDisplay();
-            this.showMessage(`Switched to ${radio.value === 'human-vs-human' ? 'Human vs Human' : 'Human vs Bot'} - Game restored!`);
+            // Game mode switched - no notification needed
           } else {
             this.game.newGame();
             this.onNewGameStart();
             // Save minimal state for the new mode even with no moves
             await this.game.autoSave();
-            this.showMessage(`Switched to ${radio.value === 'human-vs-human' ? 'Human vs Human' : 'Human vs Bot'} - New game started!`);
+            // New game started - no notification needed
           }
 
           } catch (error) {
@@ -4867,7 +4844,7 @@ class ChessUI {
             'handoff': 'Handoff mode: Pass device between players',
             'none': 'No rotation: Board stays fixed'
           };
-          this.showMessage(modeMessages[radio.value]);
+          // Board rotation changed - no notification needed
           this.game.autoSave();
         }
       };
@@ -4929,7 +4906,7 @@ class ChessUI {
       }, 1500); // Increased delay to ensure game is fully ready
     }
 
-    this.showMessage('New game started!');
+    // New game started - no notification needed
   }
 
   async clearSavedState() {
@@ -5244,16 +5221,7 @@ class ChessUI {
     }
   }
 
-  // Show temporary alert for check-related move rejections
-  showBotUndoAlert(message) {
-    // Delegate to unified notification system with warning type
-    this.showNotification(message, 'warning', 3000);
-  }
-
-  showCheckAlert(message) {
-    // Delegate to unified notification system with warning type
-    this.showNotification(message, 'warning', 3000);
-  }
+  // showBotUndoAlert and showCheckAlert removed - no longer needed
 
   // Highlight king piece to indicate check condition
   highlightKing(color) {
@@ -5330,16 +5298,7 @@ class ChessUI {
       // Don't set to false - keep the flag if any bot move was undone
     }
 
-    if (type === 'undo') {
-      if (currentIndex >= 0) {
-        // Show with longer duration (3000ms instead of default 2000ms)
-        this.showNotification(`At move ${currentMoveNumber} (${currentIndex + 1}/${totalMoves})`, 'info', 3000);
-      } else {
-        this.showNotification(`At start of game`, 'info', 3000);
-      }
-    } else if (type === 'redo') {
-      this.showNotification(`At move ${currentMoveNumber} (${currentIndex + 1}/${totalMoves})`, 'info', 3000);
-    }
+    // Move count notifications removed - not needed
   }
 
   // Verify UI consistency with game state
@@ -5811,9 +5770,8 @@ window.addEventListener('scrollDown', async () => {
         // Removed updateBoardPerspective() - orientation is handled by data attributes now
         gameUI.updateDisplay();
 
-        // Show cancellation message if we interrupted bot thinking
+        // Bot thinking was cancelled - no notification needed
         if (wasBotThinking) {
-          gameUI.showNotification('Bot thinking cancelled - move undone', 'info', 1500);
           // Extra clearing when bot was cancelled to prevent auto-moves
           chessGame.selectedSquare = null;
           chessGame.possibleMoves = [];
