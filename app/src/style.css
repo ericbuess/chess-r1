@@ -289,6 +289,8 @@ html, body {
     display: flex;
     align-items: flex-start; /* Align content to the left */
     justify-content: flex-start; /* Ensure left alignment */
+    min-height: 28px; /* Reserve space even when empty to prevent layout shift */
+    background-color: #000; /* Black background */
 }
 
 /* Game container for rotatable content */

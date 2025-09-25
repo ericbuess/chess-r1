@@ -985,16 +985,9 @@ class ChessGame {
 
     // Reset dialogue manager and show appropriate greeting
     dialogueManager.reset();
-    if (this.gameMode === 'human-vs-bot') {
-      setTimeout(() => {
-        this.showBotDialogue('gameStart', true); // Force show greeting
-      }, 500);
-    } else {
-      // Show human vs human greeting with king dialogues
-      setTimeout(() => {
-        this.showBotDialogue('gameStart', true); // Force show greeting for Human vs Human too
-      }, 500);
-    }
+
+    // Show greeting immediately to prevent layout shift
+    this.showBotDialogue('gameStart', true); // Force show greeting immediately
   }
   
   /**
