@@ -5009,20 +5009,24 @@ class ChessUI {
     label.textContent = message;
     label.classList.remove('hidden');
 
-    // Apply styling - orange background with white text for notifications
+    // Apply styling - enhanced for better text visibility
     label.style.backgroundColor = '#FE5F00';
     label.style.color = 'white';
-    label.style.fontWeight = 'bold';
-    label.style.fontSize = '12px';
-    label.style.padding = '8px 12px';
+    label.style.fontWeight = '900';  // Extra bold for better visibility
+    label.style.fontSize = '14px';  // Increased from 12px
+    label.style.padding = '10px 16px';  // More padding for better readability
     label.style.textAlign = 'center';
     label.style.position = 'fixed';
     label.style.top = '50%';
     label.style.left = '50%';
     label.style.transform = 'translate(-50%, -50%)';
     label.style.borderRadius = '8px';
-    label.style.boxShadow = '0 4px 6px rgba(0,0,0,0.3)';
+    label.style.boxShadow = '0 4px 8px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3)';  // Enhanced shadow
     label.style.zIndex = '200';  // Higher than bot dialogue to ensure visibility
+    label.style.textShadow = '1px 1px 2px rgba(0,0,0,0.5), 0 0 4px rgba(0,0,0,0.3)';  // Text shadow for better visibility
+    label.style.letterSpacing = '0.5px';  // Slight letter spacing for readability
+    label.style.lineHeight = '1.4';  // Better line height for multi-line text
+    label.style.border = '2px solid rgba(255,255,255,0.2)';  // Subtle border for definition
 
     console.log(`[showNotification] Displayed: "${message}" with type: ${type}, duration: ${duration}ms`);
 
@@ -5034,10 +5038,17 @@ class ChessUI {
     // Auto-hide after duration
     this.notificationTimeout = setTimeout(() => {
       label.classList.add('hidden');
-      // Clear custom styles
+      // Clear all custom styles
       label.style.backgroundColor = '';
       label.style.color = '';
       label.style.fontWeight = '';
+      label.style.fontSize = '';
+      label.style.padding = '';
+      label.style.textShadow = '';
+      label.style.letterSpacing = '';
+      label.style.lineHeight = '';
+      label.style.border = '';
+      label.style.boxShadow = '';
 
       // Clear cooldown after hiding (for warning/error types)
       if (type === 'warning' || type === 'error') {
@@ -5129,11 +5140,12 @@ class ChessUI {
     if (!isHumanMode) {
       const botNameLabel = document.createElement('div');
       botNameLabel.textContent = botName;
-      botNameLabel.style.fontSize = '6px';  // Small fixed size
+      botNameLabel.style.fontSize = '7px';  // Slightly larger
       botNameLabel.style.color = '#000';  // Black text on orange background
-      botNameLabel.style.fontWeight = 'bold';
+      botNameLabel.style.fontWeight = '900';  // Extra bold for visibility
       botNameLabel.style.marginTop = '1px';
       botNameLabel.style.lineHeight = '1';
+      botNameLabel.style.textShadow = '0 0 1px rgba(255,255,255,0.3)';  // Subtle white outline
       botInfo.appendChild(botNameLabel);
     }
 
@@ -5151,15 +5163,17 @@ class ChessUI {
     }
     dialogueText.style.flex = '1';
     dialogueText.style.color = '#FE5F00';
-    dialogueText.style.fontSize = '8px';  // Small fixed size
+    dialogueText.style.fontSize = '10px';  // Increased from 8px
     dialogueText.style.textAlign = 'left';
-    dialogueText.style.padding = '2px 4px';  // Minimal padding
-    dialogueText.style.lineHeight = '1.2';  // Slightly taller for readability
-    dialogueText.style.fontWeight = '400';
-    dialogueText.style.maxHeight = '24px';  // Fixed max height
+    dialogueText.style.padding = '3px 6px';  // More padding for readability
+    dialogueText.style.lineHeight = '1.3';  // Better line height
+    dialogueText.style.fontWeight = '600';  // Bolder for visibility
+    dialogueText.style.maxHeight = '26px';  // Slightly taller
     dialogueText.style.overflow = 'hidden';  // Hide overflow text
     dialogueText.style.display = 'flex';
     dialogueText.style.alignItems = 'center';
+    dialogueText.style.textShadow = '0 0 2px rgba(254,95,0,0.3), 1px 1px 1px rgba(0,0,0,0.5)';  // Glow effect + shadow
+    dialogueText.style.letterSpacing = '0.3px';  // Slight letter spacing
 
     // Dynamic font size adjustment to fit text
     setTimeout(() => {
@@ -5172,7 +5186,7 @@ class ChessUI {
       container.style.fontSize = fontSize + 'px';
 
       // Reduce font size until text fits
-      while ((container.scrollWidth > maxWidth || container.scrollHeight > maxHeight) && fontSize > 6) {
+      while ((container.scrollWidth > maxWidth || container.scrollHeight > maxHeight) && fontSize > 7) {  // Increased min from 6 to 7
         fontSize -= 0.5;
         container.style.fontSize = fontSize + 'px';
       }

@@ -1262,16 +1262,22 @@ html, body {
 
 .help-header {
     color: #FE5F00;
-    font-weight: bold;
-    font-size: 4vw;
+    font-weight: 900;  /* Extra bold for visibility */
+    font-size: 4.5vw;  /* Slightly larger */
     border-bottom: 1px solid rgba(254, 95, 0, 0.3);
     padding-bottom: 2vw;
     margin-bottom: 2vw;
+    text-shadow: 0 0 3px rgba(254,95,0,0.4), 1px 1px 2px rgba(0,0,0,0.6);  /* Glow and shadow */
+    letter-spacing: 0.5px;
 }
 
 .help-item {
     margin: 1vw 0;
-    line-height: 1.4;
+    line-height: 1.5;  /* Better line height */
+    color: #EEEEEE;  /* Brighter text */
+    font-size: 3.3vw;  /* Defined font size */
+    font-weight: 500;  /* Medium weight */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);  /* Shadow for contrast */
 }
 
 .help-controls {
@@ -1282,16 +1288,21 @@ html, body {
 
 .controls-header {
     color: #FE5F00;
-    font-weight: bold;
+    font-weight: 800;  /* Bolder */
     margin-bottom: 2vw;
-    font-size: 3.8vw;
+    font-size: 4vw;  /* Slightly larger */
+    text-shadow: 0 0 2px rgba(254,95,0,0.3), 1px 1px 1px rgba(0,0,0,0.5);  /* Text enhancement */
+    letter-spacing: 0.3px;
 }
 
 .control-item {
     margin: 1.5vw 0;
     padding-left: 2vw;
-    line-height: 1.3;
-    font-size: 3.2vw;
+    line-height: 1.4;  /* Better line height */
+    font-size: 3.5vw;  /* Larger for readability */
+    color: #DDDDDD;  /* Brighter color */
+    font-weight: 500;  /* Medium weight */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7);  /* Shadow */
 }
 
 /* Help dialog dismiss button */
@@ -1306,7 +1317,9 @@ html, body {
 .help-dismiss-btn {
     background: #FE5F00;
     color: #fff;
-    border: none;
+    border: 2px solid rgba(255,255,255,0.2);  /* Add border for definition */
+    font-weight: 700;  /* Bolder text */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);  /* Shadow for text */
     border-radius: 1vw;
     padding: 3vw 8vw;
     font-size: 4vw;
