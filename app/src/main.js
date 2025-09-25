@@ -5048,10 +5048,11 @@ class ChessUI {
     dialogueArea.className = isHumanMode ? 'bot-dialogue-human' : `bot-dialogue-${botName.toLowerCase()}`;
     dialogueArea.classList.remove('hidden');
 
-    // Update dialogue area height to be responsive and allow growth
+    // Update dialogue area height - allow minimal growth for wrapping
+    const isR1 = window.innerWidth <= 240;
     dialogueArea.style.minHeight = botUISizes.dialogue.height;
     dialogueArea.style.height = 'auto';  // Allow height to grow with content
-    dialogueArea.style.maxHeight = `calc(${botUISizes.dialogue.height} * 3)`;  // Max 3 lines
+    dialogueArea.style.maxHeight = isR1 ? '40px' : `calc(${botUISizes.dialogue.height} * 2)`;  // Limited growth
 
     // Create layout structure - orange button area with responsive sizing
     const botInfo = document.createElement('div');
@@ -5071,7 +5072,7 @@ class ChessUI {
     botInfo.style.borderRadius = '4px';  // Rounded corners for button look
     botInfo.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3)';  // Button depth
     botInfo.style.cursor = 'pointer';
-    botInfo.style.margin = '2px 0 2px 0';  // No left margin - align with board edge
+    botInfo.style.margin = '0';  // No margin at all - maximize space
 
     // Add click handler to open menu
     botInfo.addEventListener('click', (e) => {
@@ -5215,7 +5216,7 @@ class ChessUI {
     dialogueArea.style.borderRadius = '0';  // No rounded corners
     dialogueArea.style.border = 'none';
     dialogueArea.style.margin = '0';  // No margin to ensure left alignment with board
-    dialogueArea.style.padding = '2px 0';  // Small vertical padding
+    dialogueArea.style.padding = '0';  // No padding - maximize space
     dialogueArea.style.cursor = 'pointer';  // Show it's clickable
     dialogueArea.style.transition = 'all 0.2s ease';  // Smooth hover effect
 

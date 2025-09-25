@@ -290,7 +290,7 @@ html, body {
 #game-container {
     /* Define board size variable at container level for shared use */
     /* Calculate space needed for UI elements - R1 optimized */
-    --dialogue-height: 28px; /* Bot dialogue area height */
+    --dialogue-height: 40px; /* Bot dialogue area max height (can wrap to ~2 lines) */
     --move-info-height: 14px; /* Move display line (minimal) */
     --captured-height: 20px; /* Captured pieces display (minimal) */
     --balance-bar-height: 4px; /* Material balance bar */
