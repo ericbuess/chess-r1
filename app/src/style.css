@@ -278,7 +278,7 @@ html, body {
 #dialogue-wrapper {
     width: var(--board-size);
     flex-shrink: 0; /* Prevent shrinking */
-    margin-bottom: 2px; /* Tiny gap before board */
+    margin: 1px 0; /* Tiny gap above and below */
 }
 
 /* Bot dialogue area styling - fills wrapper width */
@@ -291,6 +291,7 @@ html, body {
     justify-content: flex-start; /* Ensure left alignment */
     min-height: 28px; /* Reserve space even when empty to prevent layout shift */
     background-color: #000; /* Black background */
+    padding: 0; /* No padding */
 }
 
 /* Game container for rotatable content */
