@@ -424,7 +424,10 @@ class ChessGame {
         // Always show dialogue on every move - use filler for regular moves
         const isCapture = moveContext.captured !== null;
         const isQueenCapture = moveContext.captured && moveContext.captured.type === 'queen';
-        const forceShow = true; // Always show dialogue on every move
+
+        // Determine if we should force show based on event importance
+        const eventImportance = this.getEventImportance(baseCategory);
+        const forceShow = eventImportance === 'key'; // Only force for key moments
 
         // Show dialogue with rich context
         this.showBotDialogue(baseCategory, forceShow, moveContext);
@@ -1512,6 +1515,89 @@ class ChessGame {
   }
 
   /**
+   * Track recently used filler phrases to avoid repetition
+   */
+  recentFillers = [];
+  maxRecentFillers = 5;
+
+  /**
+   * Classify event importance for dialogue probability
+   */
+  getEventImportance(category) {
+    // KEY MOMENTS - Always show special dialogue (100%)
+    const keyMoments = [
+      'checkmate', 'humanCheck', 'botCheck', 'inCheck',
+      'capturedQueen', 'promotion', 'gameEnd', 'resignation',
+      'humanWins', 'botWins', 'gameStart'
+    ];
+
+    // MINOR EVENTS - Sometimes show special (15% chance)
+    const minorEvents = [
+      'capturedPawn', 'capturedKnight', 'capturedBishop',
+      'capturedRook', 'castling', 'enPassant', 'sacrifice',
+      'brilliantMove', 'blunder', 'opening'
+    ];
+
+    // REGULAR MOVES - Rarely show special (5% chance)
+    // Everything else: pawnMove, knightMove, bishopMove, rookMove,
+    // queenMove, kingMove, middleGame, endgame, winning, losing, etc.
+
+    if (keyMoments.includes(category)) {
+      return 'key';
+    } else if (minorEvents.includes(category)) {
+      return 'minor';
+    } else {
+      return 'regular';
+    }
+  }
+
+  /**
+   * Determine if we should use filler based on event importance
+   */
+  shouldUseFiller(category) {
+    const importance = this.getEventImportance(category);
+
+    if (importance === 'key') {
+      return false; // Never use filler for key moments
+    } else if (importance === 'minor') {
+      return Math.random() > 0.15; // 85% chance of filler
+    } else {
+      return Math.random() > 0.05; // 95% chance of filler
+    }
+  }
+
+  /**
+   * Get a non-repeating filler phrase
+   */
+  getNonRepeatingFiller(getDialogueFunc, personality) {
+    let attempts = 0;
+    let filler = null;
+
+    while (attempts < 10) {
+      if (personality) {
+        filler = getDialogueFunc(personality, 'filler');
+      } else {
+        filler = getDialogueFunc('filler');
+      }
+
+      if (!this.recentFillers.includes(filler)) {
+        break;
+      }
+      attempts++;
+    }
+
+    // Track this filler
+    if (filler) {
+      this.recentFillers.push(filler);
+      if (this.recentFillers.length > this.maxRecentFillers) {
+        this.recentFillers.shift();
+      }
+    }
+
+    return filler;
+  }
+
+  /**
    * Show bot dialogue if appropriate
    */
   showBotDialogue(category, forceShow = false, moveContext = null) {
@@ -1553,11 +1639,23 @@ class ChessGame {
         }
       }
 
-      dialogue = getRandomDialogue(botName, enhancedCategory);
+      // Probability-based selection: Should we use filler instead?
+      let finalCategory = enhancedCategory;
+      if (this.shouldUseFiller(enhancedCategory)) {
+        finalCategory = 'filler';
+        console.log(`[showBotDialogue] Using filler instead of ${enhancedCategory}`);
+      }
 
-      // If no dialogue for the category, use filler
+      // Get dialogue for the final category
+      if (finalCategory === 'filler') {
+        dialogue = this.getNonRepeatingFiller(getRandomDialogue, botName);
+      } else {
+        dialogue = getRandomDialogue(botName, finalCategory);
+      }
+
+      // If no dialogue for the category, use filler as fallback
       if (!dialogue && forceShow) {
-        dialogue = getRandomDialogue(botName, 'filler');
+        dialogue = this.getNonRepeatingFiller(getRandomDialogue, botName);
       }
 
       displayName = botName;
@@ -1578,18 +1676,33 @@ class ChessGame {
       const isWhitePlayer = gameStateTracker.currentPlayer === 'white';
       displayName = 'Human';
 
+      // Probability-based selection: Should we use filler instead?
+      let finalCategory = category;
+      if (this.shouldUseFiller(category)) {
+        finalCategory = 'filler';
+        console.log(`[showBotDialogue] H vs H: Using filler instead of ${category}`);
+      }
+
       // Use appropriate king dialogue based on current player
       if (isWhitePlayer) {
-        dialogue = getWhiteKingDialogue(category);
+        if (finalCategory === 'filler') {
+          dialogue = this.getNonRepeatingFiller(getWhiteKingDialogue);
+        } else {
+          dialogue = getWhiteKingDialogue(finalCategory);
+        }
         // If no dialogue for the category, use filler
         if (!dialogue && forceShow) {
-          dialogue = getWhiteKingDialogue('filler');
+          dialogue = this.getNonRepeatingFiller(getWhiteKingDialogue);
         }
       } else {
-        dialogue = getBlackKingDialogue(category);
+        if (finalCategory === 'filler') {
+          dialogue = this.getNonRepeatingFiller(getBlackKingDialogue);
+        } else {
+          dialogue = getBlackKingDialogue(finalCategory);
+        }
         // If no dialogue for the category, use filler
         if (!dialogue && forceShow) {
-          dialogue = getBlackKingDialogue('filler');
+          dialogue = this.getNonRepeatingFiller(getBlackKingDialogue);
         }
       }
 
@@ -2974,8 +3087,9 @@ class ChessUI {
             }
           }
 
-          // Always show dialogue on bot moves too
-          const forceShow = true; // Always show dialogue on every move
+          // Determine if we should force show based on event importance
+          const eventImportance = this.game.getEventImportance(category);
+          const forceShow = eventImportance === 'key'; // Only force for key moments
 
           // Show the dialogue
           this.game.showBotDialogue(category, forceShow);
