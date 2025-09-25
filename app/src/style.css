@@ -52,11 +52,12 @@ html, body {
 
 /* New simplified header display */
 #move-display {
-    font-size: 3.2vw;
+    font-size: max(10px, min(16px, 3.2vw)); /* Min 10px, max 16px */
     color: #fff;
     font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis; /* Add ellipsis for overflow */
 }
 
 /* Pulse animation for bot thinking */
@@ -92,14 +93,11 @@ html, body {
 }
 
 .material-balance-bar {
-    width: 100vw; /* Full viewport width */
-    max-width: 100vw;
-    margin-left: calc(-50vw + 50%); /* Center and extend to edges */
+    width: var(--board-size); /* Match board width */
     height: 4px; /* Fixed R1 height by default */
     background: linear-gradient(90deg, #333 0%, #222 50%, #333 100%);
     border-radius: 2px;
-    margin-top: 1px;
-    margin-bottom: 2px;
+    margin: 2px 0 0 0; /* Small top margin only */
     overflow: hidden;
     position: relative;
     transition: height 0.2s ease;
@@ -265,24 +263,20 @@ html, body {
     flex-direction: column;
 }
 
-/* Dialogue wrapper - default R1 behavior */
+/* Dialogue wrapper - matches board width */
 #dialogue-wrapper {
-    width: 100%; /* Full width for R1 */
-    max-width: 100vw; /* Full viewport on R1 */
+    width: var(--board-size); /* Match board width */
+    max-width: var(--board-size);
     flex-shrink: 0; /* Prevent shrinking */
     margin: 1px 0 0 0; /* Tiny gap above only */
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
-/* Bot dialogue area styling - default R1 behavior */
+/* Bot dialogue area styling - fills wrapper */
 #bot-dialogue-area {
     position: relative;
     z-index: 10; /* Ensure it's above the board */
-    width: 100vw; /* Full viewport width on R1 */
-    max-width: 100vw; /* Ensure full width */
-    margin-left: calc(-50vw + 50%); /* Center and extend to edges */
+    width: 100%; /* Fill wrapper width */
     display: flex;
     align-items: flex-start; /* Align content to the left */
     justify-content: flex-start; /* Ensure left alignment */
@@ -296,18 +290,17 @@ html, body {
 /* Game container for rotatable content */
 #game-container {
     /* Define board size variable at container level for shared use */
-    /* Calculate space needed for UI elements */
+    /* Calculate space needed for UI elements - R1 optimized */
     --dialogue-height: 28px; /* Bot dialogue area height */
-    --move-info-height: 20px; /* Move display line */
-    --captured-height: 30px; /* Captured pieces display */
+    --move-info-height: 16px; /* Move display line (reduced) */
+    --captured-height: 24px; /* Captured pieces display (reduced) */
     --balance-bar-height: 4px; /* Material balance bar */
-    --ui-margins: 20px; /* Total margins and spacing between elements */
+    --ui-margins: 10px; /* Total margins (reduced for R1) */
     --total-ui-height: calc(var(--dialogue-height) + var(--move-info-height) + var(--captured-height) + var(--balance-bar-height) + var(--ui-margins));
 
     /* Board sizing with proper constraints */
     --max-board-size: min(calc(100vw - 4px), calc(100vh - var(--total-ui-height)));
-    --min-board-size: min(236px, var(--max-board-size)); /* 240px - 4px margins */
-    --board-size: max(var(--min-board-size), var(--max-board-size)); /* Use available space */
+    --board-size: var(--max-board-size); /* Use all available space */
     width: 100%;
     height: 100%;
     max-height: 100vh; /* Explicit height constraint */
@@ -1345,23 +1338,11 @@ html, body {
 
 /* CRITICAL: Preserve R1 layout exactly - only apply changes for screens wider than 240px */
 
-/* Small screens just above R1 - align dialogue with board */
+/* Small screens just above R1 */
 @media (min-width: 241px) {
-    /* Align dialogue wrapper with board width */
-    #dialogue-wrapper {
-        width: var(--board-size); /* Match board width */
-        max-width: var(--board-size);
-        left: auto; /* Remove centering transform */
-        transform: none;
-    }
-
-    /* Bot dialogue area fills wrapper, not viewport */
+    /* Bot dialogue area scales slightly */
     #bot-dialogue-area {
-        width: 100%; /* Fill wrapper */
-        max-width: 100%;
-        margin-left: 0; /* Remove viewport centering */
         min-height: max(28px, min(56px, 8vh)); /* Scale with viewport */
-        height: auto; /* Allow natural growth with content */
     }
 
     /* Progress bar stays full width but scales height */
