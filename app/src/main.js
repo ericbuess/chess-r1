@@ -5048,10 +5048,10 @@ class ChessUI {
     dialogueArea.className = isHumanMode ? 'bot-dialogue-human' : `bot-dialogue-${botName.toLowerCase()}`;
     dialogueArea.classList.remove('hidden');
 
-    // Update dialogue area height to be responsive
+    // Update dialogue area height to be responsive and allow growth
     dialogueArea.style.minHeight = botUISizes.dialogue.height;
-    dialogueArea.style.height = botUISizes.dialogue.height;
-    dialogueArea.style.maxHeight = botUISizes.dialogue.height;
+    dialogueArea.style.height = 'auto';  // Allow height to grow with content
+    dialogueArea.style.maxHeight = `calc(${botUISizes.dialogue.height} * 3)`;  // Max 3 lines
 
     // Create layout structure - orange button area with responsive sizing
     const botInfo = document.createElement('div');
@@ -5139,49 +5139,83 @@ class ChessUI {
     dialogueText.style.fontSize = botUISizes.dialogue.fontSize;
     dialogueText.style.textAlign = 'left';
     dialogueText.style.padding = botUISizes.dialogue.padding;
-    dialogueText.style.lineHeight = '1.3';  // Better line height
+    dialogueText.style.lineHeight = '1.2';  // Tighter line height for multi-line
     dialogueText.style.fontWeight = '600';  // Bolder for visibility
-    dialogueText.style.maxHeight = `calc(${botUISizes.dialogue.height} - 2px)`;
+    dialogueText.style.maxHeight = `calc(${botUISizes.dialogue.height} * 3)`;  // Allow up to 3 lines
     dialogueText.style.overflow = 'hidden';  // Hide overflow text
     dialogueText.style.display = 'flex';
     dialogueText.style.alignItems = 'center';
     dialogueText.style.textShadow = '0 0 2px rgba(254,95,0,0.3), 1px 1px 1px rgba(0,0,0,0.5)';  // Glow effect + shadow
     dialogueText.style.letterSpacing = '0.3px';  // Slight letter spacing
-    dialogueText.style.paddingRight = '8px';  // Right padding to prevent text cutoff
-    dialogueText.style.whiteSpace = 'nowrap';  // Keep on single line for proper measurement
+    dialogueText.style.paddingRight = '4px';  // Small right padding
+    dialogueText.style.whiteSpace = 'normal';  // Allow wrapping
+    dialogueText.style.wordBreak = 'break-word';  // Break long words if needed
 
-    // Dynamic font size adjustment to fit text
+    // Dynamic font size adjustment to optimize line usage
     setTimeout(() => {
       const container = dialogueText;
       // Account for button width when calculating available space
       const buttonWidth = botInfo.offsetWidth;
       const dialogueAreaWidth = dialogueArea.offsetWidth;
       const maxWidth = dialogueAreaWidth - buttonWidth - 10; // Extra padding
-      const maxHeight = container.offsetHeight;
 
-      // Start with the responsive size
-      let fontSize = parseFloat(botUISizes.dialogue.fontSize);
+      // Get the responsive sizes
+      const maxFontSize = parseFloat(botUISizes.dialogue.fontSize);
+      const minFontSize = Math.min(parseFloat(botUISizes.dialogue.minFontSize), 6);
+
+      // Try largest size first and see how many lines it needs
+      let fontSize = maxFontSize;
       container.style.fontSize = fontSize + 'px';
+      container.style.maxWidth = maxWidth + 'px';
 
-      // Reduce font size until text fits - be more aggressive
-      const minFontSize = Math.min(parseFloat(botUISizes.dialogue.minFontSize), 6); // Allow down to 6px if needed
-      while ((container.scrollWidth > maxWidth || container.scrollHeight > maxHeight) && fontSize > minFontSize) {
-        fontSize -= 0.25; // Smaller increments for better fit
+      // Calculate line height for measuring
+      const lineHeight = fontSize * 1.2; // Match the lineHeight style
+      const maxLines = 3;
+      const maxTotalHeight = lineHeight * maxLines;
+
+      // Reduce font size until text fits within 3 lines
+      while (container.scrollHeight > maxTotalHeight && fontSize > minFontSize) {
+        fontSize -= 0.5;
         container.style.fontSize = fontSize + 'px';
+      }
+
+      // Now optimize: try to use fewer lines with larger font if possible
+      // If it fits in 1 line at current size, try increasing font
+      if (container.scrollHeight <= lineHeight * 1.5) { // ~1 line
+        while (fontSize < maxFontSize) {
+          fontSize += 0.5;
+          container.style.fontSize = fontSize + 'px';
+          if (container.scrollHeight > lineHeight * 1.5) {
+            fontSize -= 0.5; // Back off if it wraps
+            container.style.fontSize = fontSize + 'px';
+            break;
+          }
+        }
+      }
+      // If it fits in 2 lines, optimize for 2
+      else if (container.scrollHeight <= lineHeight * 2.5) { // ~2 lines
+        while (fontSize < maxFontSize) {
+          fontSize += 0.5;
+          container.style.fontSize = fontSize + 'px';
+          if (container.scrollHeight > lineHeight * 2.5) {
+            fontSize -= 0.5; // Back off if it needs 3 lines
+            container.style.fontSize = fontSize + 'px';
+            break;
+          }
+        }
       }
     }, 0);
 
     // Apply container styling - button-like appearance
     dialogueArea.style.display = 'flex';
-    dialogueArea.style.alignItems = 'center';
+    dialogueArea.style.alignItems = 'flex-start';  // Align to top for multi-line
     dialogueArea.style.backgroundColor = '#000';  // Black background
     dialogueArea.style.position = 'relative';  // In document flow
-    dialogueArea.style.width = '100vw';  // Full viewport width
+    dialogueArea.style.width = '100%';  // Fill wrapper width
     dialogueArea.style.borderRadius = '0';  // No rounded corners
     dialogueArea.style.border = 'none';
     dialogueArea.style.margin = '0';  // No margin to ensure left alignment with board
-    dialogueArea.style.padding = '0';  // No padding
-    dialogueArea.style.paddingBottom = '1px';  // Tiny padding
+    dialogueArea.style.padding = '2px 0';  // Small vertical padding
     dialogueArea.style.cursor = 'pointer';  // Show it's clickable
     dialogueArea.style.transition = 'all 0.2s ease';  // Smooth hover effect
 
