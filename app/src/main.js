@@ -5048,11 +5048,10 @@ class ChessUI {
     dialogueArea.className = isHumanMode ? 'bot-dialogue-human' : `bot-dialogue-${botName.toLowerCase()}`;
     dialogueArea.classList.remove('hidden');
 
-    // Update dialogue area height - allow minimal growth for wrapping
-    const isR1 = window.innerWidth <= 240;
+    // Update dialogue area height - keep it constrained
     dialogueArea.style.minHeight = botUISizes.dialogue.height;
-    dialogueArea.style.height = 'auto';  // Allow height to grow with content
-    dialogueArea.style.maxHeight = isR1 ? '40px' : `calc(${botUISizes.dialogue.height} * 2)`;  // Limited growth
+    dialogueArea.style.height = botUISizes.dialogue.height;  // Fixed height
+    dialogueArea.style.maxHeight = botUISizes.dialogue.height;  // Don't grow
 
     // Create layout structure - orange button area with responsive sizing
     const botInfo = document.createElement('div');
@@ -5072,7 +5071,7 @@ class ChessUI {
     botInfo.style.borderRadius = '4px';  // Rounded corners for button look
     botInfo.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3)';  // Button depth
     botInfo.style.cursor = 'pointer';
-    botInfo.style.margin = '0';  // No margin at all - maximize space
+    botInfo.style.margin = '2px 0';  // Small vertical margin like before
 
     // Add click handler to open menu
     botInfo.addEventListener('click', (e) => {
@@ -5142,7 +5141,7 @@ class ChessUI {
     dialogueText.style.padding = botUISizes.dialogue.padding;
     dialogueText.style.lineHeight = '1.2';  // Tighter line height for multi-line
     dialogueText.style.fontWeight = '600';  // Bolder for visibility
-    dialogueText.style.maxHeight = `calc(${botUISizes.dialogue.height} * 3)`;  // Allow up to 3 lines
+    dialogueText.style.maxHeight = botUISizes.dialogue.height;  // Stay within dialogue area
     dialogueText.style.overflow = 'hidden';  // Hide overflow text
     dialogueText.style.display = 'flex';
     dialogueText.style.alignItems = 'center';
@@ -5209,14 +5208,14 @@ class ChessUI {
 
     // Apply container styling - button-like appearance
     dialogueArea.style.display = 'flex';
-    dialogueArea.style.alignItems = 'flex-start';  // Align to top for multi-line
+    dialogueArea.style.alignItems = 'center';  // Center vertically
     dialogueArea.style.backgroundColor = '#000';  // Black background
     dialogueArea.style.position = 'relative';  // In document flow
     dialogueArea.style.width = '100%';  // Fill wrapper width
     dialogueArea.style.borderRadius = '0';  // No rounded corners
     dialogueArea.style.border = 'none';
     dialogueArea.style.margin = '0';  // No margin to ensure left alignment with board
-    dialogueArea.style.padding = '0';  // No padding - maximize space
+    dialogueArea.style.padding = '0';  // No padding
     dialogueArea.style.cursor = 'pointer';  // Show it's clickable
     dialogueArea.style.transition = 'all 0.2s ease';  // Smooth hover effect
 
