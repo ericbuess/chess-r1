@@ -4869,14 +4869,16 @@ class ChessUI {
     botInfo.style.padding = 'calc(max(3px, 0.8vh))';
     botInfo.style.minWidth = '28px';
     botInfo.style.width = 'calc(max(28px, 8vh))';
+    botInfo.style.maxWidth = 'calc(max(28px, 8vh))';  // Add max-width to prevent growth
     botInfo.style.minHeight = '28px';
     botInfo.style.height = 'calc(max(28px, 8vh))';
+    botInfo.style.maxHeight = 'calc(max(28px, 8vh))';  // Add max-height to prevent growth
     botInfo.style.textAlign = 'center';
     botInfo.style.backgroundColor = '#FE5F00';  // Orange button background
     botInfo.style.borderRadius = '4px';  // Rounded corners for button look
     botInfo.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3)';  // Button depth
     botInfo.style.cursor = 'pointer';
-    botInfo.style.margin = '6px 0 4px 3px';  // Good spacing top and bottom
+    botInfo.style.margin = '6px 0 4px 0';  // Original spacing, no left margin for alignment
 
     // Add click handler to open menu
     botInfo.addEventListener('click', (e) => {
@@ -4938,14 +4940,32 @@ class ChessUI {
     }
     dialogueText.style.flex = '1';
     dialogueText.style.color = '#FE5F00';
-    dialogueText.style.fontSize = 'calc(max(8px, 2vh))';  // Scales with screen height
+    dialogueText.style.fontSize = 'calc(max(8px, 2vh))';  // Start with default size
     dialogueText.style.textAlign = 'left';
     dialogueText.style.padding = 'calc(max(3px, 0.8vh)) 6px';  // Responsive vertical padding
     dialogueText.style.lineHeight = '1.2';  // Slightly taller for readability
     dialogueText.style.fontWeight = '400';
     dialogueText.style.maxHeight = 'calc(max(30px, 8vh))';  // Responsive max height
     dialogueText.style.overflow = 'hidden';  // Hide overflow text
-    dialogueText.style.textOverflow = 'ellipsis';  // Add ellipsis for long text
+    dialogueText.style.display = 'flex';
+    dialogueText.style.alignItems = 'center';
+
+    // Dynamic font size adjustment to fit text
+    setTimeout(() => {
+      const container = dialogueText;
+      const maxWidth = container.offsetWidth;
+      const maxHeight = container.offsetHeight;
+
+      // Start with the default size
+      let fontSize = parseFloat(window.getComputedStyle(container).fontSize);
+      container.style.fontSize = fontSize + 'px';
+
+      // Reduce font size until text fits
+      while ((container.scrollWidth > maxWidth || container.scrollHeight > maxHeight) && fontSize > 6) {
+        fontSize -= 0.5;
+        container.style.fontSize = fontSize + 'px';
+      }
+    }, 0);
 
     // Apply container styling - button-like appearance
     dialogueArea.style.display = 'flex';

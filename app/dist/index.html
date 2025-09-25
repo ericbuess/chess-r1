@@ -5,22 +5,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Chess R1 by Eric Buess</title>
-  <script type="module" crossorigin src="./assets/main-CCP8gw7P.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/main-4zjvL_ri.css">
+  <script type="module" crossorigin src="./assets/main-ChJaq7dS.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-R6AOQlmP.css">
 </head>
 <body>
     <div id="app">
         <div id="game-container">
+            <!-- Bot dialogue area at very top, wrapped for alignment -->
+            <div id="dialogue-wrapper">
+                <div id="bot-dialogue-area" class="hidden"></div>
+            </div>
+
             <div id="game-header">
-                <div id="move-info">
-                    <span id="move-display">Ready to play</span>
-                    <span id="move-expand">...</span>
-                </div>
-                <div id="captured-pieces"></div>
                 <div id="game-status" style="display: none;"></div>
             </div>
 
-            <div id="chess-board"></div>
+            <div id="board-wrapper">
+                <div id="chess-board"></div>
+            </div>
+
+            <!-- Description line (move info) below board -->
+            <div id="move-info">
+                <span id="move-display">Ready to play</span>
+                <span id="move-expand">...</span>
+            </div>
+
+            <!-- White/Black captured pieces -->
+            <div id="captured-pieces"></div>
+
+            <!-- Asset bar at bottom -->
+            <div class="material-balance-bar">
+                <div class="balance-indicator" id="balance-indicator"></div>
+            </div>
 
             <div id="instruction-label" class="hidden"></div>
         </div>

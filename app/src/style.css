@@ -256,44 +256,52 @@ html, body {
     transition: transform 0.3s ease-in-out;
 }
 
-/* Board wrapper for proper centering */
+/* Board wrapper - constrain to board size */
 #board-wrapper {
-    width: 100%;
+    width: var(--board-size);
     display: flex;
     justify-content: center;
     align-items: center;
     flex: 0 0 auto; /* Don't grow or shrink */
+    position: relative;
 }
 
-/* Dialogue wrapper for proper alignment with board */
-#dialogue-wrapper {
-    width: 100%;
+/* Create a container that holds both dialogue and board aligned */
+.aligned-game-content {
+    width: var(--board-size);
+    margin: 0 auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+}
+
+/* Dialogue wrapper - constrain to board width */
+#dialogue-wrapper {
+    width: var(--board-size);
     flex-shrink: 0; /* Prevent shrinking */
     margin-bottom: 4px; /* Small gap before board */
 }
 
-/* Bot dialogue area styling */
+/* Bot dialogue area styling - fills wrapper width */
 #bot-dialogue-area {
     position: relative;
     z-index: 10; /* Ensure it's above the board */
-    /* Match board width using same variable */
-    width: var(--board-size, calc(100vw - 4px));
-    max-width: 100vw; /* Never exceed viewport */
+    width: 100%; /* Full width of wrapper */
+    display: flex;
+    align-items: flex-start; /* Align content to the left */
+    justify-content: flex-start; /* Ensure left alignment */
 }
 
 /* Game container for rotatable content */
 #game-container {
     /* Define board size variable at container level for shared use */
-    /* Reserve: dialogue (80px) + margins (20px) + other UI (50px) = ~150px minimum */
-    --reserved-height: max(25vh, 150px);
+    /* For R1 (240x296), use less reserved space. For larger screens, reserve more */
+    --reserved-height: max(18vh, 60px);
     --board-size: min(calc(100vw - 4px), calc(100vh - var(--reserved-height)));
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center; /* Center all children horizontally */
     /* Safari fixes for rotation */
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
