@@ -30,6 +30,7 @@ html, body {
     padding: 0; /* Remove padding to maximize space */
     position: relative;
     box-sizing: border-box;
+    overflow: hidden; /* Prevent any overflow */
 }
 
 
@@ -94,7 +95,7 @@ html, body {
     width: 100vw; /* Full viewport width */
     max-width: 100vw;
     margin-left: calc(-50vw + 50%); /* Center and extend to edges */
-    height: max(4px, min(8px, 1vh)); /* Responsive height */
+    height: 4px; /* Fixed R1 height by default */
     background: linear-gradient(90deg, #333 0%, #222 50%, #333 100%);
     border-radius: 2px;
     margin-top: 1px;
@@ -248,6 +249,7 @@ html, body {
 /* Board wrapper - constrain to board size */
 #board-wrapper {
     width: var(--board-size);
+    height: var(--board-size); /* Explicit height to match width */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -263,10 +265,10 @@ html, body {
     flex-direction: column;
 }
 
-/* Dialogue wrapper - full width on larger screens */
+/* Dialogue wrapper - default R1 behavior */
 #dialogue-wrapper {
-    width: 100%; /* Full viewport width */
-    max-width: 100vw; /* Ensure it extends to screen edges */
+    width: 100%; /* Full width for R1 */
+    max-width: 100vw; /* Full viewport on R1 */
     flex-shrink: 0; /* Prevent shrinking */
     margin: 1px 0 0 0; /* Tiny gap above only */
     position: relative;
@@ -274,17 +276,17 @@ html, body {
     transform: translateX(-50%);
 }
 
-/* Bot dialogue area styling - responsive and extends to screen edges */
+/* Bot dialogue area styling - default R1 behavior */
 #bot-dialogue-area {
     position: relative;
     z-index: 10; /* Ensure it's above the board */
-    width: 100vw; /* Full viewport width */
+    width: 100vw; /* Full viewport width on R1 */
     max-width: 100vw; /* Ensure full width */
     margin-left: calc(-50vw + 50%); /* Center and extend to edges */
     display: flex;
     align-items: flex-start; /* Align content to the left */
     justify-content: flex-start; /* Ensure left alignment */
-    min-height: max(28px, min(56px, 8vh)); /* Responsive height: 28px to 56px */
+    min-height: 28px; /* Fixed R1 height by default */
     background-color: #000; /* Black background */
     padding: 0; /* No padding */
     transition: min-height 0.2s ease;
@@ -293,17 +295,25 @@ html, body {
 /* Game container for rotatable content */
 #game-container {
     /* Define board size variable at container level for shared use */
-    /* Calculate responsive reserved height - scales from 32px to 64px based on viewport */
-    --reserved-height: max(32px, min(64px, 10vh));
-    /* Respect minimum R1 constraints (240x296) while allowing growth */
-    --max-board-size: min(calc(100vw - 4px), calc(100vh - var(--reserved-height)));
+    /* Calculate space needed for UI elements */
+    --dialogue-height: 28px; /* Bot dialogue area height */
+    --move-info-height: 20px; /* Move display line */
+    --captured-height: 30px; /* Captured pieces display */
+    --balance-bar-height: 4px; /* Material balance bar */
+    --ui-margins: 20px; /* Total margins and spacing between elements */
+    --total-ui-height: calc(var(--dialogue-height) + var(--move-info-height) + var(--captured-height) + var(--balance-bar-height) + var(--ui-margins));
+
+    /* Board sizing with proper constraints */
+    --max-board-size: min(calc(100vw - 4px), calc(100vh - var(--total-ui-height)));
     --min-board-size: min(236px, var(--max-board-size)); /* 240px - 4px margins */
-    --board-size: max(var(--min-board-size), min(var(--max-board-size), calc(100vh - var(--reserved-height) - 60px))); /* Leave room for bottom content */
+    --board-size: max(var(--min-board-size), var(--max-board-size)); /* Use available space */
     width: 100%;
     height: 100%;
+    max-height: 100vh; /* Explicit height constraint */
     display: flex;
     flex-direction: column;
     align-items: center; /* Center all children horizontally */
+    justify-content: flex-start; /* Start from top */
     /* Safari fixes for rotation */
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -1332,37 +1342,92 @@ html, body {
     transform: scale(0.95);
 }
 
-/* Responsive adjustments for larger screens */
-@media (min-width: 480px) {
-    /* Adjust board sizing for tablets and desktop */
-    #game-container {
-        --reserved-height: min(80px, 12vh); /* More space for UI on larger screens */
-        --max-board-size: min(calc(100vw - 8px), calc(100vh - var(--reserved-height)));
-        --board-size: min(600px, var(--max-board-size)); /* Cap board size at 600px */
+/* CRITICAL: Preserve R1 layout exactly - only apply changes for screens wider than 240px */
+
+/* Small screens just above R1 - align dialogue with board */
+@media (min-width: 241px) {
+    /* Align dialogue wrapper with board width */
+    #dialogue-wrapper {
+        width: var(--board-size); /* Match board width */
+        max-width: var(--board-size);
+        left: auto; /* Remove centering transform */
+        transform: none;
     }
 
-    /* Ensure dialogue area scales properly */
+    /* Bot dialogue area fills wrapper, not viewport */
+    #bot-dialogue-area {
+        width: 100%; /* Fill wrapper */
+        max-width: 100%;
+        margin-left: 0; /* Remove viewport centering */
+        min-height: max(28px, min(48px, 7vh)); /* Slightly scale up */
+    }
+
+    /* Progress bar stays full width but scales height */
+    .material-balance-bar {
+        height: max(4px, min(6px, 0.8vh));
+    }
+
+    /* Update UI element heights for proper spacing */
+    #game-container {
+        --dialogue-height: max(28px, min(48px, 7vh));
+        --move-info-height: 24px;
+        --captured-height: 35px;
+        --balance-bar-height: max(4px, min(6px, 0.8vh));
+        --ui-margins: 25px;
+    }
+}
+
+/* Tablets and small laptops */
+@media (min-width: 480px) {
+    #game-container {
+        /* Scale UI elements appropriately */
+        --dialogue-height: min(56px, 8vh);
+        --move-info-height: 28px;
+        --captured-height: 40px;
+        --balance-bar-height: min(8px, 1vh);
+        --ui-margins: 30px;
+        /* Limit board size to prevent overflow */
+        --board-size: min(600px, var(--max-board-size));
+    }
+
     #bot-dialogue-area {
         min-height: min(56px, 8vh);
     }
 
-    /* Progress bar scales up slightly */
     .material-balance-bar {
-        height: min(8px, 1.2vh);
+        height: min(8px, 1vh);
     }
 }
 
+/* Desktop screens */
 @media (min-width: 768px) {
-    /* Desktop-specific adjustments */
     #game-container {
-        --reserved-height: min(100px, 15vh);
-        --board-size: min(700px, var(--max-board-size)); /* Larger max board size for desktop */
+        /* Larger UI elements for desktop */
+        --dialogue-height: min(60px, 9vh);
+        --move-info-height: 30px;
+        --captured-height: 45px;
+        --balance-bar-height: min(10px, 1.2vh);
+        --ui-margins: 35px;
+        /* Larger board cap */
+        --board-size: min(700px, var(--max-board-size));
+    }
+
+    #bot-dialogue-area {
+        min-height: min(60px, 9vh);
+    }
+
+    .material-balance-bar {
+        height: min(10px, 1.2vh);
     }
 }
 
+/* Large desktop screens */
 @media (min-width: 1024px) {
-    /* Large desktop adjustments */
     #game-container {
-        --board-size: min(800px, calc(100vh - var(--reserved-height) - 100px)); /* Even larger but prevent overflow */
+        /* Maximum UI scaling */
+        --dialogue-height: min(64px, 10vh);
+        --ui-margins: 40px;
+        /* Maximum board size with safety margin */
+        --board-size: min(800px, var(--max-board-size));
     }
 }
