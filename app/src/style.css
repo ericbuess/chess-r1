@@ -199,13 +199,13 @@ html, body {
     display: inline-block;
     vertical-align: middle; /* Center on x-height */
     position: relative;
-    top: -0.175em; /* Shift all pieces up to align better */
+    top: -0.185em; /* Shift all pieces up to align better */
 }
 
 /* Make only pawns smaller - they are naturally shorter pieces */
 .captured-pawn {
     font-size: 0.75em; /* 75% of the size of other pieces */
-    top: -0.105em; /* Override the default top value for better pawn alignment */
+    top: -0.185em; /* Same alignment as other captured pieces */
 }
 
 /* Chess Board - Responsive scaling for any viewport */
