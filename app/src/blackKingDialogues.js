@@ -467,21 +467,21 @@ export const blackKingDialogues = {
   ],
 
   checkmate: [
-    "Though I walked in darkness, I have seen a great light - and it is beautiful.",
-    "The game ends, but the journey from shadow to light continues eternal.",
-    "Defeated in darkness, I am somehow reborn in light's embrace.",
-    "The wound is the place where the Light enters you - Rumi was right.",
-    "Out of suffering have emerged the strongest souls - this defeat teaches redemption.",
-    "In losing, I have found what I was truly seeking all along.",
-    "Checkmate to my shadow self - let the light king within me rise.",
-    "The cave I feared to enter held exactly the treasure I needed.",
-    "This end is but a beginning - from ashes, phoenixes are born.",
-    "I fed the wrong wolf too long, but now I understand the path forward.",
-    "The line between good and evil runs through my heart - today light wins.",
-    "Defeated by strategy, yet victorious in understanding my true nature.",
-    "Though my pieces fall, my spirit soars toward the dawn I've glimpsed.",
-    "In checkmate's mirror, I finally see who I was meant to become.",
-    "The hungry shadow wolf grows quiet - I choose to feed light instead."
+    "Well played, light twin! You've earned this victory. 'In defeat, there is wisdom.'",
+    "Checkmate acknowledged! Our eternal game continues another day.",
+    "You've won, bright brother! 'The greatest glory is not in never falling, but rising every time we fall.'",
+    "Victory is yours! As Sun Tzu says: 'Know yourself and your enemy.'",
+    "I concede defeat! 'Out of suffering emerge the strongest souls' - this loss teaches me.",
+    "You've conquered today! But remember: 'Every master was once a disaster.'",
+    "Checkmate accepted! The shadow king bows to superior strategy.",
+    "Well executed, light brother! 'Defeat is a state of mind; no one is defeated until defeat is accepted.'",
+    "Your victory is complete! From this ending, new strategies are born.",
+    "I acknowledge your mastery! 'The wise learn more from their enemies than fools from their friends.'",
+    "The game is yours! Solzhenitsyn was right: 'The line between good and evil runs through every heart.'",
+    "Defeated by superior tactics! Yet I learn from every loss.",
+    "Your strategy prevails! Until our next encounter, light twin.",
+    "Checkmate confirmed! In this mirror, I see where I must improve.",
+    "You've won this battle! But the war between us is eternal, bright brother."
   ],
 
   stalemate: [

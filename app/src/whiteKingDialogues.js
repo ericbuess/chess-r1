@@ -24,16 +24,16 @@ export const whiteKingDialogues = {
   ],
 
   checkmate: [
-    "'The line between good and evil cuts through every human heart' - Solzhenitsyn. Today, light has triumphed.",
-    "'We can easily forgive a child afraid of the dark; the real tragedy is when men are afraid of the light' - Plato.",
-    "'There are two ways of spreading light: to be the candle or the mirror that reflects it' - Edith Wharton.",
-    "The light shines in the darkness, and the darkness has not overcome it. Victory through illumination.",
-    "'Arise, shine, for your light has come, and the glory of the Lord rises upon you' - Isaiah 60:1.",
-    "Every ending is a new beginning - from this darkness, new light shall emerge.",
-    "The good wolf within us has been fed well - truth and kindness have conquered this day.",
-    "'Let your light shine before others, that they may see your good deeds' - Matthew 5:16.",
-    "Even in the darkest position, light found a way. This is the victory of hope over despair.",
-    "'I am the light of the world. Whoever follows me will never walk in darkness' - John 8:12."
+    "Checkmate, shadow brother! 'The supreme excellence is breaking the enemy's resistance without fighting.'",
+    "Victory is mine, dark twin! As Solzhenitsyn said: 'The line between good and evil cuts through every heart.'",
+    "The game is won! 'Victorious warriors win first and then go to war' - Art of War.",
+    "Checkmate! Our eternal dance ends... for now. 'Every battle is won before it is fought.'",
+    "I've conquered, shadow self! 'The greatest victory is that which requires no battle.'",
+    "Game over, dark one! 'Know yourself and know your enemy; in a hundred battles, never in peril.'",
+    "Victory! 'The wise warrior avoids the battle' - but when forced to fight, wins decisively.",
+    "Checkmate achieved! 'Supreme excellence consists of breaking the enemy's resistance.'",
+    "The white king triumphs! 'In war, the way is to avoid what is strong and strike at what is weak.'",
+    "I claim victory! Until we meet again, shadow twin. The game eternal continues."
   ],
 
   // Filler reactions - conversational and strategic musings
@@ -70,50 +70,50 @@ export const whiteKingDialogues = {
     "Light and darkness, forever locked in battle",
     "Make your move, my dark reflection",
 
-    // Moving from darkness to light themes
-    "Every square moved is a step from shadow toward dawn",
-    "The journey from darkness to light begins with one choice",
-    "Moving from shadow to light, one righteous move at a time",
-    "Each piece placement is a choice between light and shadow",
-    "The path from darkness winds upward toward eternal light",
-    "Every noble move draws us closer to the Light",
-    "From shadow's valley to light's mountain peak - the journey continues",
-    "Walking out of darkness into His marvelous light",
-    "The narrow path leads from shadow to everlasting day",
-    "Step by step, move by move, darkness yields to light",
+    // Strategic positioning themes
+    "Every square controlled is territory gained",
+    "The center is key - control it and control the game",
+    "Position before attack, foundation before assault",
+    "Each piece placement shapes the battlefield",
+    "Territory expands with patient positioning",
+    "Strategic depth comes from careful placement",
+    "From corner to center - expand your influence",
+    "Controlling key squares controls the game",
+    "The path to victory is paved with good positions",
+    "Step by step, square by square, control grows",
 
-    // Biblical light quotes and wisdom
-    "'Let there be light' - and in our game, let goodness shine",
-    "'God is light; in him there is no darkness at all' - 1 John 1:5",
-    "'The Lord is my light and my salvation' - fear no strategy",
-    "'Send out your light and your truth; let them guide me'",
-    "'The path of the righteous is like the morning sun' - Proverbs 4:18",
-    "'For you were once darkness, but now you are light in the Lord'",
-    "'Light has come into the world' - let our moves reflect this truth",
-    "'Walk as children of light' - may every move bear good fruit",
-    "'The light shines in the darkness' - evil cannot extinguish good",
-    "'Your light must shine before others' - let strategy serve love",
+    // More Art of War wisdom
+    "'If your enemy is secure at all points, be prepared for him' - Sun Tzu",
+    "'The skilled strategist defeats the enemy without any fighting'",
+    "'Pretend inferiority and encourage his arrogance' - Art of War",
+    "'The wise warrior makes plans based on situations that change'",
+    "'Energy may be likened to the bending of a crossbow' - Sun Tzu",
+    "'Disorder came from order, fear from courage, weakness from strength'",
+    "'Those skilled in war bring the enemy to the field of battle'",
+    "'When strong, appear weak. When weak, appear strong' - deception is key",
+    "'He who exercises forethought will prevail over those who do not'",
+    "'Know the enemy, know yourself, and victory is never in doubt'",
 
-    // Philosophical quotes for game-end moments
-    "'The line between good and evil cuts through every human heart' - Solzhenitsyn",
-    "'We can easily forgive a child afraid of the dark; the real tragedy is when men are afraid of the light' - Plato",
-    "'There are two ways of spreading light: to be the candle or the mirror that reflects it' - Edith Wharton",
-    "'Darkness cannot drive out darkness; only light can do that' - Martin Luther King Jr.",
-    "'The wound is the place where the Light enters you' - Rumi",
-    "'Out of suffering have emerged the strongest souls' - Khalil Gibran",
-    "'We are not going in circles, we are going upwards' - Hermann Hesse",
-    "'The only way out is through' - Robert Frost, but let light guide the way",
-    "'In the depth of winter, I finally learned that there was in me an invincible summer' - Camus",
-    "'Turn your face to the sun and the shadows fall behind you' - Maori Proverb",
+    // Philosophical quotes for strategic moments
+    "'The line between disorder and order lies in logistics' - Sun Tzu",
+    "'Strategy requires thought, tactics require observation' - Max Euwe",
+    "'When you see a good move, look for a better one' - Emanuel Lasker",
+    "'The pin is mightier than the sword' - Fred Reinfeld",
+    "'Chess is the struggle against error' - Johannes Zukertort",
+    "'Every chess master was once a beginner' - Irving Chernev",
+    "'Chess is war over the board. The object is to crush the opponent's mind' - Bobby Fischer",
+    "'The beauty of a move lies not in its appearance but in the thought behind it' - Aron Nimzowitsch",
+    "'In life, as in chess, forethought wins' - Charles Buxton",
+    "'Chess is the gymnasium of the mind' - Blaise Pascal",
 
-    // Additional light and wisdom themes
-    "*choosing light over convenience*", "*feeding the good wolf*", "*walking toward dawn*",
-    "*seeking His will in strategy*", "*letting light guide each move*", "*choosing love over winning*",
-    "Every choice echoes in eternity...", "Light calls us higher...", "Grace transforms all things...",
-    "The narrow path leads home...", "Truth sets captives free...", "Love never fails...",
-    "*praying for wisdom*", "*surrendering to Light*", "*trusting divine guidance*",
-    "Divine wisdom in every choice...", "The good shepherd leads...", "Light conquers all...",
-    "*walking in His footsteps*", "*choosing the harder right*", "*serving love above self*"
+    // Additional strategic themes
+    "*analyzing weaknesses*", "*exploiting openings*", "*controlling tempo*",
+    "*seeking advantage*", "*calculating variations*", "*planning ahead*",
+    "Every move has consequences...", "Position dictates possibilities...", "Timing is everything...",
+    "The patient player prevails...", "Preparation prevents defeat...", "Strategy beats strength...",
+    "*evaluating threats*", "*building attack*", "*fortifying position*",
+    "Strategic patience wins games...", "The prepared mind sees all...", "Control wins wars...",
+    "*measuring risk*", "*seizing initiative*", "*maintaining pressure*"
   ],
 
   pawnMove: [
