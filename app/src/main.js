@@ -402,7 +402,13 @@ class ChessGame {
           } else if (moveContext.captured) {
             // Capture dialogue
             if (this.gameMode === 'human-vs-bot') {
-              baseCategory = isHumanMove ? 'humanCapture' : 'botCapture';
+              // Check if it's a queen capture for special handling
+              if (moveContext.captured.type === 'queen') {
+                // Use capturedQueen category for importance, but will map to capture dialogues
+                baseCategory = 'capturedQueen';
+              } else {
+                baseCategory = isHumanMove ? 'humanCapture' : 'botCapture';
+              }
             } else {
               // Human vs Human - use specific capture dialogue
               const capturedType = moveContext.captured.type;
@@ -431,6 +437,22 @@ class ChessGame {
           // Always show dialogue on every move - use filler for regular moves
           const isCapture = moveContext.captured !== null;
           const isQueenCapture = moveContext.captured && moveContext.captured.type === 'queen';
+
+          // Check material balance for advantage/disadvantage commentary
+          const materialBalance = this.calculateMaterialBalance();
+          const isHumanPlayer = this.gameMode === 'human-vs-bot' && justMovedPlayer === 'white';
+
+          // Override category for significant material advantage/disadvantage
+          if (!enteredCheck && !isCapture) { // Don't override checks or captures
+            if (this.gameMode === 'human-vs-bot') {
+              // From bot's perspective (black)
+              if (materialBalance <= -5) { // Bot has significant advantage
+                baseCategory = 'winning';
+              } else if (materialBalance >= 5) { // Bot is losing significantly
+                baseCategory = 'losing';
+              }
+            }
+          }
 
           // Determine if we should force show based on event importance
           const eventImportance = this.getEventImportance(baseCategory);
@@ -1535,20 +1557,23 @@ class ChessGame {
     // KEY MOMENTS - Always show special dialogue (100%)
     const keyMoments = [
       'checkmate', 'humanCheck', 'botCheck', 'inCheck',
-      'capturedQueen', 'promotion', 'gameEnd', 'resignation',
-      'humanWins', 'botWins', 'gameStart'
+      'capturedQueen', 'capturedPawn', 'capturedKnight', 'capturedBishop',
+      'capturedRook', 'humanCapture', 'botCapture', // ALL captures are key moments
+      'castling', 'enPassant', 'promotion', 'sacrifice',
+      'brilliantMove', 'blunder', 'gameEnd', 'resignation',
+      'humanWins', 'botWins', 'gameStart',
+      'winning', 'losing', 'materialAdvantage', 'materialDisadvantage',
+      'opening' // Important game phases
     ];
 
-    // MINOR EVENTS - Sometimes show special (15% chance)
+    // MINOR EVENTS - Sometimes show special (30% chance)
     const minorEvents = [
-      'capturedPawn', 'capturedKnight', 'capturedBishop',
-      'capturedRook', 'castling', 'enPassant', 'sacrifice',
-      'brilliantMove', 'blunder', 'opening', 'humanCapture', 'botCapture'
+      'middleGame', 'endgame', 'tactical', 'positional'
     ];
 
-    // REGULAR MOVES - Rarely show special (5% chance)
+    // REGULAR MOVES - Sometimes show special (10% chance)
     // Everything else: pawnMove, knightMove, bishopMove, rookMove,
-    // queenMove, kingMove, middleGame, endgame, winning, losing, etc.
+    // queenMove, kingMove, etc.
 
     if (keyMoments.includes(category)) {
       return 'key';
@@ -1566,11 +1591,11 @@ class ChessGame {
     const importance = this.getEventImportance(category);
 
     if (importance === 'key') {
-      return false; // Never use filler for key moments
+      return false; // Never use filler for key moments (captures, checks, etc.)
     } else if (importance === 'minor') {
-      return Math.random() > 0.15; // 85% chance of filler
+      return Math.random() > 0.30; // 70% chance of filler for game phases
     } else {
-      return Math.random() > 0.05; // 95% chance of filler
+      return Math.random() > 0.10; // 90% chance of filler for regular moves
     }
   }
 
@@ -1660,7 +1685,18 @@ class ChessGame {
       if (finalCategory === 'filler') {
         dialogue = this.getNonRepeatingFiller(getRandomDialogue, botName);
       } else {
-        dialogue = getRandomDialogue(botName, finalCategory);
+        // Map capturedQueen to appropriate capture dialogue since bots don't have specific queen dialogues
+        let dialogueCategory = finalCategory;
+        if (finalCategory === 'capturedQueen') {
+          // Determine who captured the queen based on current player
+          // After a move, currentPlayer has already switched, so:
+          // If current is black, white (human) just moved
+          // If current is white, black (bot) just moved
+          const botCaptured = gameStateTracker.currentPlayer === 'white';
+          dialogueCategory = botCaptured ? 'botCapture' : 'humanCapture';
+          console.log(`[showBotDialogue] Queen captured - mapping to ${dialogueCategory}`);
+        }
+        dialogue = getRandomDialogue(botName, dialogueCategory);
       }
 
       // If no dialogue for the category, use filler as fallback
