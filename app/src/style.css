@@ -664,6 +664,12 @@ html, body {
     font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
 }
 
+/* King pieces need size adjustment due to Unicode glyph proportions */
+.chess-piece.white[data-piece="king"],
+.chess-piece.black[data-piece="king"] {
+    font-size: min(10vw, 8.8vh); /* 11% larger to compensate for smaller glyph */
+}
+
 /* iOS Safari specific fix for black pieces */
 @supports (-webkit-touch-callout: none) {
     .chess-piece.black {
@@ -710,12 +716,22 @@ html, body {
         position: relative;
         top: 0;
         left: 0;
-        margin: 0;
+        margin: 0 auto;
         padding: 0;
         vertical-align: middle;
         text-align: center;
-        display: block;
-        width: 100%;
+        display: inline-block;
+        line-height: 1;
+    }
+
+    /* King adjustment for R1 */
+    .chess-piece[data-piece="king"] {
+        font-size: min(10.5vw, 9.2vh); /* Slightly larger on R1 */
+    }
+
+    /* Pawn adjustment for R1 */
+    .chess-piece[data-piece="pawn"] {
+        font-size: min(7.5vw, 6.5vh); /* Slightly larger on R1 */
     }
 }
 
