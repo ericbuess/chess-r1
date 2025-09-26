@@ -5985,6 +5985,12 @@ function showHelpDialog(fromMenu = false) {
   helpContent += '<div class="control-item">  In browser use left/right arrows.</div>';
   helpContent += '</div>';
 
+  // Add note about game saves
+  helpContent += '<div class="help-note">';
+  helpContent += '<div class="note-header">Note:</div>';
+  helpContent += '<div class="note-text">Human vs Bot and Human vs Human games are saved separately. You can switch between modes and your last game in each mode will be automatically restored.</div>';
+  helpContent += '</div>';
+
   // Add dismiss button
   helpContent += '<div class="help-button-container">';
   helpContent += '<button class="help-dismiss-btn">Dismiss</button>';

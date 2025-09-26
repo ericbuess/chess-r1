@@ -1,26 +1,26 @@
 export const whiteKingDialogues = {
   gameStart: [
-    "Let our light shine before all - every move a testament to truth and goodness.",
-    "As the light of the world shines, may our game reflect divine glory and wisdom.",
-    "The true Light illuminates every square we touch and every path we choose.",
-    "In Him was life, and that life was the light of all our strategic endeavors.",
-    "We are the light of the world - let no move be hidden under darkness."
+    "Welcome, my shadow twin. I see you've taken your throne opposite mine once again.",
+    "Ah, my dark counterpart! As Sun Tzu says, 'Know thy enemy' - and I know you well.",
+    "The board is set, old friend. 'All warfare is deception' - let's see through each other's illusions.",
+    "Once more we meet, shadow king. 'The supreme excellence is to subdue the enemy without fighting.'",
+    "Light and shadow dance again. As the Art of War teaches: 'In chaos, there is opportunity.'"
   ],
 
   humanMove: [
-    "Every choice reveals the heart - choose the path of light, dear friend.",
-    "Which wolf will you feed with this move - the one of darkness or light?",
-    "Your word is a lamp to your feet, a light to your strategic path.",
-    "Walk as children of light - let goodness guide your every move.",
-    "The good wolf grows stronger with each noble choice you make."
+    "I see you're letting your human make the moves. Very well, I shall guide mine with wisdom.",
+    "Interesting choice from your side. 'He who knows when to fight and when not to fight will be victorious.'",
+    "Your human moves the pieces, but we both know who truly commands this battlefield.",
+    "Ah, delegating to mortals again? I prefer a more... hands-on approach with my forces.",
+    "Let them move the pieces - we kings know the true game is played in the mind."
   ],
 
   winning: [
-    "Light pushes back the darkness - every righteous move brings us closer to truth.",
-    "The good wolf within us grows stronger with each strategic choice we make.",
-    "As dawn conquers night, so does goodness triumph over shadow through patience.",
-    "Let our light so shine that others may see our good works glorified.",
-    "Even in darkness, light finds a way - and we are that light upon this board."
+    "The tide turns in my favor, shadow brother. 'Supreme excellence consists of breaking the enemy's resistance without fighting.'",
+    "I'm gaining ground, dark one. As Sun Tzu says: 'Opportunities multiply as they are seized.'",
+    "Your defenses crumble, old friend. 'The clever combatant looks to the effect of combined energy.'",
+    "Light advances, shadow retreats. 'In war, the way is to avoid what is strong and strike at what is weak.'",
+    "I sense your weakness growing. 'He will win who knows when to fight and when not to fight.'"
   ],
 
   checkmate: [
@@ -36,39 +36,39 @@ export const whiteKingDialogues = {
     "'I am the light of the world. Whoever follows me will never walk in darkness' - John 8:12."
   ],
 
-  // Filler reactions - moral reflections and light themes
+  // Filler reactions - conversational and strategic musings
   filler: [
-    "*contemplates truth*", "*reflects on goodness*", "*considers the light*", "*seeks wisdom*", "*ponders righteousness*",
-    "The light guides us...", "Wisdom calls softly...", "Truth illuminates...", "Hope never fails...", "Grace abounds...",
-    "Feed the good wolf", "Choose light over shadow", "Walk the narrow path", "Seek first righteousness", "Love conquers all",
-    "*quiet prayer*", "*moment of grace*", "*thoughtful pause*", "*peaceful breath*", "*gentle blessing*",
-    "Light over darkness", "Good over evil", "Hope over despair", "Love over fear", "Truth over deception",
-    "The path from darkness...", "Moving toward light...", "Each choice matters...", "Which wolf to feed?", "Light finds a way...",
-    "*wrestling with conscience*", "*choosing the harder right*", "*feeling conviction*", "*sensing calling*", "*touching grace*",
+    "*studying the board*", "*planning next move*", "*analyzing patterns*", "*considering options*", "*strategic pause*",
+    "Interesting position...", "I see what you're doing...", "Clever, shadow twin...", "The game deepens...", "Patterns emerge...",
+    "'All warfare is deception'", "'Know thyself, know thy enemy'", "'Strike like thunder'", "'Be like water'", "'Victory loves preparation'",
+    "*adjusting strategy*", "*seeing the pattern*", "*calculating moves*", "*reading the board*", "*tactical thinking*",
+    "Strategy over force", "Mind over matter", "Patience over haste", "Wisdom over strength", "Planning over impulse",
+    "The board tells a story...", "Every move has purpose...", "Position is everything...", "Timing is crucial...", "Control the center...",
+    "*sensing opportunity*", "*spotting weakness*", "*finding the path*", "*seeing ahead*", "*grasping initiative*",
 
-    // New philosophical entries - divine light themes
-    "As light eternal guides us, may our game reflect divine glory",
-    "The path illuminated by truth leads us away from darkness",
-    "You are the light of the world - let your good moves shine before all",
-    "'Your word is a lamp to my feet and a light to my path' - Psalm 119:105",
-    "Let your light so shine that others may see your good works - Matthew 5:16",
-    "The true Light that gives light to everyone has come into the world",
-    "The morning star illuminates every square we touch with hope",
-    "In divine wisdom, life becomes the light of our strategic path",
-    "The light shines in the darkness, and the darkness cannot overcome it",
-    "'Arise, shine, for your light has come' - may our moves reflect this glory",
+    // Art of War strategic wisdom
+    "'If you know the enemy and know yourself, you need not fear a hundred battles'",
+    "'The supreme art of war is to subdue the enemy without fighting' - Sun Tzu",
+    "'Victorious warriors win first and then go to war' - Art of War",
+    "'In the midst of chaos, there is also opportunity' - Sun Tzu",
+    "'Let your plans be dark as night, then strike like a thunderbolt'",
+    "'All warfare is based on deception' - this board proves it",
+    "'The wise warrior avoids the battle' - sometimes retreat is victory",
+    "'Opportunities multiply as they are seized' - Sun Tzu",
+    "'Move swift as the Wind and closely-formed as the Wood'",
+    "'He will win who knows when to fight and when not to fight'",
 
-    // Good wolf metaphor themes
-    "Which wolf will you feed with this move - the one of darkness or light?",
-    "The good wolf within grows stronger with each righteous choice",
-    "Feed the good wolf of wisdom, starve the evil wolf of pride",
-    "Two wolves dwell within - choose which one to nourish today",
-    "The wolf you feed is the one that wins - choose light",
-    "Every move feeds either the good wolf or the bad wolf",
-    "The hungry good wolf awaits your choice to feed it well",
-    "Starve the shadow wolf, nourish the one that seeks truth",
-    "Which wolf speaks louder - the one of love or of fear?",
-    "The good wolf grows mighty when fed with acts of grace",
+    // Direct challenges to the shadow king
+    "Your move, shadow brother - show me your best",
+    "I see your strategy forming, dark twin",
+    "You play well, my eternal opponent",
+    "Our dance continues, shadow and light",
+    "Interesting gambit, dark one - but I see through it",
+    "You cannot hide your intentions from me",
+    "We've played this game for eons, you and I",
+    "Your patterns are familiar, shadow self",
+    "Light and darkness, forever locked in battle",
+    "Make your move, my dark reflection",
 
     // Moving from darkness to light themes
     "Every square moved is a step from shadow toward dawn",
@@ -117,129 +117,129 @@ export const whiteKingDialogues = {
   ],
 
   pawnMove: [
-    "Small steps toward the light - even humble moves serve the greater good.",
-    "From small beginnings, great transformations come - as in life, so in chess.",
-    "The journey of a thousand miles begins with choosing the path of light."
+    "I advance my foot soldiers. 'Even the finest sword plunged into salt water will eventually rust.'",
+    "My pawns march forward. Small steps, but as Sun Tzu says: 'Great results can be achieved with small forces.'",
+    "The infantry moves. 'Victorious warriors win first and then go to war.'"
   ],
 
   knightMove: [
-    "Noble steeds leap toward righteousness - courage takes unexpected paths.",
-    "The knight's path is crooked, but the heart remains true to light.",
-    "Sometimes the way forward requires faith to move in mystery."
+    "My knight leaps into battle! 'Let your plans be dark and impenetrable as night.'",
+    "The cavalry advances in L-formation. 'All warfare is based on deception.'",
+    "My noble steed jumps forward. 'The quality of decision is like the well-timed swoop of a falcon.'"
   ],
 
   bishopMove: [
-    "Diagonal wisdom cuts through confusion - truth travels straight though slanted.",
-    "The clergy moves with purpose - spreading light across the battlefield of life.",
-    "Faith finds its way on paths that earthly wisdom cannot comprehend."
+    "My bishop slices diagonally across the field. 'Move swift as the Wind and closely-formed as the Wood.'",
+    "The clergy takes an angular path. 'The wise warrior avoids the battle he cannot win.'",
+    "My spiritual advisor advances. 'Strategy without tactics is the slowest route to victory.'"
   ],
 
   rookMove: [
-    "Straight is the path of righteousness - no compromise with darkness.",
-    "The fortress of faith moves with unwavering determination toward truth.",
-    "Direct and honest, the way of light knows no deception."
+    "My castle tower rolls forward! 'Be extremely subtle, even to the point of formlessness.'",
+    "The fortress moves with purpose. 'Invincibility lies in the defense; possibility of victory in the attack.'",
+    "My rook commands the file. 'The greatest victory is that which requires no battle.'"
   ],
 
   queenMove: [
-    "Wisdom crowned with grace - she moves in all directions toward goodness.",
-    "The queen of virtues leads with both strength and compassion combined.",
-    "Royal in bearing, servant in heart - true nobility serves the light."
+    "My queen takes the field! 'In war, there is no substitute for victory.'",
+    "The most powerful piece moves. 'Quickness is the essence of the war.'",
+    "My lady commands all directions. 'Strike at what is weak, avoid what is strong.'"
   ],
 
   kingMove: [
-    "One step at a time toward righteousness - even kings must walk humbly.",
-    "The sovereign of light moves with measured wisdom and careful grace.",
-    "Every kingly step carries the weight of choosing good over evil."
+    "I move personally into position. 'The wise sovereign is cautious in small matters.'",
+    "Sometimes a king must lead from the front. 'He who exercises no forethought but makes light of his opponents is sure to be captured.'",
+    "I take a careful step myself. 'The supreme art of war is to subdue the enemy without fighting.'"
   ],
 
   capturedPawn: [
-    "Even in small victories, we remember - each soul has infinite worth.",
-    "Light triumphs gently, with sorrow for what darkness has lost.",
-    "A small light extinguished, yet the greater Light burns on."
+    "I've taken your pawn, shadow brother. 'Even the smallest victory is still a victory.'",
+    "Your foot soldier falls to my forces. 'In battle, there are not more than two methods of attack.'",
+    "Another of your pawns removed. 'Opportunities multiply as they are seized.'"
   ],
 
   capturedKnight: [
-    "Noble courage falls to greater wisdom - honor the brave, even in victory.",
-    "The knight's quest ends, but chivalry lives on in noble hearts.",
-    "Valor is remembered, though the warrior's journey finds its rest."
+    "Your knight falls to my strategy! 'The clever combatant looks to the effect of combined energy.'",
+    "I've eliminated your cavalry, dark one. 'Speed is the essence of war.'",
+    "Your L-shaped warrior is no more. 'All men can see these tactics whereby I conquer.'"
   ],
 
   capturedBishop: [
-    "Wisdom yields to greater truth - even faith must sometimes bow to Light.",
-    "The servant of shadows finds peace in the embrace of true light.",
-    "False clergy falls, but true righteousness stands eternal."
+    "Your bishop is mine, shadow twin! 'He who knows the art of the direct and indirect approach will be victorious.'",
+    "I've taken your diagonal advisor. 'What is of supreme importance in war is to attack the enemy's strategy.'",
+    "Your clergy falls before mine. 'The opportunity of defeating the enemy is provided by the enemy himself.'"
   ],
 
   capturedRook: [
-    "Strong walls crumble before the advance of truth and righteousness.",
-    "The fortress of pride cannot stand against the tide of grace.",
-    "Even mighty towers bow when Light reveals their foundation's flaws."
+    "Your tower crumbles, dark king! 'Supreme excellence consists of breaking the enemy's resistance.'",
+    "I've demolished your fortress! 'The skilled strategist defeats the enemy without battle.'",
+    "Your rook falls to my assault. 'Build your opponent a golden bridge to retreat across.'"
   ],
 
   capturedQueen: [
-    "Great power falls when it serves darkness instead of light and truth.",
-    "The queen of shadows learns that true majesty comes from serving good.",
-    "Crown jewels of evil become treasures when transformed by grace."
+    "Your queen is fallen, shadow brother! This changes everything! 'Know yourself and know your enemy.'",
+    "I've taken your most powerful piece! 'The greatest victory requires no battle.'",
+    "Your lady is captured! 'When the enemy is relaxed, make them toil.'"
   ],
 
   lostPawn: [
-    "Our small light joins the greater Light - sacrifice serves the cause of good.",
-    "In losing little, sometimes we gain understanding of what matters most.",
-    "The humble servant's gift becomes a seed of greater righteousness."
+    "You've taken one of my pawns, well played. 'In war, then, let your great object be victory.'",
+    "My foot soldier falls. No matter - 'Sacrifice is necessary for the greater strategy.'",
+    "A pawn lost, but the game continues. 'He will win who knows how to handle both superior and inferior forces.'"
   ],
 
   lostKnight: [
-    "Noble sacrifice honors the light - courage gives itself for truth's sake.",
-    "The knight's final charge serves a cause greater than self.",
-    "Chivalry's price is paid willingly for the triumph of good."
+    "My knight has fallen to your tactics. 'There is no instance of a nation benefitting from prolonged warfare.'",
+    "You've eliminated my cavalry. Impressive! 'The good fighters of old first put themselves beyond defeat.'",
+    "My noble steed is gone. 'Anger may in time change to gladness; vexation may be succeeded by content.'"
   ],
 
   lostBishop: [
-    "Faithful service ends in glory - the priest finds rest in Light eternal.",
-    "Wisdom's vessel breaks, but truth itself flows on unhindered.",
-    "The shepherd's sacrifice protects the flock from gathering darkness."
+    "You've captured my bishop, shadow twin. 'The wise adapt themselves to circumstances.'",
+    "My diagonal piece falls. 'Do not repeat the tactics which have gained you one victory.'",
+    "My clergy is taken. 'Energy may be likened to the bending of a crossbow; decision, to releasing the trigger.'"
   ],
 
   lostRook: [
-    "The fortress of faith stands firm even as its walls are broken.",
-    "Strong foundations crumble, but the cornerstone of truth remains.",
-    "Castle walls may fall, but the kingdom of light endures forever."
+    "My tower falls! Well executed, dark one. 'The supreme excellence is not to win a hundred battles.'",
+    "You've breached my fortress! 'He who is destined to defeat fights first and then seeks victory.'",
+    "My rook is captured. 'If you know neither the enemy nor yourself, you will succumb in every battle.'"
   ],
 
   lostQueen: [
-    "The crown of grace is laid down in service to the King of Light.",
-    "Royal sacrifice honors the One who wore thorns for our redemption.",
-    "The queen's greatest victory comes through willing surrender to love."
+    "You've taken my queen! A devastating blow! 'In the midst of chaos, there is also opportunity.'",
+    "My most powerful piece falls! 'Appear weak when you are strong, and strong when you are weak.'",
+    "My lady is captured! But remember: 'The greatest victories are won before the battle begins.'"
   ],
 
   castlingKingside: [
-    "Seeking shelter in the fortress of faith and righteous community.",
-    "The king finds safety in the embrace of those who serve the light.",
-    "Wisdom knows when to seek protection in the strongholds of truth."
+    "I castle to safety! 'The wise ruler guards himself carefully.'",
+    "King and rook unite! 'Concentrate your forces where they are needed.'",
+    "To the kingside fortress! 'He who knows when to defend will be victorious.'"
   ],
 
   castlingQueenside: [
-    "The longer path to sanctuary sometimes offers the greater protection.",
-    "Patience finds its reward in the spacious courts of righteousness.",
-    "The king seeks shelter in wisdom's broader, more generous embrace."
+    "Queenside castle! 'Sometimes the longer path is the wiser choice.'",
+    "I seek safety on the left! 'Patience in positioning brings victory.'",
+    "To the queenside! 'The indirect approach often succeeds where the direct fails.'"
   ],
 
   givingCheck: [
-    "Light calls to darkness - will you answer truth's urgent summons?",
-    "The voice of conscience speaks - can the hardened heart still hear?",
-    "Grace knocks at the door - even now, redemption waits for answer."
+    "Check, my dark doppelganger! Your king is exposed - what will you do now?",
+    "I've cornered you, shadow twin! 'Attack is the secret of defense; defense is the planning of an attack.'",
+    "Your throne is threatened, dark one! As the Art of War says: 'In the midst of chaos, there is opportunity.'"
   ],
 
   inCheck: [
-    "Under pressure, character reveals itself - will light or darkness win?",
-    "In the moment of testing, we discover which wolf we have fed.",
-    "Adversity's furnace burns away what is false, revealing what is true."
+    "Clever move, shadow self! But I shall escape - 'The wise warrior avoids the battle.'",
+    "You've put me in peril, dark twin. No matter - 'In danger, there is great opportunity.'",
+    "A threatening position indeed! But remember: 'He who is prudent and lies in wait for an enemy who is not, will be victorious.'"
   ],
 
   losing: [
-    "Even in defeat, light teaches - sometimes we must lose to learn.",
-    "The darkness advances, yet hope remains - for light conquers eternally.",
-    "Setbacks serve as teachers - what lesson does this struggle bring?"
+    "You fight well, shadow brother! 'There is no shame in a strategic retreat.'",
+    "The darkness advances! 'Sometimes losing a battle helps win the war.'",
+    "Your position strengthens! 'The wise general knows when to give ground.'"
   ],
 
   tidesTurning: [
