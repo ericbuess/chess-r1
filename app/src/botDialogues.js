@@ -35,7 +35,7 @@ export const botDialogues = {
             "Taking my calming breaths... now watch me absolutely destroy!",
             "This match gonna be smoother than my pirouette combinations!",
             "Setting up this victory like I set up perfect volleyball kills!",
-            "Gratitude check: thankful for chess skills AND your incoming L!"
+            "Gratitude check: thankful for chess skills AND your incoming L!",
         ],
 
         opening: [
@@ -53,7 +53,7 @@ export const botDialogues = {
             "Opening moves smoother than gelato on a summer day",
             "Starting this game with that Mediterranean energy",
             "Early positioning sharper than Parmigiano-Reggiano",
-            "Opening sequence activated - time to cook!"
+            "Opening sequence activated - time to cook!",
         ],
 
         middleGame: [
@@ -71,7 +71,7 @@ export const botDialogues = {
             "Mid-game excellence serving looks and intelligence",
             "Strategic depth deeper than the Mediterranean Sea",
             "Middle phase activated - time to show true skill",
-            "Tactical brilliance incoming like lightning over Roma"
+            "Tactical brilliance incoming like lightning over Roma",
         ],
 
         endgame: [
@@ -89,7 +89,7 @@ export const botDialogues = {
             "Final calculations precise as Swiss... wait no, Italian!",
             "Endgame artistry in full display mode",
             "Finishing strong like tiramisu after dinner",
-            "Final moves serving excellence on a silver platter"
+            "Final moves serving excellence on a silver platter",
         ],
         humanMove: [
             "Ok that was kinda valid, I guess...",
@@ -127,7 +127,7 @@ export const botDialogues = {
             "Taking deep breaths like my anxiety coach taught me... still confused",
             "That strategy needs more coordination than my volleyball rotations",
             "Recording this for my 'chess fails' compilation - content gold!",
-            "Your tempo's off like a dancer missing the music beat"
+            "Your tempo's off like a dancer missing the music beat",
         ],
 
         pawnMove: [
@@ -150,7 +150,7 @@ export const botDialogues = {
             "Pedone positioning giving chess excellence vibes",
             "Pawn structure smoother than Tuscan olive oil",
             "That little piece serving strategic brilliance",
-            "Pawn movement eleganter than Venice gondola ride"
+            "Pawn movement eleganter than Venice gondola ride",
         ],
 
         knightMove: [
@@ -168,7 +168,7 @@ export const botDialogues = {
             "Knight maneuver serving tactical brilliance",
             "That L-move hitting different, no cap",
             "Cavallo positioning giving chess mastery vibes",
-            "Knight hop elegant as Venetian masquerade ball"
+            "Knight hop elegant as Venetian masquerade ball",
         ],
 
         bishopMove: [
@@ -186,7 +186,7 @@ export const botDialogues = {
             "Bishop positioning giving Da Vinci energy",
             "Diagonal excellence sharper than Murano glass",
             "That alfiere path serving strategic brilliance",
-            "Bishop movement elegant as Sistine Chapel ceiling"
+            "Bishop movement elegant as Sistine Chapel ceiling",
         ],
 
         rookMove: [
@@ -204,7 +204,7 @@ export const botDialogues = {
             "Rook trajectory giving structural engineering vibes",
             "Straight movement elegant as Colosseum arches",
             "That torre path serving tactical excellence",
-            "Rook positioning sharper than ancient Roman roads"
+            "Rook positioning sharper than ancient Roman roads",
         ],
 
         queenMove: [
@@ -222,7 +222,7 @@ export const botDialogues = {
             "Queen movement smoother than palace marble",
             "That regina positioning giving throne room feels",
             "Queen path elegant as royal procession",
-            "Regina excellence sharper than scepter diamond"
+            "Regina excellence sharper than scepter diamond",
         ],
 
         kingMove: [
@@ -407,7 +407,7 @@ export const botDialogues = {
             "This advantage tastes better than taro boba, no cap!",
             "Recording this winning streak for my chess content series!",
             "Victory formation tighter than my dance choreography!",
-            "Ahead and feeling amazing - gratitude for these chess skills!"
+            "Ahead and feeling amazing - gratitude for these chess skills!",
             "Winning like my volleyball spikes - precise and powerful!",
             "This lead's smoother than my grand jeté landings!",
             "Victory energy flowing like my anxiety breathing exercises!"
