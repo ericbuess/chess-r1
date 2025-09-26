@@ -5961,31 +5961,6 @@ function showHelpDialog(fromMenu = false) {
   helpContent += '<div class="help-header">Chess R1 v0.0.2</div>';
   helpContent += '<div class="help-item">By @EricBuess on X</div>';
 
-  // Add bot info if in bot mode
-  if (chessGame && chessGame.gameMode === 'human-vs-bot') {
-    const botName = chessGame.getBotDifficultyText();
-    const difficulty = chessGame.botDifficulty;
-    const difficultyDescriptions = {
-      0: 'easy',
-      1: 'normal',
-      2: 'hard'
-    };
-    const difficultyText = difficultyDescriptions[difficulty] || 'normal';
-    helpContent += `<div class="help-item">Playing against ${botName} (bot - ${difficultyText})</div>`;
-  }
-
-  // Add orientation mode info for human vs human games
-  if (chessGame && chessGame.gameMode === 'human-vs-human' && chessGame.orientationMode !== 'none') {
-    const orientationDescriptions = {
-      'handoff': 'Handoff mode (pass device)',
-      'table': 'Table mode (sitting across)'
-    };
-    const orientationText = orientationDescriptions[chessGame.orientationMode];
-    if (orientationText) {
-      helpContent += `<div class="help-item">${orientationText}</div>`;
-    }
-  }
-
   // Add controls section
   helpContent += '<div class="help-controls">';
   helpContent += '<div class="controls-header">Controls & Shortcuts:</div>';
