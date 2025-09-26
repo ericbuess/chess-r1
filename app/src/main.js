@@ -4182,6 +4182,13 @@ class ChessUI {
         pieceElement.className = `chess-piece ${piece.color}`;
         pieceElement.setAttribute('data-piece', piece.type); // Add piece type for CSS targeting
         pieceElement.textContent = this.game.getPieceSymbol(piece);
+
+        // Slightly raise the king piece
+        if (piece.type === 'king') {
+          pieceElement.style.position = 'relative';
+          pieceElement.style.top = '-1px';
+        }
+
         square.appendChild(pieceElement);
 
         // Debug logging for key positions
