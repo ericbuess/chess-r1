@@ -1828,6 +1828,7 @@ export const botDialogues = {
             "Blunder magnitude: severe. Full system diagnostic required!",
         ],
         humanCapture: [
+            "Eh? Ehem. Ehem. Por qué. I needed that piece.",
             "Hull breach! You've captured unit designation: my piece",
             "Component lost! That piece had 47 possible future moves",
             "System compromised! Like losing a tire at 200mph",

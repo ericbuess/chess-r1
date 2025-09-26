@@ -484,6 +484,19 @@ export const blackKingDialogues = {
     "You've won this battle! But the war between us is eternal, bright brother."
   ],
 
+  queenCaptured: [
+    "MY QUEEN! MY SHADOW EMPRESS! You've torn out my dark heart!",
+    "NO! Not my beloved queen! She was my midnight sun, my everything!",
+    "You FIEND! My queen, my wife, my eternal companion... gone!",
+    "CURSE YOU! She ruled the shadows beside me for millennia!",
+    "My dark queen! I'll paint this board with vengeance for you!",
+    "You've stolen my shadow bride! This aggression will not be forgotten!",
+    "My queen... my love... darkness itself weeps at her loss!",
+    "HOW DARE YOU! She was the moon to my night, the void to my darkness!",
+    "My shadow queen! I swear by the eternal night, you will pay!",
+    "You've ripped my soul by taking my queen! The shadows cry for justice!"
+  ],
+
   stalemate: [
     "Stalemate! Shadow and light locked in eternal balance!",
     "Neither darkness nor light can claim final victory!",

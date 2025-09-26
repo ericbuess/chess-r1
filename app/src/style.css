@@ -1010,6 +1010,34 @@ html, body {
     backdrop-filter: none !important;
 }
 
+/* Special styling for "Push button to enable undo" notification */
+#instruction-label.undo-notification {
+    background: rgba(0, 0, 0, 0.75) !important;
+    background-color: rgba(0, 0, 0, 0.75) !important;
+    color: #FE5F00 !important;
+    padding: 3vh 4vw !important;
+    border-radius: 2vw !important;
+    width: auto !important;
+    min-width: 80vw !important;
+    max-width: 90vw !important;
+    min-height: auto !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 20px rgba(254, 95, 0, 0.15) !important;
+    animation: undoNotificationPulse 2s ease-in-out infinite !important;
+}
+
+@keyframes undoNotificationPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 20px rgba(254, 95, 0, 0.15);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6), 0 0 30px rgba(254, 95, 0, 0.25);
+    }
+}
+
 /* Bot thinking animation */
 #instruction-label:has-text("Bot is thinking") {
     animation: botThinking 2s ease-in-out infinite;

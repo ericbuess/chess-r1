@@ -36,6 +36,19 @@ export const whiteKingDialogues = {
     "I claim victory! Until we meet again, shadow twin. The game eternal continues."
   ],
 
+  queenCaptured: [
+    "NO! My queen! My beloved! You've taken everything from me!",
+    "My queen... my heart... how dare you steal her from me!",
+    "You monster! She was my light, my love, my everything!",
+    "NOOO! Not my queen! We've ruled together for centuries!",
+    "My beloved queen! I shall avenge you, I swear it!",
+    "You've taken my wife, my partner, my soul! This means war!",
+    "My queen is gone... the light dims... but my rage burns eternal!",
+    "How DARE you! She was the sun to my dawn, the star to my sky!",
+    "My queen! My love! I will not rest until justice is served!",
+    "You've stolen my heart by taking my queen! This will not stand!"
+  ],
+
   // Filler reactions - conversational and strategic musings
   filler: [
     "*studying the board*", "*planning next move*", "*analyzing patterns*", "*considering options*", "*strategic pause*",
