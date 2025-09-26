@@ -5168,20 +5168,21 @@ class ChessUI {
 
       let largeSize, smallSize;
       if (isR1) {
-        largeSize = '18px';
-        smallSize = '14px';
+        // Much greater size difference for R1
+        largeSize = '22px';
+        smallSize = '10px';
       } else {
-        // Scale up proportionally for larger screens
-        largeSize = 'max(18px, min(36px, 5.25vw))';
-        smallSize = 'max(14px, min(28px, 4vw))';
+        // Scale up proportionally for larger screens with greater contrast
+        largeSize = 'max(22px, min(44px, 6.4vw))';
+        smallSize = 'max(10px, min(20px, 2.9vw))';
       }
 
       if (isWhiteTurn) {
         // White's turn - black king large (opposite), white king small (current)
-        botIcon.innerHTML = `<span style="font-size: ${smallSize}; opacity: 0.6;">♔</span><span style="font-size: ${largeSize};">♚</span>`;
+        botIcon.innerHTML = `<span style="font-size: ${smallSize}; opacity: 0.4;">♔</span><span style="font-size: ${largeSize};">♚</span>`;
       } else {
         // Black's turn - white king large (opposite), black king small (current)
-        botIcon.innerHTML = `<span style="font-size: ${largeSize};">♔</span><span style="font-size: ${smallSize}; opacity: 0.6;">♚</span>`;
+        botIcon.innerHTML = `<span style="font-size: ${largeSize};">♔</span><span style="font-size: ${smallSize}; opacity: 0.4;">♚</span>`;
       }
     } else {
       const icons = { 'Evy': '♟', 'Emmy': '♞', 'Asa': '♛' };
