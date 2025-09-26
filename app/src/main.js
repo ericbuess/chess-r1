@@ -1493,8 +1493,11 @@ class ChessGame {
   getContextualDialogueCategory(baseCategory, isCheck, gamePhase, momentum) {
     // Check takes highest priority
     if (isCheck) {
+      // After a move, currentPlayer has already switched
+      // If currentPlayer is human, BOT just delivered check
+      // If currentPlayer is bot, HUMAN just delivered check
       return this.gameMode === 'human-vs-bot' ?
-        (gameStateTracker.currentPlayer === this.humanColor ? 'humanCheck' : 'botCheck') :
+        (gameStateTracker.currentPlayer === this.humanColor ? 'botCheck' : 'humanCheck') :
         'inCheck';
     }
 
@@ -1635,6 +1638,9 @@ class ChessGame {
    */
   showBotDialogue(category, forceShow = false, moveContext = null) {
     console.log(`[showBotDialogue] Called with category: ${category}, forceShow: ${forceShow}, gameMode: ${this.gameMode}`);
+    if (moveContext) {
+      console.log(`[showBotDialogue] moveContext: piece=${moveContext.piece?.type}, captured=${moveContext.captured?.type}, isCheck=${moveContext.isCheck}, special=${moveContext.special}`);
+    }
 
     // Enhanced dialogue selection for different game modes
     let dialogue = null;
@@ -1685,22 +1691,28 @@ class ChessGame {
       if (finalCategory === 'filler') {
         dialogue = this.getNonRepeatingFiller(getRandomDialogue, botName);
       } else {
-        // Map capturedQueen to appropriate capture dialogue since bots don't have specific queen dialogues
+        // Map specific capture categories to generic bot dialogue categories
         let dialogueCategory = finalCategory;
-        if (finalCategory === 'capturedQueen') {
-          // Determine who captured the queen based on current player
+        const specificCaptures = ['capturedQueen', 'capturedRook', 'capturedBishop', 'capturedKnight', 'capturedPawn'];
+
+        if (specificCaptures.includes(finalCategory)) {
           // After a move, currentPlayer has already switched, so:
-          // If current is black, white (human) just moved
           // If current is white, black (bot) just moved
-          const botCaptured = gameStateTracker.currentPlayer === 'white';
-          dialogueCategory = botCaptured ? 'botCapture' : 'humanCapture';
-          console.log(`[showBotDialogue] Queen captured - mapping to ${dialogueCategory}`);
+          // If current is black, white (human) just moved
+          const botMadeMove = gameStateTracker.currentPlayer === 'white';
+          dialogueCategory = botMadeMove ? 'botCapture' : 'humanCapture';
+          console.log(`[showBotDialogue] Mapping ${finalCategory} to ${dialogueCategory}`);
         }
+
         dialogue = getRandomDialogue(botName, dialogueCategory);
+        if (!dialogue) {
+          console.log(`[showBotDialogue] WARNING: No dialogue found for bot=${botName}, category=${dialogueCategory}`);
+        }
       }
 
       // If no dialogue for the category, use filler as fallback
       if (!dialogue && forceShow) {
+        console.log(`[showBotDialogue] Using filler fallback for forced category ${finalCategory}`);
         dialogue = this.getNonRepeatingFiller(getRandomDialogue, botName);
       }
 
