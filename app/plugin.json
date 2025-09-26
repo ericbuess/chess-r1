@@ -1,0 +1,8 @@
+{
+  "manifest_version": 1,
+  "name": "Chess R1",
+  "version": "0.0.2",
+  "description": "Complete chess game for Rabbit R1",
+  "author": "Eric Buess",
+  "entry": "dist/index.html"
+}

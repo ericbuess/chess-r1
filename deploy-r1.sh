@@ -25,6 +25,8 @@ cp -r app/index.html rabbitos-plugin/apps/app/
 cp -r app/package.json rabbitos-plugin/apps/app/
 cp -r app/vite.config.js rabbitos-plugin/apps/app/
 cp -r app/src rabbitos-plugin/apps/app/
+cp -r app/plugin.json rabbitos-plugin/apps/app/
+cp -r app/.rabbit-r1-config.yml rabbitos-plugin/apps/app/
 
 # Add RABBITOS.md to root of package
 echo "Step 3: Adding RABBITOS.md instructions..."
@@ -46,7 +48,9 @@ echo "📁 Structure:"
 echo "   └── RABBITOS.md (Creation Agent instructions)"
 echo "   └── apps/app/"
 echo "       ├── index.html"
-echo "       ├── package.json (includes js-chess-engine dependency)"
+echo "       ├── package.json (name: chess-r1, version: 0.0.2)"
+echo "       ├── plugin.json (name: Chess R1)"
+echo "       ├── .rabbit-r1-config.yml (name: Chess R1)"
 echo "       ├── vite.config.js"
 echo "       └── src/"
 echo "           ├── main.js (imports js-chess-engine via ES6)"

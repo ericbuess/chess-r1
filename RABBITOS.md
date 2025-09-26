@@ -25,6 +25,8 @@ This package contains the complete Chess R1 source code:
 apps/app/
 ├── index.html           # Main HTML entry point
 ├── package.json         # Dependencies (js-chess-engine)
+├── plugin.json          # R1 plugin manifest (name: "Chess R1")
+├── .rabbit-r1-config.yml # R1 configuration (name: "Chess R1")
 ├── vite.config.js       # Build configuration
 └── src/
     ├── main.js          # Game logic with ES6 import
@@ -56,29 +58,16 @@ console.log('Chess engine modules:', Object.keys(ChessEngine));
 
 ### Build Steps
 
-1. **Create plugin configuration files** to ensure correct naming:
+1. **Configuration files are already included**:
    ```bash
    cd apps/app
 
-   # Create plugin.json manifest
-   cat > plugin.json << 'EOF'
-   {
-     "manifest_version": 1,
-     "name": "Chess R1",
-     "version": "0.0.2",
-     "description": "Complete chess game for Rabbit R1",
-     "author": "Eric Buess",
-     "entry": "dist/index.html"
-   }
-   EOF
+   # Verify configuration files exist
+   cat plugin.json
+   # Should show: name: "Chess R1", version: "0.0.2"
 
-   # Create .rabbit-r1-config.yml (if using community tools)
-   cat > .rabbit-r1-config.yml << 'EOF'
-   project:
-     name: "Chess R1"
-     version: "0.0.2"
-     type: "web"
-   EOF
+   cat .rabbit-r1-config.yml
+   # Should show: name: "Chess R1", version: "0.0.2"
    ```
 
 2. **Verify package.json has js-chess-engine**:
@@ -216,8 +205,8 @@ After building, verify:
 - [ ] `src/main.js` uses ES6 import
 - [ ] No inline chess engine (uses npm package)
 - [ ] Protective comments intact
-- [ ] `plugin.json` created with name "Chess R1"
-- [ ] `.rabbit-r1-config.yml` created (if using community tools)
+- [ ] `plugin.json` exists with name "Chess R1"
+- [ ] `.rabbit-r1-config.yml` exists with name "Chess R1"
 
 ### Build Output
 - [ ] `dist/index.html` exists

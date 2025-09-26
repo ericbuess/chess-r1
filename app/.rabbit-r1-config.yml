@@ -1,0 +1,6 @@
+project:
+  name: "Chess R1"
+  version: "0.0.2"
+  type: "web"
+  author: "Eric Buess"
+  description: "Complete chess game with bot AI for Rabbit R1"
