@@ -667,7 +667,7 @@ html, body {
 /* King pieces need size adjustment due to Unicode glyph proportions */
 .chess-piece.white[data-piece="king"],
 .chess-piece.black[data-piece="king"] {
-    font-size: min(10vw, 8.8vh); /* 11% larger to compensate for smaller glyph */
+    font-size: min(11vw, 9.7vh); /* 22% larger to compensate for smaller glyph */
 }
 
 /* iOS Safari specific fix for black pieces */
@@ -726,7 +726,7 @@ html, body {
 
     /* King adjustment for R1 */
     .chess-piece[data-piece="king"] {
-        font-size: min(10.5vw, 9.2vh); /* Slightly larger on R1 */
+        font-size: min(11.5vw, 10.1vh); /* Even larger on R1 */
     }
 
     /* Pawn adjustment for R1 */

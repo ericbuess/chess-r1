@@ -5177,11 +5177,11 @@ class ChessUI {
       }
 
       if (isWhiteTurn) {
-        // White's turn - white king large, black king small
-        botIcon.innerHTML = `<span style="font-size: ${largeSize};">♔</span><span style="font-size: ${smallSize}; opacity: 0.6;">♚</span>`;
-      } else {
-        // Black's turn - white king small, black king large
+        // White's turn - black king large (opposite), white king small (current)
         botIcon.innerHTML = `<span style="font-size: ${smallSize}; opacity: 0.6;">♔</span><span style="font-size: ${largeSize};">♚</span>`;
+      } else {
+        // Black's turn - white king large (opposite), black king small (current)
+        botIcon.innerHTML = `<span style="font-size: ${largeSize};">♔</span><span style="font-size: ${smallSize}; opacity: 0.6;">♚</span>`;
       }
     } else {
       const icons = { 'Evy': '♟', 'Emmy': '♞', 'Asa': '♛' };
