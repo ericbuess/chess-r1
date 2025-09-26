@@ -1,3 +1,4 @@
+// CRITICAL: DO NOT MODIFY THIS FILE except for updating paths for linking or imports
 // Chess Worker - Inline version that creates a worker from a blob
 // This avoids module loading issues
 

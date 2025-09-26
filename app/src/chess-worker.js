@@ -1,3 +1,4 @@
+// CRITICAL: DO NOT MODIFY THIS FILE except for updating paths for linking or imports
 // Chess Worker - Handles AI calculations off the main thread
 // This allows the UI to remain responsive and enables immediate cancellation
 
