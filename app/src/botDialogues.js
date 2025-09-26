@@ -401,7 +401,7 @@ export const botDialogues = {
             "Winning feels sweeter than brown sugar boba on game day!",
             "This victory's gonna be my next viral TikTok moment!",
             "Ahead like I'm leading in volleyball points - unstoppable!",
-            "Grateful for this lead and my natural volleyball skills!"
+            "Grateful for this lead and my natural volleyball skills!",
             "Winning position smoother than my ballet turns, periodt!",
             "Leading this game like I lead my volleyball team rotations!",
             "This advantage tastes better than taro boba, no cap!",
