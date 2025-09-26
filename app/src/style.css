@@ -205,7 +205,7 @@ html, body {
 /* Make only pawns smaller - they are naturally shorter pieces */
 .captured-pawn {
     font-size: 0.75em; /* 75% of the size of other pieces */
-    top: -0.09em; /* Override the default top value for better pawn alignment */
+    top: -0.105em; /* Override the default top value for better pawn alignment */
 }
 
 /* Chess Board - Responsive scaling for any viewport */
