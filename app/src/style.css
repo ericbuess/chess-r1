@@ -1208,6 +1208,8 @@ html, body {
     height: 0.65em;
     margin-left: 0.4em;
     vertical-align: middle;
+    position: relative;
+    top: -0.05em; /* Slight vertical adjustment */
 }
 
 .bot-thinking-spinner:after {
