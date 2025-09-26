@@ -1204,27 +1204,21 @@ html, body {
 /* Bot thinking spinner */
 .bot-thinking-spinner {
     display: inline-block;
-    width: 1.8em; /* Use em to match text size */
-    height: 1.8em;
+    width: 0.8em; /* Smaller size to not exceed text height */
+    height: 0.8em;
     margin-left: 0.5em;
     vertical-align: middle;
-    position: relative;
-    top: -0.1em; /* Fine-tune vertical alignment */
 }
 
 .bot-thinking-spinner:after {
     content: " ";
     display: block;
-    width: 1em;
-    height: 1em;
+    width: 0.8em;
+    height: 0.8em;
     border-radius: 50%;
-    border: 0.15em solid #FE5F00;
+    border: 0.1em solid #FE5F00;
     border-color: #FE5F00 transparent #FE5F00 transparent;
     animation: spin 1.2s linear infinite;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 @keyframes spin {
