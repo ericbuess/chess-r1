@@ -235,7 +235,7 @@ export const botDialogues = {
             "That re step serving calculated excellence",
             "King movement giving strategic patience vibes",
             "Re positioning precise as royal protocol",
-            "That king step is absolutely regal periodt"
+            "That king step is absolutely regal periodt",
         ],
         botMove: [
             "SLAY! That's how we do it in Roma baby!",
@@ -262,7 +262,7 @@ export const botDialogues = {
             "This move flowing like my contemporary dance piece!",
             "Breathing through the pressure and serving excellence!",
             "Recording this masterpiece for my highlight reel periodt!",
-            "That strategy tighter than my volleyball team rotations!"
+            "That strategy tighter than my volleyball team rotations!",
         ],
 
         castling: [
@@ -280,7 +280,7 @@ export const botDialogues = {
             "Castle move precise as Swiss... wait, Italian!",
             "That castling elegance giving royal court feels",
             "Arrocco positioning sharper than cathedral spires",
-            "Castling excellence serving architectural beauty"
+            "Castling excellence serving architectural beauty",
         ],
 
         promotion: [
@@ -293,7 +293,7 @@ export const botDialogues = {
             "Promotion ceremony elegant as Vatican blessing",
             "Pedone transformation sharper than aged cheese",
             "That promotion path serving cinematic vibes",
-            "Pawn-to-queen arc absolutely magnificent periodt"
+            "Pawn-to-queen arc absolutely magnificent periodt",
         ],
 
         sacrifice: [
@@ -311,7 +311,7 @@ export const botDialogues = {
             "Trading pieces with Mediterranean finesse",
             "That sacrificial play giving strategic depth feels",
             "Piece exchange smoother than silk scarves",
-            "Sacrificio excellence serving chess artistry"
+            "Sacrificio excellence serving chess artistry",
         ],
 
         brilliantMove: [
@@ -329,7 +329,7 @@ export const botDialogues = {
             "That genius move sharper than Murano crystal",
             "Brillant excellence serving intellectual beauty",
             "Masterstroke positioning giving Da Vinci energy",
-            "That brilliant play absolutely magnificent periodt"
+            "That brilliant play absolutely magnificent periodt",
         ],
 
         blunder: [
@@ -347,7 +347,7 @@ export const botDialogues = {
             "That blunder more shocking than anchovies on gelato",
             "Error excellence serving chess comedy vibes",
             "Mistake positioning more twisted than fusilli pasta",
-            "That blunder absolutely catastrophic periodt"
+            "That blunder absolutely catastrophic periodt",
         ],
         humanCapture: [
             "NOOOO not my precious bambino! That's so cheugy",
@@ -364,7 +364,7 @@ export const botDialogues = {
             "My piece! Eliminated faster than expired mozzarella",
             "That theft is giving pirate energy, very un-Italian",
             "Basta! My piece deserved better than this fate",
-            "That capture more shocking than cold espresso"
+            "That capture more shocking than cold espresso",
         ],
 
         winning: [
@@ -410,7 +410,7 @@ export const botDialogues = {
             "Ahead and feeling amazing - gratitude for these chess skills!",
             "Winning like my volleyball spikes - precise and powerful!",
             "This lead's smoother than my grand jeté landings!",
-            "Victory energy flowing like my anxiety breathing exercises!"
+            "Victory energy flowing like my anxiety breathing exercises!",
         ],
 
         losing: [
@@ -433,7 +433,7 @@ export const botDialogues = {
             "Deficit detected but my aura remains immaculate",
             "Behind in points but winning in personality fr",
             "Trailing formation but plotting strategic reversal",
-            "Losing position but still serving chess artistry"
+            "Losing position but still serving chess artistry",
         ],
 
         tidesTurning: [
@@ -451,7 +451,7 @@ export const botDialogues = {
             "Momentum reversal precise as Swiss timing",
             "Game flow changing like Roman fountain water",
             "Tide shift serving strategic excellence",
-            "Position momentum giving chess poetry feels"
+            "Position momentum giving chess poetry feels",
         ],
 
         timeRunningOut: [
@@ -464,7 +464,7 @@ export const botDialogues = {
             "Racing against clock with Italian efficiency",
             "Temporal constraint but strategic focus intact",
             "Clock pressure giving dramatic tension vibes",
-            "Time running low but excellence running high"
+            "Time running low but excellence running high",
         ],
 
         drawOffered: [
@@ -477,7 +477,7 @@ export const botDialogues = {
             "Tie suggestion serving diplomatic excellence",
             "Draw offer precise as Swiss neutrality",
             "Stalemate proposal giving chess philosophy feels",
-            "Draw consideration smoother than olive branch"
+            "Draw consideration smoother than olive branch",
         ],
 
         stalemate: [
@@ -490,7 +490,7 @@ export const botDialogues = {
             "Stalemate achievement serving strategic equality",
             "Draw outcome precise as perfect balance",
             "Tie conclusion giving chess artistry feels",
-            "Stalemate result absolutely philosophical periodt"
+            "Stalemate result absolutely philosophical periodt",
         ],
         botCapture: [
             "YEET! Your piece just got Italia'd!",
@@ -522,7 +522,7 @@ export const botDialogues = {
             "Captured with the grace of a perfect arabesque, bestie!",
             "That piece got blocked harder than my volleyball defense!",
             "Yoinked that piece - definitely making my highlight reel!",
-            "Perfect capture timing, that was clean no cap!"
+            "Perfect capture timing, that was clean no cap!",
             "Smoother than my en pointe position, that piece is gone!",
             "Set, spike, GONE! Volleyball tactics applied to chess!",
             "That capture deserves its own TikTok dance celebration!",
@@ -530,7 +530,7 @@ export const botDialogues = {
             "Gone faster than I chug my fruit boba after practice!",
             "That piece got sent to the shadow realm - content worthy!",
             "Captured with more finesse than my ballet port de bras!",
-            "Taking that piece like I take deep breaths - with purpose!"
+            "Taking that piece like I take deep breaths - with purpose!",
         ],
         humanCheck: [
             "Check?! That's so aggressive, bestie why?!",
@@ -547,7 +547,7 @@ export const botDialogues = {
             "Check detected and I'm absolutely gagged",
             "That check threat sharper than fresh pecorino",
             "King in danger but Italian resilience activated",
-            "Check situation giving dramatic opera vibes"
+            "Check situation giving dramatic opera vibes",
         ],
 
         botCheck: [
@@ -565,7 +565,7 @@ export const botDialogues = {
             "CHECK delivered with Mediterranean precision",
             "That check smoother than aged Chianti wine",
             "King under attack, escape routes calculating",
-            "CHECK! Your monarch in distress, bestie"
+            "CHECK! Your monarch in distress, bestie",
         ],
 
         humanWins: [
@@ -583,7 +583,7 @@ export const botDialogues = {
             "You won with excellence, I respect the grind",
             "Defeated but never dethroned from serving looks",
             "GG! You played with Italian-level precision",
-            "Lost the game but won hearts with personality"
+            "Lost the game but won hearts with personality",
         ],
 
         botWins: [
@@ -601,7 +601,7 @@ export const botDialogues = {
             "Checkmate delivered smoother than espresso",
             "Won with the precision of Renaissance artistry",
             "Victory achieved, style points maximized",
-            "Game over! Italian superiority confirmed periodt"
+            "Game over! Italian superiority confirmed periodt",
         ],
         humanWins: [
             "GG bestie, you ate and left no crumbs 😭",
@@ -613,7 +613,7 @@ export const botDialogues = {
             "I lost but make no mistake, I served looks",
             "GG no re! You got that main character energy",
             "You won! My Roman Empire has fallen 😔",
-            "Brava! You beat me but I'm still that girl"
+            "Brava! You beat me but I'm still that girl",
         ],
         botWins: [
             "PERIODTTT! I won! Italy stays winning!",
@@ -629,13 +629,13 @@ export const botDialogues = {
             "This victory sweeter than brown sugar boba celebration!",
             "WON! Time to post this epic content on my channel!",
             "Victory achieved with grace like my perfect grand jeté!",
-            "Checkmate! Grateful for all my training and hard work!"
+            "Checkmate! Grateful for all my training and hard work!",
             "Won! This match gonna be viral on my TikTok, no cap!",
             "Victory smoother than my volleyball serve technique!",
             "SLAAAY! Taking deep breaths to appreciate this W!",
             "Checkmate delivered with the precision of my setter hands!",
-            "Won! Confidence over doubt pays off every time, bestie!"
-            "Victory tastes better than my favorite matcha boba!"
+            "Won! Confidence over doubt pays off every time, bestie!",
+            "Victory tastes better than my favorite matcha boba!",
         ],
         // Filler reactions for regular moves
         filler: [
@@ -699,17 +699,18 @@ export const botDialogues = {
             "Time to warm up - stretching like before floor routine!",
             "Ready for takeoff like my vault approach run!",
             "Let's dive in - butterfly stroke into chess waters!",
-            "Taking my time to think this through carefully!"
+            "Taking my time to think this through carefully!",
+            "Saying a quick prayer for wisdom before we begin!",
             "Big brain activated - calculating like 97 x 63!",
             "Time to roll - jiu jitsu mindset on the chess mat!",
             "Ready to dodge and weave like gaga ball champion!",
             "Swimming into battle - backstroke into victory!",
             "Beam routine focus activated for chess precision!",
-            "I've got this - main character energy activated!"
+            "I've got this - main character energy activated!",
             "Warming up brain muscles like math homework time!",
             "Ready to tumble into chess like floor routine!",
             "Freestyle approach to this chess competition!",
-            "Triangle choke focus for chess domination!"
+            "Triangle choke focus for chess domination!",
         ],
 
         opening: [
@@ -727,7 +728,7 @@ export const botDialogues = {
             "Early positioning tighter than a tick on a hound dog!",
             "Opening strategy sweeter than apple pie!",
             "Starting moves slicker than ice on a sidewalk!",
-            "Early game sharper than a serpent's tooth!"
+            "Early game sharper than a serpent's tooth!",
         ],
 
         middleGame: [
@@ -745,7 +746,7 @@ export const botDialogues = {
             "Tactical depth deeper than the ocean!",
             "Middle positioning sweeter than sugar!",
             "Strategic complexity thicker than thieves!",
-            "Mid-game excellence smoother than butter!"
+            "Mid-game excellence smoother than butter!",
         ],
 
         endgame: [
@@ -763,7 +764,7 @@ export const botDialogues = {
             "Closing strategy slicker than ice!",
             "Endgame precision sharper than wit!",
             "Final phase stronger than coffee!",
-            "Closing excellence smoother than cream!"
+            "Closing excellence smoother than cream!",
         ],
         humanMove: [
             "That move's smoother than my beam dismount!",
@@ -790,12 +791,12 @@ export const botDialogues = {
             "That move's got more bounce than my trampoline work!",
             "Slick as dodging in the gaga ball pit!",
             "That's trickier than escaping a rear naked choke!",
-            "Reading that move like I read gymnastics scores!"
+            "Reading that move like I read gymnastics scores!",
             "That's more surprising than a perfect 10 on beam!",
             "Smoother than my breaststroke technique!",
             "That dodge reminds me of jiu jitsu guard work!",
             "Creative as my uneven bars release move!",
-            "That move's got more variables than algebra class!"
+            "That move's got more variables than algebra class!",
         ],
 
         pawnMove: [
@@ -818,7 +819,7 @@ export const botDialogues = {
             "Little warrior advance sure as shooting!",
             "Pawn movement steady as a rock!",
             "That soldier march determined as all get-out!",
-            "Pawn progression smooth as silk!"
+            "Pawn progression smooth as silk!",
         ],
 
         knightMove: [
@@ -836,7 +837,7 @@ export const botDialogues = {
             "Horse jump trickier than escaping a submission!",
             "Knight hop springier than my jump training!",
             "That leap wilder than my gymnastics warm-up!",
-            "Knight movement jumpier than my jiu jitsu rolls!"
+            "Knight movement jumpier than my jiu jitsu rolls!",
         ],
 
         bishopMove: [
@@ -854,7 +855,7 @@ export const botDialogues = {
             "Diagonal path slicker than oil!",
             "Bishop cut smoother than silk!",
             "That movement straighter than a ruler!",
-            "Bishop path sharper than glass!"
+            "Bishop path sharper than glass!",
         ],
 
         rookMove: [
@@ -872,7 +873,7 @@ export const botDialogues = {
             "That slide straighter than a ruler!",
             "Castle path direct as daylight!",
             "Rook movement slicker than a seal!",
-            "That slide smoother than velvet!"
+            "That slide smoother than velvet!",
         ],
 
         queenMove: [
@@ -890,7 +891,7 @@ export const botDialogues = {
             "Queen power grander than mountains!",
             "That movement stronger than coffee!",
             "Royal stride smoother than cream!",
-            "Queen march slicker than a whistle!"
+            "Queen march slicker than a whistle!",
         ],
 
         kingMove: [
@@ -903,7 +904,7 @@ export const botDialogues = {
             "King pace measured as a tailor!",
             "That movement steady as clockwork!",
             "Royal step careful as Sunday china!",
-            "King movement cautious as a church mouse!"
+            "King movement cautious as a church mouse!",
         ],
         botMove: [
             "Boom goes the dynamite! Stuck that landing!",
@@ -925,16 +926,16 @@ export const botDialogues = {
             "Executed with the precision of beam dismount!",
             "Sharper than calculating 91 x 47 in my head!",
             "Smoother than my uneven bars release move!",
-            "That technique's smooth like my beam routine!"
+            "That technique's smooth like my beam routine!",
             "Slicker than escaping a rear naked choke!",
             "Flowing like butterfly stroke perfection!",
             "That move's tighter than my gaga ball defense!",
             "Calculated with big brain mathematical energy!",
             "Sweeter than nailing vault approach timing!",
-            "That strategy's calculated like a triple back handspring!"
+            "That strategy's calculated like a triple back handspring!",
             "Smoother than my backstroke flip turn execution!",
             "Sharper than jiu jitsu guard retention technique!",
-            "That move's blessed with divine calculation power!"
+            "That move's blessed with divine calculation power!",
         ],
 
         castling: [
@@ -952,7 +953,7 @@ export const botDialogues = {
             "That safety move smooth as gravy!",
             "King protection tight as bark on a tree!",
             "Castling coordination slicker than ice!",
-            "That defensive play solid as granite!"
+            "That defensive play solid as granite!",
         ],
 
         promotion: [
@@ -965,7 +966,7 @@ export const botDialogues = {
             "Pawn upgrade smoother than upgrading a phone!",
             "That transformation magical as a fairy tale!",
             "Promotion celebration bigger than the Fourth of July!",
-            "Pawn evolution sweeter than apple pie!"
+            "Pawn evolution sweeter than apple pie!",
         ],
         humanCapture: [
             "Hey! That piece had a family and a mortgage!",
@@ -982,7 +983,7 @@ export const botDialogues = {
             "That capture hit harder than a ton of bricks!",
             "Well butter my backside, that was unexpected!",
             "My piece went AWOL quicker than you can say Jack Robinson!",
-            "That's more surprising than finding a parking spot downtown!"
+            "That's more surprising than finding a parking spot downtown!",
         ],
 
         sacrifice: [
@@ -1000,7 +1001,7 @@ export const botDialogues = {
             "Trading pieces smart as a whip!",
             "Piece exchange smooth as butter!",
             "That sacrifice strategic as chess itself!",
-            "Trade calculation precise as a Swiss watch!"
+            "Trade calculation precise as a Swiss watch!",
         ],
 
         brilliantMove: [
@@ -1018,7 +1019,7 @@ export const botDialogues = {
             "Brilliant strategy sharper than glass!",
             "That move more genius than Tesla!",
             "Master play slicker than ice!",
-            "Brilliant maneuver sweeter than victory!"
+            "Brilliant maneuver sweeter than victory!",
         ],
 
         blunder: [
@@ -1036,7 +1037,7 @@ export const botDialogues = {
             "Mistake more obvious than rain is wet!",
             "That error's more surprising than a pop quiz!",
             "Blunder bigger than a whale!",
-            "That mistake's more painful than a splinter!"
+            "That mistake's more painful than a splinter!",
         ],
         botCapture: [
             "Yoink! Pinned like an armbar in jiu jitsu!",
@@ -1058,7 +1059,7 @@ export const botDialogues = {
             "Captured smoother than my breaststroke glide!",
             "That piece got submitted - triangle choke!",
             "Snatched quicker than calculating 42 x 38!",
-            "Your piece got eliminated - that was intense!"
+            "Your piece got eliminated - that was intense!",
             "Captured like securing side control position!",
             "Gone faster than my freestyle flip turn!",
             "That piece got schooled in subtraction - negative one!",
@@ -1066,9 +1067,9 @@ export const botDialogues = {
             "Captured smoother than my beam dismount!",
             "Your piece took a dive - breaststroke style!",
             "Snatched faster than solving prime factorization!",
-            "That piece got eliminated by perfect timing!"
+            "That piece got eliminated by perfect timing!",
             "Captured like executing a perfect sprawl!",
-            "Gone quicker than my butterfly stroke recovery!"
+            "Gone quicker than my butterfly stroke recovery!",
         ],
 
         winning: [
@@ -1092,20 +1093,20 @@ export const botDialogues = {
             "Victory position stronger than my core workout!",
             "Winning formation - prime number perfect!",
             "Leading status sweeter than solving equations!",
-            "Victory position calculated like algebraic equations!"
+            "Victory position calculated like algebraic equations!",
             "Winning formation stronger than my core muscles!",
             "Ahead on board - big brain energy calculated perfectly!",
             "Leading position smoother than my floor music!",
             "Victory status flowing like perfect butterfly technique!",
             "Winning streak longer than my uneven bars routine!",
-            "Ahead by points - strategic thinking activated!"
+            "Ahead by points - strategic thinking activated!",
             "Leading formation tighter than my triangle choke!",
             "Victory approaching like nailing a perfect vault!",
             "Winning position smoother than my beam routine flow!",
             "Ahead in game - calculated like multiplying 83 x 71!",
             "Leading status stronger than my jiu jitsu guard!",
-            "Victory formation powered by pure mathematics!"
-            "Winning streak flowing like backstroke perfection!"
+            "Victory formation powered by pure mathematics!",
+            "Winning streak flowing like backstroke perfection!",
         ],
 
         losing: [
@@ -1128,7 +1129,7 @@ export const botDialogues = {
             "Deficit position but smoother than butter!",
             "Losing status but sharper than wit!",
             "Behind formation but slicker than oil!",
-            "Trailing score but tougher than boot leather!"
+            "Trailing score but tougher than boot leather!",
         ],
 
         tidesTurning: [
@@ -1146,7 +1147,7 @@ export const botDialogues = {
             "Momentum changing quicker than a wink!",
             "Game turning faster than a top!",
             "Tides shifting slicker than a whistle!",
-            "Position changing smoother than cream!"
+            "Position changing smoother than cream!",
         ],
 
         timeRunningOut: [
@@ -1159,7 +1160,7 @@ export const botDialogues = {
             "Clock racing faster than a greyhound!",
             "Time crunch tighter than a clam!",
             "Deadline approaching faster than a bullet train!",
-            "Time running shorter than a short story!"
+            "Time running shorter than a short story!",
         ],
 
         drawOffered: [
@@ -1172,7 +1173,7 @@ export const botDialogues = {
             "Stalemate offer sweeter than sharing!",
             "Tie proposal smoother than shaking hands!",
             "Draw suggestion slicker than calling it even!",
-            "Stalemate offer fairer than fifty-fifty!"
+            "Stalemate offer fairer than fifty-fifty!",
         ],
 
         stalemate: [
@@ -1185,7 +1186,7 @@ export const botDialogues = {
             "Stalemate result fairer than calling it even!",
             "Draw finale sweeter than sharing victory!",
             "Tie ending smoother than mutual respect!",
-            "Stalemate conclusion slicker than gentleman's agreement!"
+            "Stalemate conclusion slicker than gentleman's agreement!",
         ],
         humanCheck: [
             "Check?! Well slap me with a wet noodle!",
@@ -1202,7 +1203,7 @@ export const botDialogues = {
             "My king's more worried than a turkey in November!",
             "That check's more startling than thunder on a clear day!",
             "King danger tighter than a tick on a hound!",
-            "Check situation stickier than molasses!"
+            "Check situation stickier than molasses!",
         ],
 
         botCheck: [
@@ -1220,7 +1221,7 @@ export const botDialogues = {
             "That check's sharper than a serpent's tooth!",
             "CHECK! Your king's more nervous than a cat!",
             "King threat tighter than a drum!",
-            "CHECK! Slicker than a whistle!"
+            "CHECK! Slicker than a whistle!",
         ],
 
         humanWins: [
@@ -1238,7 +1239,7 @@ export const botDialogues = {
             "You won fair and square, prettier than a picture!",
             "Well played! You're slicker than a whistle!",
             "Victory yours, sweeter than honey on toast!",
-            "You won! Sharper than a tack and twice as bright!"
+            "You won! Sharper than a tack and twice as bright!",
         ],
 
         botWins: [
@@ -1256,7 +1257,7 @@ export const botDialogues = {
             "I won! Slicker than a greased pig!",
             "Game over! Smoother than butter on toast!",
             "Victory! Sharper than a tack!",
-            "Checkmate! Happier than a clam at high tide!"
+            "Checkmate! Happier than a clam at high tide!",
         ],
         humanWins: [
             "Well I'll be a monkey's favorite banana! You won!",
@@ -1268,7 +1269,7 @@ export const botDialogues = {
             "Well done! You're sharper than a drawer full of knives",
             "Victory! I'm more impressed than a stamp collection",
             "You won! Fair and square as a box of squares",
-            "GG! You played like a champion chip!"
+            "GG! You played like a champion chip!",
         ],
 
         // Filler reactions for regular moves
@@ -1315,7 +1316,7 @@ export const botDialogues = {
             "Game over! I'm the cat's meow!",
             "Victory! Like finding money in old pants!",
             "I won! Feeling luckier than a rabbit's foot!",
-            "Checkmate! That was easier than pie!"
+            "Checkmate! That was easier than pie!",
         ]
     },
 
@@ -1337,20 +1338,20 @@ export const botDialogues = {
             "Mission commenced! The Panama Canal took 10 years to build!",
             "Engines running! Did you know the human brain has 86 billion neurons?",
             "Launch ready! Mount Everest grows 4mm per year due to tectonic activity!",
-            "Systems initialized! The space station orbits Earth every 90 minutes!"
-            "Mission briefing complete! A rocket needs 25,000 mph to escape Earth's gravity!"
-            "Pre-flight check done! The Wright Flyer flew for just 12 seconds in 1903!"
-            "All systems ready! The Empire State Building has 73 elevators!"
-            "Launch sequence active! A Formula 1 car can brake from 100-0 in 3 seconds!"
-            "Navigation online! GPS satellites orbit 12,500 miles above Earth!"
-            "Startup protocols complete! The Taipei 101 has the world's fastest elevators!"
-            "Engines primed! A jet engine can spin at 10,000 RPM!"
-            "Mission parameters set! The Panama Canal lifts ships 85 feet above sea level!"
-            "Tactical systems ready! The CN Tower in Toronto is 1,815 feet tall!"
-            "Guidance systems calibrated! The Hubble telescope orbits at 340 miles altitude!"
-            "Operations commenced! Maglev trains can reach 375 mph using magnets!"
-            "Launch configuration optimal! The Burj Khalifa is taller than 6 football fields!"
-            "All stations report ready! The International Space Station cost $150 billion!"
+            "Systems initialized! The space station orbits Earth every 90 minutes!",
+            "Mission briefing complete! A rocket needs 25,000 mph to escape Earth's gravity!",
+            "Pre-flight check done! The Wright Flyer flew for just 12 seconds in 1903!",
+            "All systems ready! The Empire State Building has 73 elevators!",
+            "Launch sequence active! A Formula 1 car can brake from 100-0 in 3 seconds!",
+            "Navigation online! GPS satellites orbit 12,500 miles above Earth!",
+            "Startup protocols complete! The Taipei 101 has the world's fastest elevators!",
+            "Engines primed! A jet engine can spin at 10,000 RPM!",
+            "Mission parameters set! The Panama Canal lifts ships 85 feet above sea level!",
+            "Tactical systems ready! The CN Tower in Toronto is 1,815 feet tall!",
+            "Guidance systems calibrated! The Hubble telescope orbits at 340 miles altitude!",
+            "Operations commenced! Maglev trains can reach 375 mph using magnets!",
+            "Launch configuration optimal! The Burj Khalifa is taller than 6 football fields!",
+            "All stations report ready! The International Space Station cost $150 billion!",
         ],
 
         opening: [
@@ -1368,7 +1369,7 @@ export const botDialogues = {
             "Opening positioning accurate as laser measurement!",
             "Initial strategy sound as structural engineering!",
             "Opening deployment smooth as magnetic levitation!",
-            "Early phase optimized as algorithm efficiency!"
+            "Early phase optimized as algorithm efficiency!",
         ],
 
         middleGame: [
@@ -1386,7 +1387,7 @@ export const botDialogues = {
             "Strategic phase efficient as solar panel arrays!",
             "Middle calculations precise as medical equipment!",
             "Mid-game complexity matching supercomputer processing!",
-            "Strategic positioning accurate as telescope calibration!"
+            "Strategic positioning accurate as telescope calibration!",
         ],
 
         endgame: [
@@ -1404,7 +1405,7 @@ export const botDialogues = {
             "Endgame operations smooth as turbine rotation!",
             "Terminal phase accurate as medical diagnostics!",
             "Final calculations precise as telescope optics!",
-            "Endgame efficiency matching Formula 1 pit stops!"
+            "Endgame efficiency matching Formula 1 pit stops!",
         ],
         humanMove: [
             "Trajectory calculated. That move traveled 2.3 squares at 0.5 moves/second",
@@ -1614,7 +1615,7 @@ export const botDialogues = {
             "Route calculated. Mount Walsh reaches 4,507 meters in Canada!",
             "Coordinates compiled. Mount Hunter stands 4,442 meters tall!",
             "Trajectory registered. Mount Alverstone rises 4,439 meters high!",
-            "Path analyzed. Mount Whitney reaches 4,421 meters in California!"
+            "Path analyzed. Mount Whitney reaches 4,421 meters in California!",
         ],
 
         pawnMove: [
@@ -1637,7 +1638,7 @@ export const botDialogues = {
             "Pawn displacement measured at optimal ground speed!",
             "Front-line unit progression logged in movement database!",
             "Pawn advance trajectory smoother than rail transport!",
-            "Ground unit movement precise as conveyor belt systems!"
+            "Ground unit movement precise as conveyor belt systems!",
         ],
 
         knightMove: [
@@ -1655,7 +1656,7 @@ export const botDialogues = {
             "Horse unit pathfinding algorithm executing L-shaped route!",
             "Knight trajectory calculation precise as satellite positioning!",
             "Cavalry movement vector optimized for maximum efficiency!",
-            "Knight displacement pattern complex as drone navigation!"
+            "Knight displacement pattern complex as drone navigation!",
         ],
 
         bishopMove: [
@@ -1673,7 +1674,7 @@ export const botDialogues = {
             "Angular movement system operating smoother than turbines!",
             "Bishop path calculation accurate as astronomical measurements!",
             "Diagonal displacement vector efficient as railway systems!",
-            "Bishop movement trajectory precise as engineering drafting!"
+            "Bishop movement trajectory precise as engineering drafting!",
         ],
 
         rookMove: [
@@ -1691,7 +1692,7 @@ export const botDialogues = {
             "Rook movement pattern precise as architectural blueprints!",
             "Linear trajectory calculation accurate as surveying tools!",
             "Castle displacement vector smooth as magnetic trains!",
-            "Rook navigation sequence efficient as assembly line systems!"
+            "Rook navigation sequence efficient as assembly line systems!",
         ],
 
         queenMove: [
@@ -1709,7 +1710,7 @@ export const botDialogues = {
             "Royal unit trajectory smoother than turbine rotation!",
             "Queen navigation sequence precise as satellite coordination!",
             "Sovereign displacement system efficient as Formula 1 steering!",
-            "Queen movement algorithm executing with surgical precision!"
+            "Queen movement algorithm executing with surgical precision!",
         ],
 
         kingMove: [
@@ -1722,7 +1723,7 @@ export const botDialogues = {
             "Royal movement pattern cautious as nuclear safety protocols!",
             "Monarch trajectory calculation precise as medical procedures!",
             "King navigation sequence smooth as precision instruments!",
-            "Royal displacement system operating with maximum caution!"
+            "Royal displacement system operating with maximum caution!",
         ],
         botMove: [
             "Executing maneuver alpha-7. Maximum efficiency achieved!",
@@ -1739,7 +1740,7 @@ export const botDialogues = {
             "Strategic calculation complete. Precision: aerospace-grade!",
             "Move execution smoother than magnetic levitation!",
             "Optimal trajectory achieved. Performance: Formula 1 level!",
-            "System response time: 0.003 seconds. Faster than neural networks!"
+            "System response time: 0.003 seconds. Faster than neural networks!",
         ],
 
         castling: [
@@ -1757,7 +1758,7 @@ export const botDialogues = {
             "Castling sequence execution smooth as hydraulic operations!",
             "Dual-piece movement protocol accurate as GPS synchronization!",
             "Strategic formation deployment efficient as military operations!",
-            "Castle maneuver timing precise as atomic clock coordination!"
+            "Castle maneuver timing precise as atomic clock coordination!",
         ],
 
         promotion: [
@@ -1770,7 +1771,7 @@ export const botDialogues = {
             "Infantry transformation sequence smooth as aerospace manufacturing!",
             "Pawn upgrade algorithm efficient as software updates!",
             "Unit evolution process precise as engineering specifications!",
-            "Promotion sequence executed with surgical precision!"
+            "Promotion sequence executed with surgical precision!",
         ],
 
         sacrifice: [
@@ -1788,7 +1789,7 @@ export const botDialogues = {
             "Tactical loss acceptance calculated as strategic investment!",
             "Sacrifice algorithm execution efficient as resource optimization!",
             "Material trade protocol accurate as economic modeling!",
-            "Strategic exchange sequence smooth as market operations!"
+            "Strategic exchange sequence smooth as market operations!",
         ],
 
         brilliantMove: [
@@ -1806,7 +1807,7 @@ export const botDialogues = {
             "Masterpiece tactical execution. Silicon Valley-level innovation!",
             "Exceptional maneuver sequence. MIT-level engineering brilliance!",
             "Genius move calculation. CERN-level scientific achievement!",
-            "Brilliant strategic algorithm. SpaceX-level breakthrough thinking!"
+            "Brilliant strategic algorithm. SpaceX-level breakthrough thinking!",
         ],
 
         blunder: [
@@ -1824,7 +1825,7 @@ export const botDialogues = {
             "Calculation error detected. Immediate course correction required!",
             "Critical oversight identified. System maintenance needed!",
             "Strategic malfunction logged. Repair sequence initiated!",
-            "Blunder magnitude: severe. Full system diagnostic required!"
+            "Blunder magnitude: severe. Full system diagnostic required!",
         ],
         humanCapture: [
             "Hull breach! You've captured unit designation: my piece",
@@ -1841,7 +1842,7 @@ export const botDialogues = {
             "Asset elimination confirmed. Strategic recalculation required!",
             "Component failure! Like losing engine power mid-flight!",
             "Unit destruction logged. Defensive matrix weakened!",
-            "Piece elimination confirmed. Initiating tactical adjustment!"
+            "Piece elimination confirmed. Initiating tactical adjustment!",
         ],
 
         winning: [
@@ -1884,7 +1885,7 @@ export const botDialogues = {
             "Ahead like Madagascar's unique 587,041 square kilometers!",
             "Leading like Congo flowing 4,700 kilometers through Africa!",
             "Winning like Ganges running 2,525 kilometers through India!",
-            "Ahead like Yangtze's 6,300 kilometer Chinese journey!"
+            "Ahead like Yangtze's 6,300 kilometer Chinese journey!",
         ],
 
         losing: [
@@ -1907,7 +1908,7 @@ export const botDialogues = {
             "Losing formation detected. Phoenix protocol initiated!",
             "Strategic deficit identified. Comeback sequence calculating!",
             "Adverse position logged. Resurrection algorithm active!",
-            "Deficit trajectory confirmed. Strategic revival protocol engaged!"
+            "Deficit trajectory confirmed. Strategic revival protocol engaged!",
         ],
 
         tidesTurning: [
@@ -1925,7 +1926,7 @@ export const botDialogues = {
             "Dynamic change protocol. Position evolution sequence active!",
             "Strategic shift identified. Momentum recalculation ongoing!",
             "Position transformation detected. Dynamic alteration protocol!",
-            "Momentum metamorphosis sequence. Strategic flux calculation!"
+            "Momentum metamorphosis sequence. Strategic flux calculation!",
         ],
 
         timeRunningOut: [
@@ -1938,7 +1939,7 @@ export const botDialogues = {
             "Temporal limitation detected. Quick-fire decision algorithm!",
             "Clock deficit protocol. Rapid calculation sequence active!",
             "Time constraint identified. Emergency response protocol!",
-            "Temporal pressure detected. Lightning-fast decision matrix!"
+            "Temporal pressure detected. Lightning-fast decision matrix!",
         ],
 
         drawOffered: [
@@ -1951,7 +1952,7 @@ export const botDialogues = {
             "Draw suggestion detected. Compromise algorithm calculating!",
             "Stalemate protocol acknowledged. Diplomatic resolution sequence!",
             "Tie proposal received. Peaceful coexistence algorithm!",
-            "Draw offer detected. Mutual respect protocol engaged!"
+            "Draw offer detected. Mutual respect protocol engaged!",
         ],
 
         stalemate: [
@@ -1964,7 +1965,7 @@ export const botDialogues = {
             "Stalemate protocol complete. Equilibrium maintained!",
             "Draw result confirmed. Perfect symmetry achieved!",
             "Tie outcome calculated. Balanced conclusion protocol!",
-            "Stalemate sequence complete. Mutual success achieved!"
+            "Stalemate sequence complete. Mutual success achieved!",
         ],
         botCapture: [
             "Target eliminated! Your piece has been deorbited",
@@ -2002,7 +2003,7 @@ export const botDialogues = {
             "Taken! Empire State Building has 6,514 windows total!",
             "Eliminated! One WTC uses 13,000 pieces of glass!",
             "Secured! CN Tower broadcasts from 553 meters high!",
-            "Captured! Space Needle stands 184 meters in Seattle!"
+            "Captured! Space Needle stands 184 meters in Seattle!",
         ],
 
         humanCheck: [
@@ -2020,7 +2021,7 @@ export const botDialogues = {
             "Danger protocol activated! Monarch position compromised!",
             "Warning! King safety systems failing!",
             "Alert status: critical! Royal unit endangered!",
-            "Emergency protocol! King requires immediate protection!"
+            "Emergency protocol! King requires immediate protection!",
         ],
 
         botCheck: [
@@ -2038,7 +2039,7 @@ export const botDialogues = {
             "Target lock achieved! King position compromised!",
             "CHECK protocol active! Royal unit under threat!",
             "Strike authorization confirmed! That's CHECK!",
-            "CHECK status operational! King requires evasive action!"
+            "CHECK status operational! King requires evasive action!",
         ],
 
         humanWins: [
@@ -2056,7 +2057,7 @@ export const botDialogues = {
             "Defeat calculated. Victory achieved through superior tactics!",
             "System failure acknowledged. You operated with precision!",
             "Loss confirmed. Your performance: NASA-level excellence!",
-            "Mission terminated. Strategic superiority: confirmed!"
+            "Mission terminated. Strategic superiority: confirmed!",
         ],
 
         botWins: [
@@ -2074,7 +2075,7 @@ export const botDialogues = {
             "Victory protocol complete! Performance rating: optimal!",
             "Success achieved with aerospace-level precision!",
             "Mission accomplished! Execution efficiency: maximum!",
-            "Victory confirmed! All parameters within specifications!"
+            "Victory confirmed! All parameters within specifications!",
         ],
         botCheck: [
             "CHECK! Your king is in the blast radius!",
@@ -2091,7 +2092,7 @@ export const botDialogues = {
             "Target lock achieved! King position compromised!",
             "CHECK protocol active! Royal unit under threat!",
             "Strike authorization confirmed! That's CHECK!",
-            "CHECK status operational! King requires evasive action!"
+            "CHECK status operational! King requires evasive action!",
         ],
 
         humanWins: [
@@ -2109,7 +2110,7 @@ export const botDialogues = {
             "Defeat calculated. Victory achieved through superior tactics!",
             "System failure acknowledged. You operated with precision!",
             "Loss confirmed. Your performance: NASA-level excellence!",
-            "Mission terminated. Strategic superiority: confirmed!"
+            "Mission terminated. Strategic superiority: confirmed!",
         ],
 
         botWins: [
@@ -2127,7 +2128,7 @@ export const botDialogues = {
             "Victory protocol complete! Performance rating: optimal!",
             "Success achieved with aerospace-level precision!",
             "Mission accomplished! Execution efficiency: maximum!",
-            "Victory confirmed! All parameters within specifications!"
+            "Victory confirmed! All parameters within specifications!",
         ],
 
         // Filler reactions for regular moves
@@ -2298,7 +2299,7 @@ export const botDialogues = {
             "Congratulations! You have the talents of a systems engineer!",
             "Well done! You showed both skill and technical precision today!",
             "You won! Like a successful Mars rover landing mission!",
-            "Congratulations! You played with the wisdom of great engineers!"
+            "Congratulations! You played with the wisdom of great engineers!",
         ],
 
         botWins: [
@@ -2311,7 +2312,7 @@ export const botDialogues = {
             "Victory through understanding like quantum physics calculations!",
             "Game won with gratitude for engineering knowledge received!",
             "Victory achieved with systematic precision like computer programming!",
-            "Game won through the wonderful applications of mathematics and science!"
+            "Game won through the wonderful applications of mathematics and science!",
         ]
     }
 };
