@@ -669,7 +669,7 @@ html, body {
 .chess-piece.black[data-piece="king"] {
     font-size: min(12.5vw, 11vh); /* 39% larger to compensate for smaller glyph */
     position: relative;
-    top: -0.1em; /* Moderate lift to center it better */
+    top: -0.05em; /* Small lift to center it better */
 }
 
 /* iOS Safari specific fix for black pieces */
@@ -729,7 +729,7 @@ html, body {
     /* King adjustment for R1 */
     .chess-piece[data-piece="king"] {
         font-size: min(13vw, 11.4vh); /* Much larger on R1 */
-        top: -0.125em; /* Moderate lift on R1 */
+        top: -0.06em; /* Small lift on R1 */
     }
 
     /* Pawn adjustment for R1 */
