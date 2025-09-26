@@ -63,6 +63,39 @@ All memory leaks and performance issues have been resolved!
 - **Performance**: All targets met (bot response <2s, undo/redo <5ms)
 - **Storage**: Using creationStorage.plain with localStorage fallback
 
+## 🎯 Current Sprint: Bot Dialogue Enhancement (9/26/2025)
+
+### Objective
+Enhance bot personalities with personalized dialogue content reflecting specific interests and values for each bot.
+
+### Asa Bot (6-year-old) - Add 200+ New Comments About:
+- [ ] Tallest buildings (Burj Khalifa, Merdeka 118, etc.)
+- [ ] Biggest cities (focus on Asia)
+- [ ] Countries and geography facts
+- [ ] Vehicle types (SUVs: Escalade, Tahoe, Sienna, Sequoia)
+- [ ] Christian faith elements
+
+### Emmy Bot (9-year-old) - Add Dialogues About:
+- [ ] Gymnastics moves and competitions
+- [ ] Swimming strokes and techniques
+- [ ] Gaga ball gameplay
+- [ ] Jiu jitsu moves
+- [ ] Math enthusiasm ("big brain" references)
+- [ ] Christian faith and Bible reading
+
+### Evy Bot (11-year-old) - Add Dialogues About:
+- [ ] Volleyball positions and plays
+- [ ] Dance/ballet terminology
+- [ ] Video creation and editing
+- [ ] Boba tea varieties
+- [ ] Anxiety management (breathing, gratitude)
+- [ ] Christian faith and prayer
+
+### King Dialogues - Philosophical Themes:
+- [ ] White King: Light vs darkness, good wolf metaphor
+- [ ] Black King: Internal moral struggle, redemption journey
+- [ ] Game-end quotes (Solzhenitsyn, Cherokee proverb, C.S. Lewis)
+
 ## Directory Structure
 - `/app` - Main application source
 - `/app/src` - Source files (main.js, style.css, etc.)
