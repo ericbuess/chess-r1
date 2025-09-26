@@ -569,6 +569,9 @@ html, body {
     font-variant-emoji: text;
     /* Better rendering for clearer internal details */
     text-rendering: geometricPrecision;
+    /* Ensure consistent baseline alignment */
+    vertical-align: baseline;
+    line-height: 1;
 }
 
 .chess-piece:hover {
@@ -598,9 +601,9 @@ html, body {
     -webkit-text-fill-color: #ffffff;
 }
 
-/* Make white pawns smaller on all browsers */
+/* Make white pawns smaller on all browsers - consistent ratio */
 .chess-piece.white[data-piece="pawn"] {
-    font-size: min(7vw, 6vh); /* Slightly larger for better visibility */
+    font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
 }
 
 /* iOS Safari specific fix for white pieces */
@@ -627,14 +630,9 @@ html, body {
         -webkit-text-fill-color: #ffffff;
     }
 
-    /* Make pawns smaller and centered */
+    /* Make pawns smaller - removed flexbox to fix baseline alignment */
     .chess-piece.white[data-piece="pawn"] {
-        font-size: min(7vw, 6vh); /* Slightly larger for visibility */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        width: 100%;
+        font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
     }
 }
 
@@ -661,9 +659,9 @@ html, body {
     -webkit-text-fill-color: #000000;
 }
 
-/* Make black pawns smaller on all browsers */
+/* Make black pawns smaller on all browsers - consistent ratio */
 .chess-piece.black[data-piece="pawn"] {
-    font-size: min(7vw, 6vh); /* Slightly larger for visibility */
+    font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
 }
 
 /* iOS Safari specific fix for black pieces */
@@ -690,14 +688,9 @@ html, body {
         -webkit-text-fill-color: #000000;
     }
 
-    /* Make pawns smaller and centered */
+    /* Make pawns smaller - removed flexbox to fix baseline alignment */
     .chess-piece.black[data-piece="pawn"] {
-        font-size: min(7vw, 6vh); /* Slightly larger for visibility */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        width: 100%;
+        font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
     }
 }
 
