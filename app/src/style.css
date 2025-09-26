@@ -694,6 +694,18 @@ html, body {
     }
 }
 
+/* R1-specific vertical alignment fix for 240x320 viewport */
+@media (max-width: 240px) and (max-height: 320px),
+       (max-width: 320px) and (max-height: 240px) {
+
+    .chess-piece {
+        /* Adjust vertical positioning for R1 display */
+        vertical-align: middle;
+        position: relative;
+        top: -0.1em; /* Fine-tune vertical position */
+    }
+}
+
 /* Fixed Classic Wooden Theme */
 :root {
     --light-square: #ddb88c;
