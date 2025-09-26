@@ -568,13 +568,10 @@ html, body {
     /* Prevent emoji rendering */
     font-variant-emoji: text;
     /* Better rendering for clearer internal details */
-    text-rendering: optimizeLegibility;
-    /* Fix vertical alignment for R1 */
-    vertical-align: middle;
+    text-rendering: geometricPrecision;
+    /* Ensure consistent baseline alignment */
+    vertical-align: baseline;
     line-height: 1;
-    /* Additional centering for R1 */
-    display: inline-block;
-    transform: translateY(0);
 }
 
 .chess-piece:hover {
@@ -584,22 +581,24 @@ html, body {
 /* White pieces - white fill with black outline (same solid symbols as black) */
 .chess-piece.white {
     color: #ffffff;  /* Pure white for better contrast on small screen */
-    /* Simplified shadow for better R1 rendering - using whole pixels */
+    /* Extra thick multi-layer text shadow for maximum visibility */
     text-shadow:
+        -0.6px -0.6px 0 #000000,
+        0.6px -0.6px 0 #000000,
+        -0.6px 0.6px 0 #000000,
+        0.6px 0.6px 0 #000000,
+        -0.9px 0 0 #000000,
+        0.9px 0 0 #000000,
+        0 -0.9px 0 #000000,
+        0 0.9px 0 #000000,
         -1px -1px 0 #000000,
         1px -1px 0 #000000,
         -1px 1px 0 #000000,
-        1px 1px 0 #000000,
-        -1px 0 0 #000000,
-        1px 0 0 #000000,
-        0 -1px 0 #000000,
-        0 1px 0 #000000;
+        1px 1px 0 #000000;
     background: none;
     font-weight: 900;
     /* Ensure white fill is consistent */
     -webkit-text-fill-color: #ffffff;
-    /* Add stroke as primary outline for R1 */
-    -webkit-text-stroke: 1px #000000;
 }
 
 /* Make white pawns smaller on all browsers - consistent ratio */
@@ -640,22 +639,24 @@ html, body {
 /* Black pieces - solid black appearance with enhanced white outline for visibility */
 .chess-piece.black {
     color: #000000;
-    /* Simplified shadow for better R1 rendering - using whole pixels */
+    /* Extra thick multi-layer text shadow for maximum visibility */
     text-shadow:
+        -0.6px -0.6px 0 #ffffff,
+        0.6px -0.6px 0 #ffffff,
+        -0.6px 0.6px 0 #ffffff,
+        0.6px 0.6px 0 #ffffff,
+        -0.9px 0 0 #ffffff,
+        0.9px 0 0 #ffffff,
+        0 -0.9px 0 #ffffff,
+        0 0.9px 0 #ffffff,
         -1px -1px 0 #ffffff,
         1px -1px 0 #ffffff,
         -1px 1px 0 #ffffff,
-        1px 1px 0 #ffffff,
-        -1px 0 0 #ffffff,
-        1px 0 0 #ffffff,
-        0 -1px 0 #ffffff,
-        0 1px 0 #ffffff;
+        1px 1px 0 #ffffff;
     background: none;
     font-weight: 900;
     /* Ensure black fill is consistent */
     -webkit-text-fill-color: #000000;
-    /* Add stroke as primary outline for R1 */
-    -webkit-text-stroke: 1px #ffffff;
 }
 
 /* Make black pawns smaller on all browsers - consistent ratio */
@@ -690,60 +691,6 @@ html, body {
     /* Make pawns smaller - removed flexbox to fix baseline alignment */
     .chess-piece.black[data-piece="pawn"] {
         font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
-    }
-}
-
-/* R1-specific optimizations for 240x320 viewport */
-@media (max-width: 240px) and (max-height: 320px),
-       (max-width: 320px) and (max-height: 240px) {
-
-    .chess-piece {
-        /* Force middle alignment for R1 */
-        vertical-align: middle !important;
-        line-height: 1 !important;
-        /* Use transform for fine-tuning vertical position */
-        transform: translateY(-0.05em);
-        /* Optimize rendering for limited R1 browser */
-        text-rendering: optimizeSpeed;
-        /* Remove complex filters for performance */
-        -webkit-filter: none;
-        filter: none;
-    }
-
-    .chess-piece.white {
-        /* Simpler, stronger shadows for R1 */
-        text-shadow:
-            -1px -1px 0 #000,
-            1px -1px 0 #000,
-            -1px 1px 0 #000,
-            1px 1px 0 #000;
-        /* Strong stroke for primary outline */
-        -webkit-text-stroke: 1.5px #000000;
-        font-weight: 900;
-    }
-
-    .chess-piece.black {
-        /* Simpler, stronger shadows for R1 */
-        text-shadow:
-            -1px -1px 0 #fff,
-            1px -1px 0 #fff,
-            -1px 1px 0 #fff,
-            1px 1px 0 #fff;
-        /* Strong stroke for primary outline */
-        -webkit-text-stroke: 1.5px #ffffff;
-        font-weight: 900;
-    }
-
-    /* Ensure squares use flexbox centering on R1 */
-    .chess-square {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-
-    /* Adjust pawn positioning specifically for R1 */
-    .chess-piece[data-piece="pawn"] {
-        transform: translateY(-0.08em);
     }
 }
 
