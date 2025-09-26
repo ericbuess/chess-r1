@@ -694,15 +694,28 @@ html, body {
     }
 }
 
-/* R1-specific vertical alignment fix for 240x320 viewport */
+/* R1-specific alignment fix for 240x320 viewport */
 @media (max-width: 240px) and (max-height: 320px),
        (max-width: 320px) and (max-height: 240px) {
 
+    /* Ensure squares use flexbox for perfect centering on R1 */
+    .chess-square {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
     .chess-piece {
-        /* Adjust vertical positioning for R1 display */
-        vertical-align: middle;
+        /* Center pieces perfectly in cells */
         position: relative;
-        top: -0.1em; /* Fine-tune vertical position */
+        top: 0;
+        left: 0;
+        margin: 0;
+        padding: 0;
+        vertical-align: middle;
+        text-align: center;
+        display: block;
+        width: 100%;
     }
 }
 
