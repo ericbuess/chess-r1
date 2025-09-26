@@ -669,7 +669,7 @@ html, body {
 .chess-piece.black[data-piece="king"] {
     font-size: min(10.5vw, 9.2vh); /* 17% larger to compensate for smaller glyph */
     position: relative;
-    top: 0.04em; /* Small offset to raise king higher */
+    top: 0.01em; /* Minimal offset to raise king even higher */
 }
 
 /* iOS Safari specific fix for black pieces */
@@ -729,7 +729,7 @@ html, body {
     /* King adjustment for R1 */
     .chess-piece[data-piece="king"] {
         font-size: min(11vw, 9.6vh); /* Moderately larger on R1 */
-        top: 0.03em; /* Smaller offset for R1 to raise king higher */
+        top: 0; /* No offset - king at baseline */
     }
 
     /* Pawn adjustment for R1 */
