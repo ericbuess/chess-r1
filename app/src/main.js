@@ -178,7 +178,7 @@ class ChessGame {
     this.orientationMode = 'handoff'; // 'none', 'table', or 'handoff' for human vs human
     this.gameMode = 'human-vs-bot';
     this.humanColor = 'white';
-    this.botDifficulty = 1; // Bot difficulty: 0=random, 1=Ella(normal), 2=Evy(hard), 3=Emmy(harder), 4=Asa(hardest)
+    this.botDifficulty = 1; // Bot difficulty: 0=Evy(easy), 1=Emmy(normal), 2=Asa(hard)
     this.allowUndo = true; // Enable undo by default
     this.soundEnabled = true; // Sound effects enabled by default
 
@@ -1419,7 +1419,7 @@ class ChessGame {
    */
   getBotDifficultyText() {
     const difficulties = {
-      0: 'Evy',   // Easy (was Ella)
+      0: 'Evy',   // Easy
       1: 'Emmy',  // Normal (was Evy)
       2: 'Asa'    // Hard (was Emmy, removed old Asa at 3)
     };
@@ -5958,7 +5958,8 @@ function showHelpDialog(fromMenu = false) {
   if (!gameUI) return;
 
   let helpContent = '<div class="help-dialog-content">';
-  helpContent += '<div class="help-header">Chess R1 by Eric Buess v0.0.2</div>';
+  helpContent += '<div class="help-header">Chess R1 v0.0.2</div>';
+  helpContent += '<div class="help-item">By @EricBuess on X</div>';
 
   // Add bot info if in bot mode
   if (chessGame && chessGame.gameMode === 'human-vs-bot') {
