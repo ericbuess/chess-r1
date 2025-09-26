@@ -5144,8 +5144,23 @@ class ChessUI {
       // Fixed position kings - white always on left, black always on right
       // Current player's king is larger
       const isWhiteTurn = this.game?.currentPlayer === 'white';
-      const largeSize = botUISizes.button.iconSize;
-      const smallSize = `calc(${botUISizes.button.iconSize} * 0.7)`;
+      // Use larger icon sizes for Human vs Human mode kings
+      // For R1: 18px large, 14px small (was 12px and 8.4px)
+      // For larger screens: scale appropriately
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const isR1 = vw <= 240 && vh <= 320;
+
+      let largeSize, smallSize;
+      if (isR1) {
+        largeSize = '18px';
+        smallSize = '14px';
+      } else {
+        // Scale up proportionally for larger screens
+        largeSize = 'max(18px, min(36px, 5.25vw))';
+        smallSize = 'max(14px, min(28px, 4vw))';
+      }
+
       if (isWhiteTurn) {
         // White's turn - white king large, black king small
         botIcon.innerHTML = `<span style="font-size: ${largeSize};">♔</span><span style="font-size: ${smallSize}; opacity: 0.6;">♚</span>`;
