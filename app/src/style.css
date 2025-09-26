@@ -1204,19 +1204,19 @@ html, body {
 /* Bot thinking spinner */
 .bot-thinking-spinner {
     display: inline-block;
-    width: 0.35em; /* Match x-height of text */
-    height: 0.35em;
-    margin-left: 0.3em;
+    width: 0.5em; /* Balanced size - visible but within text bounds */
+    height: 0.5em;
+    margin-left: 0.4em;
     vertical-align: middle;
 }
 
 .bot-thinking-spinner:after {
     content: " ";
     display: block;
-    width: 0.35em;
-    height: 0.35em;
+    width: 0.5em;
+    height: 0.5em;
     border-radius: 50%;
-    border: 0.05em solid #FE5F00;
+    border: 0.07em solid #FE5F00;
     border-color: #FE5F00 transparent #FE5F00 transparent;
     animation: spin 1.2s linear infinite;
 }
