@@ -5989,12 +5989,8 @@ function showHelpDialog(fromMenu = false) {
   // Add controls section
   helpContent += '<div class="help-controls">';
   helpContent += '<div class="controls-header">Controls & Shortcuts:</div>';
-  helpContent += '<div class="control-item">• Top middle tap → Shows this help</div>';
-  helpContent += '<div class="control-item">  (Long press side button on R1)</div>';
-  helpContent += '<div class="control-item">• Captured pieces tap → Opens menu</div>';
-  helpContent += '<div class="control-item">  (Side button on R1)</div>';
-  helpContent += '<div class="control-item">• Top left/right edge → Undo/Redo</div>';
-  helpContent += '<div class="control-item">  (Scroll wheel on R1)</div>';
+  helpContent += '<div class="control-item">• Undo/Redo → On Rabbit R1 use scroll wheel.</div>';
+  helpContent += '<div class="control-item">  In browser use left/right arrows.</div>';
   helpContent += '</div>';
 
   // Add dismiss button
@@ -6253,20 +6249,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Add keyboard fallback for development
   if (typeof PluginMessageHandler === 'undefined') {
     window.addEventListener('keydown', (event) => {
-      // P key shortcut for Push-To-Talk (options menu)
-      if (event.code === 'KeyP') {
-        event.preventDefault();
-        // Trigger the same event as sideClick (PTT button)
-        window.dispatchEvent(new CustomEvent('sideClick'));
-      }
-
-      // I key shortcut for help dialog (same as long press)
-      if (event.code === 'KeyI') {
-        event.preventDefault();
-        showHelpDialog();
-      }
-
-      // Temporary arrow key shortcuts for undo/redo (will be removed for R1)
+      // Arrow key shortcuts for undo/redo in browser
       if (event.code === 'ArrowLeft') {
         event.preventDefault();
         // Trigger the same event as scroll down (which does undo)
@@ -6275,10 +6258,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (event.code === 'ArrowRight') {
         event.preventDefault();
-        
+
         // Trigger the same event as scroll up (which does redo)
         window.dispatchEvent(new CustomEvent('scrollUp'));
-        
+
       }
     });
   }
