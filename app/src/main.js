@@ -5964,7 +5964,7 @@ function showHelpDialog(fromMenu = false) {
   // Add controls section
   helpContent += '<div class="help-controls">';
   helpContent += '<div class="controls-header">Controls & Shortcuts:</div>';
-  helpContent += '<div class="control-item">• Open Menu → On Rabbit R1 press side button or push-to-talk button.</div>';
+  helpContent += '<div class="control-item">• Open Menu → On Rabbit R1 press side button (push-to-talk).</div>';
   helpContent += '<div class="control-item">  In browser also use P key.</div>';
   helpContent += '<div class="control-item">• Undo/Redo → On Rabbit R1 use scroll wheel.</div>';
   helpContent += '<div class="control-item">  In browser use left/right arrows.</div>';
