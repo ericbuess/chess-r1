@@ -1204,8 +1204,8 @@ html, body {
 /* Bot thinking spinner */
 .bot-thinking-spinner {
     display: inline-block;
-    width: 0.8em; /* Smaller size to not exceed text height */
-    height: 0.8em;
+    width: 0.6em; /* Small enough to fit within text line height */
+    height: 0.6em;
     margin-left: 0.5em;
     vertical-align: middle;
 }
@@ -1213,10 +1213,10 @@ html, body {
 .bot-thinking-spinner:after {
     content: " ";
     display: block;
-    width: 0.8em;
-    height: 0.8em;
+    width: 0.6em;
+    height: 0.6em;
     border-radius: 50%;
-    border: 0.1em solid #FE5F00;
+    border: 0.08em solid #FE5F00;
     border-color: #FE5F00 transparent #FE5F00 transparent;
     animation: spin 1.2s linear infinite;
 }
