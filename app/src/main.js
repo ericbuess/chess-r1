@@ -382,6 +382,7 @@ class ChessGame {
       // Mark that we're about to show a dialogue (for timing coordination)
       if (shouldShowDialogue && window.gameUI) {
         window.gameUI.pendingBotDialogue = true;
+    // console.log(`[makeMove] Set pendingBotDialogue = true`);
       }
 
       // Show enhanced context-aware dialogue
@@ -463,6 +464,7 @@ class ChessGame {
           // Clear the pending flag after showing dialogue
           if (window.gameUI) {
             window.gameUI.pendingBotDialogue = false;
+    // console.log(`[makeMove] Cleared pendingBotDialogue = false`);
           }
         }, 300);
       }
@@ -1635,7 +1637,9 @@ class ChessGame {
    * Show bot dialogue if appropriate
    */
   showBotDialogue(category, forceShow = false, moveContext = null) {
+    // console.log(`[showBotDialogue] Called with category: ${category}, forceShow: ${forceShow}, gameMode: ${this.gameMode}`);
     if (moveContext) {
+    // console.log(`[showBotDialogue] moveContext: piece=${moveContext.piece?.type}, captured=${moveContext.captured?.type}, isCheck=${moveContext.isCheck}, special=${moveContext.special}`);
     }
 
     // Enhanced dialogue selection for different game modes
@@ -1649,6 +1653,7 @@ class ChessGame {
       // Always show dialogue on every bot move (like Human vs Human mode)
       // Removed frequency limiting to make bots comment on every move
       // if (!forceShow && !dialogueManager.shouldShowDialogue()) {
+      //   console.log(`[showBotDialogue] Skipping - dialogue manager says no`);
       //   return null;
       // }
 
@@ -1679,6 +1684,7 @@ class ChessGame {
       let finalCategory = enhancedCategory;
       if (!forceShow && this.shouldUseFiller(enhancedCategory)) {
         finalCategory = 'filler';
+    // console.log(`[showBotDialogue] Using filler instead of ${enhancedCategory}`);
       }
 
       // Get dialogue for the final category
@@ -1695,15 +1701,18 @@ class ChessGame {
           // If current is black, white (human) just moved
           const botMadeMove = gameStateTracker.currentPlayer === 'white';
           dialogueCategory = botMadeMove ? 'botCapture' : 'humanCapture';
+    // console.log(`[showBotDialogue] Mapping ${finalCategory} to ${dialogueCategory}`);
         }
 
         dialogue = getRandomDialogue(botName, dialogueCategory);
         if (!dialogue) {
+    // console.log(`[showBotDialogue] WARNING: No dialogue found for bot=${botName}, category=${dialogueCategory}`);
         }
       }
 
       // If no dialogue for the category, use filler as fallback
       if (!dialogue && forceShow) {
+    // console.log(`[showBotDialogue] Using filler fallback for forced category ${finalCategory}`);
         dialogue = this.getNonRepeatingFiller(getRandomDialogue, botName);
       }
 
@@ -1728,6 +1737,7 @@ class ChessGame {
       let finalCategory = category;
       if (!forceShow && this.shouldUseFiller(category)) {
         finalCategory = 'filler';
+    // console.log(`[showBotDialogue] H vs H: Using filler instead of ${category}`);
       }
 
       // Use appropriate king dialogue based on current player
@@ -1765,13 +1775,17 @@ class ChessGame {
       }
     }
 
+    // console.log(`[showBotDialogue] Got dialogue: "${dialogue}" for display name: ${displayName}`);
 
     if (dialogue) {
+    // console.log(`[showBotDialogue] Has dialogue, checking for window.gameUI...`);
 
       if (window.gameUI) {
+    // console.log(`[showBotDialogue] window.gameUI exists, showing persistent dialogue`);
 
         // Clear any active thinking interval to allow dialogue to show
         if (window.gameUI.thinkingInterval) {
+    // console.log(`[showBotDialogue] Clearing thinking interval to show dialogue`);
           clearInterval(window.gameUI.thinkingInterval);
           window.gameUI.thinkingInterval = null;
         }
@@ -1787,11 +1801,13 @@ class ChessGame {
         if (this.stateHistory.length > 0 && this.currentStateIndex === this.stateHistory.length - 1) {
           // We're at the latest state, update it with the new dialogue
           this.stateHistory[this.currentStateIndex].dialogue = { ...this.currentDialogue };
+    // console.log(`[showBotDialogue] Updated state history entry ${this.currentStateIndex} with dialogue`);
         }
       } else {
         console.error(`[showBotDialogue] ERROR: window.gameUI is not available!`);
       }
     } else {
+    // console.log(`[showBotDialogue] No dialogue returned`);
     }
 
     return dialogue;
@@ -2839,6 +2855,7 @@ class ChessUI {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('r1test') === 'true') {
       if (this.shouldEnableR1Logging()) {
+    // console.log('[R1 Test Mode] Simulating R1 device in Chrome');
       }
       return true;
     }
@@ -2871,14 +2888,15 @@ class ChessUI {
 
     // Log detection result
     if (this.shouldEnableR1Logging()) {
-        isR1Viewport,
-        hasFlutterChannel,
-        hasR1UserAgent,
-        isWebView,
-        result: isR1,
-        viewport: `${window.innerWidth}x${window.innerHeight}`,
-        userAgent: navigator.userAgent
-      });
+      // console.log('[R1 Detection]', {
+      //   isR1Viewport,
+      //   hasFlutterChannel,
+      //   hasR1UserAgent,
+      //   isWebView,
+      //   result: isR1,
+      //   viewport: `${window.innerWidth}x${window.innerHeight}`,
+      //   userAgent: navigator.userAgent
+      // });
     }
 
     return isR1;
@@ -3443,6 +3461,7 @@ class ChessUI {
       this.updatePlayerTurnIndicator(this.game.currentPlayer, gameMode);
 
     } else {
+    // console.log(`[showBotThinking] Hiding thinking indicator, showingBotDialogue: ${this.showingBotDialogue}, pendingBotDialogue: ${this.pendingBotDialogue}`);
       // Don't hide instruction label if we're showing or about to show a bot dialogue
       if (!this.showingBotDialogue && !this.pendingBotDialogue) {
         this.hideInstructionLabel();
@@ -4972,6 +4991,7 @@ class ChessUI {
 
     // Don't interfere with rotating bot thinking messages UNLESS it's an undo/redo notification or bot dialogue
     if (this.thinkingInterval && !isUndoRedoNotification && !isBotDialogue) {
+    // console.log(`[showNotification] Skipping notification during bot thinking: "${message}"`);
       // Skipping notification during bot thinking (except for undo/redo and bot dialogues)
       return;
     }
@@ -5038,6 +5058,7 @@ class ChessUI {
       label.style.background = 'linear-gradient(135deg, rgba(254, 95, 0, 0.98) 0%, rgba(254, 95, 0, 0.92) 100%)';  // Gradient for depth
     }
 
+    // console.log(`[showNotification] Displayed: "${message}" with type: ${type}, duration: ${duration}ms`);
 
     // Set cooldown for warning/error types to prevent spam
     if (type === 'warning' || type === 'error') {
@@ -5074,6 +5095,7 @@ class ChessUI {
   }
 
   showInstructionLabel(text) {
+    // console.log(`[showInstructionLabel] Called with text: "${text}"`);
     // Delegate to unified notification system
     this.showNotification(text, 'default', 2000);
   }
@@ -5290,6 +5312,7 @@ class ChessUI {
     dialogueArea.appendChild(botInfo);
     dialogueArea.appendChild(dialogueText);
 
+    // console.log(`[showBotDialoguePersistent] Displayed: "${dialogue}" for bot: ${botName}`);
   }
 
   /**
@@ -5309,6 +5332,7 @@ class ChessUI {
     const dialogueArea = document.getElementById('bot-dialogue-area');
     if (dialogueArea) {
       dialogueArea.classList.add('hidden');
+    // console.log(`[hideBotDialogue] Bot dialogue hidden`);
     }
   }
 
@@ -6323,6 +6347,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // This is critical for R1 plugin which may not have creationStorage immediately
   const storageReady = await waitForStorageAPI();
   if (!storageReady) {
+    // console.log('R1 storage API not available, using localStorage fallback');
   }
 
   // Try to load saved game state
