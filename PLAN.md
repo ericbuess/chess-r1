@@ -63,6 +63,12 @@ All memory leaks and performance issues have been resolved!
 - **Performance**: All targets met (bot response <2s, undo/redo <5ms)
 - **Storage**: Using creationStorage.plain with localStorage fallback
 
+## ✅ Bot Dialogue Enhancement Complete (9/26/2025)
+
+### Fixed Critical Issues:
+- [x] ✅ Bot dialogue timing - Now shows correct move context
+- [x] ✅ Human vs Human input - Board re-enables after checkmate
+
 ## 🎯 Current Sprint: Bot Dialogue Enhancement (9/26/2025)
 
 ### Objective
