@@ -604,6 +604,8 @@ html, body {
 /* Make white pawns smaller on all browsers - consistent ratio */
 .chess-piece.white[data-piece="pawn"] {
     font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
+    position: relative;
+    top: 0.5vh; /* Small offset to align baseline with other pieces */
 }
 
 /* iOS Safari specific fix for white pieces */
@@ -633,6 +635,8 @@ html, body {
     /* Make pawns smaller - removed flexbox to fix baseline alignment */
     .chess-piece.white[data-piece="pawn"] {
         font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
+        position: relative;
+        top: 0.5vh; /* Small offset to align baseline with other pieces */
     }
 }
 
@@ -662,6 +666,8 @@ html, body {
 /* Make black pawns smaller on all browsers - consistent ratio */
 .chess-piece.black[data-piece="pawn"] {
     font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
+    position: relative;
+    top: 0.5vh; /* Small offset to align baseline with other pieces */
 }
 
 /* iOS Safari specific fix for black pieces */
@@ -691,6 +697,8 @@ html, body {
     /* Make pawns smaller - removed flexbox to fix baseline alignment */
     .chess-piece.black[data-piece="pawn"] {
         font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
+        position: relative;
+        top: 0.5vh; /* Small offset to align baseline with other pieces */
     }
 }
 
@@ -1204,21 +1212,27 @@ html, body {
 /* Bot thinking spinner */
 .bot-thinking-spinner {
     display: inline-block;
-    width: 3vw;
-    height: 3vw;
-    margin-left: 2vw;
+    width: 1.8em; /* Use em to match text size */
+    height: 1.8em;
+    margin-left: 0.5em;
     vertical-align: middle;
+    position: relative;
+    top: -0.1em; /* Fine-tune vertical alignment */
 }
 
 .bot-thinking-spinner:after {
     content: " ";
     display: block;
-    width: 2.5vw;
-    height: 2.5vw;
+    width: 1em;
+    height: 1em;
     border-radius: 50%;
-    border: 0.3vw solid #FE5F00;
+    border: 0.15em solid #FE5F00;
     border-color: #FE5F00 transparent #FE5F00 transparent;
     animation: spin 1.2s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 @keyframes spin {
