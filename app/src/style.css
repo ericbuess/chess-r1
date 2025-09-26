@@ -1216,7 +1216,7 @@ html, body {
     width: 0.75em;
     height: 0.75em;
     border-radius: 50%;
-    border: 0.14em solid #FE5F00;
+    border: 0.25em solid #FE5F00;
     border-color: #FE5F00 transparent #FE5F00 transparent;
     animation: spin 1.2s linear infinite;
 }
