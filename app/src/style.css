@@ -605,7 +605,7 @@ html, body {
 .chess-piece.white[data-piece="pawn"] {
     font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
     position: relative;
-    top: 0.5vh; /* Small offset to align baseline with other pieces */
+    top: -0.09em; /* Small offset to align baseline with other pieces */
 }
 
 /* iOS Safari specific fix for white pieces */
@@ -636,7 +636,7 @@ html, body {
     .chess-piece.white[data-piece="pawn"] {
         font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
         position: relative;
-        top: 0.5vh; /* Small offset to align baseline with other pieces */
+        top: -0.09em; /* Small offset to align baseline with other pieces */
     }
 }
 
@@ -667,7 +667,7 @@ html, body {
 .chess-piece.black[data-piece="pawn"] {
     font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
     position: relative;
-    top: 0.5vh; /* Small offset to align baseline with other pieces */
+    top: -0.09em; /* Small offset to align baseline with other pieces */
 }
 
 /* iOS Safari specific fix for black pieces */
@@ -698,7 +698,7 @@ html, body {
     .chess-piece.black[data-piece="pawn"] {
         font-size: min(7vw, 6.22vh); /* Maintain 77.77% ratio for consistent scaling */
         position: relative;
-        top: 0.5vh; /* Small offset to align baseline with other pieces */
+        top: -0.09em; /* Small offset to align baseline with other pieces */
     }
 }
 
