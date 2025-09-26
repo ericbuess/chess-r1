@@ -3203,6 +3203,10 @@ class ChessUI {
         // Update display after bot move
         this.updateDisplay();
 
+        // Update gameStateTracker to reflect bot's move
+        gameStateTracker.lastPlayer = gameStateTracker.currentPlayer;
+        gameStateTracker.currentPlayer = this.game.currentPlayer;
+
         // Check if bot put human in check
         if (botResult.enteredCheck) {
           // Bot put human in check - highlight human's king
@@ -3834,9 +3838,13 @@ class ChessUI {
 
   // Enhanced bot initialization for both human white/black scenarios
   checkInitialBotTurn() {
-    
 
+
+    // For Human vs Human, just enable input and return
     if (this.game.gameMode !== 'human-vs-bot') {
+      this.setInputEnabled(true);
+      this.showBotThinking(false);
+      this.updateGameStateIndicators();
       return;
     }
 
