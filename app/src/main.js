@@ -5964,6 +5964,8 @@ function showHelpDialog(fromMenu = false) {
   // Add controls section
   helpContent += '<div class="help-controls">';
   helpContent += '<div class="controls-header">Controls & Shortcuts:</div>';
+  helpContent += '<div class="control-item">• Open Menu → On Rabbit R1 press side button or push-to-talk button.</div>';
+  helpContent += '<div class="control-item">  In browser also use P key.</div>';
   helpContent += '<div class="control-item">• Undo/Redo → On Rabbit R1 use scroll wheel.</div>';
   helpContent += '<div class="control-item">  In browser use left/right arrows.</div>';
   helpContent += '</div>';
@@ -6224,6 +6226,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Add keyboard fallback for development
   if (typeof PluginMessageHandler === 'undefined') {
     window.addEventListener('keydown', (event) => {
+      // P key shortcut for opening menu
+      if (event.code === 'KeyP') {
+        event.preventDefault();
+        // Trigger the same event as sideClick (push-to-talk button)
+        window.dispatchEvent(new CustomEvent('sideClick'));
+      }
+
       // Arrow key shortcuts for undo/redo in browser
       if (event.code === 'ArrowLeft') {
         event.preventDefault();
