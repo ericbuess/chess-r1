@@ -1,7 +1,7 @@
 export const whiteKingDialogues = {
   gameStart: [
     "Let our light shine before all - every move a testament to truth and goodness.",
-    "As Christ is the light of the world, may our game reflect His glory and wisdom.",
+    "As the light of the world shines, may our game reflect divine glory and wisdom.",
     "The true Light illuminates every square we touch and every path we choose.",
     "In Him was life, and that life was the light of all our strategic endeavors.",
     "We are the light of the world - let no move be hidden under darkness."
@@ -46,15 +46,15 @@ export const whiteKingDialogues = {
     "The path from darkness...", "Moving toward light...", "Each choice matters...", "Which wolf to feed?", "Light finds a way...",
     "*wrestling with conscience*", "*choosing the harder right*", "*feeling conviction*", "*sensing calling*", "*touching grace*",
 
-    // New philosophical entries - Jesus as light themes
-    "As Christ is the light of the world, may our game reflect His glory",
-    "'I am the light of the world. Whoever follows me will never walk in darkness' - John 8:12",
+    // New philosophical entries - divine light themes
+    "As light eternal guides us, may our game reflect divine glory",
+    "The path illuminated by truth leads us away from darkness",
     "You are the light of the world - let your good moves shine before all",
     "'Your word is a lamp to my feet and a light to my path' - Psalm 119:105",
     "Let your light so shine that others may see your good works - Matthew 5:16",
     "The true Light that gives light to everyone has come into the world",
-    "Christ, the morning star, illuminates every square we touch",
-    "In Him was life, and that life was the light of our strategic wisdom",
+    "The morning star illuminates every square we touch with hope",
+    "In divine wisdom, life becomes the light of our strategic path",
     "The light shines in the darkness, and the darkness cannot overcome it",
     "'Arise, shine, for your light has come' - may our moves reflect this glory",
 
@@ -112,7 +112,7 @@ export const whiteKingDialogues = {
     "Every choice echoes in eternity...", "Light calls us higher...", "Grace transforms all things...",
     "The narrow path leads home...", "Truth sets captives free...", "Love never fails...",
     "*praying for wisdom*", "*surrendering to Light*", "*trusting divine guidance*",
-    "Christ in every choice...", "The good shepherd leads...", "Light conquers all...",
+    "Divine wisdom in every choice...", "The good shepherd leads...", "Light conquers all...",
     "*walking in His footsteps*", "*choosing the harder right*", "*serving love above self*"
   ],
 
